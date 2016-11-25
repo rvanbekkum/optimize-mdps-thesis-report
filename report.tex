@@ -1,0 +1,27 @@
+% !TeX program = xelatex
+\documentclass[whitelogo]{tudelft-report}
+\input{preamble}
+
+\begin{document}
+
+%% Include an optional title page.
+\input{title}
+
+\input{preface}
+
+\tableofcontents
+
+%% Use Arabic numerals for the page numbers of the chapters.
+\mainmatter
+
+\input{chapters/1.introduction}
+
+%% Use letters for the chapter numbers of the appendices.
+\appendix
+
+%\input{appendix-a}
+
+\bibliography{references}
+
+\end{document}
+
