@@ -1,5 +1,5 @@
 % !TeX program = xelatex
-\documentclass[whitelogo]{tudelft-report}
+\documentclass{tudelft-report} %[whitelogo]
 \input{preamble}
 
 \begin{document}
@@ -23,7 +23,13 @@
 
 %\input{appendix-a}
 
+% Acronyms and Glossary
+\printglossary[type=\acronymtype]
+%\printglossary
+
 \bibliography{references}
 
 \end{document}
+
+% Using the order described here: http://academia.stackexchange.com/questions/5569/where-in-a-thesis-should-a-glossary-be-positioned
 

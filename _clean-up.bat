@@ -1,0 +1,14 @@
+move main.alg ./build
+move main.acn ./build
+move main.acr ./build
+move main.aux ./build
+move main.bbl ./build
+move main.blg ./build
+move main.glg ./build
+move main.glo ./build
+move main.gls ./build
+move main.ist ./build
+move main.log ./build
+move main.out ./build
+move main.soc ./build
+move main.toc ./build
