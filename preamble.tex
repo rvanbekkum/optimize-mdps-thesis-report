@@ -1,15 +1,24 @@
+\usepackage{amsmath}
 \usepackage{changes}
 \usepackage{hyperref}
-\usepackage[acronym,automake]{glossaries} \makeglossaries
+\usepackage[acronym,automake]{glossaries} 
 \usepackage{subcaption} 
 \usepackage{tikz}
+\usepackage{unicode-math}
+
 \usetikzlibrary{automata,arrows,shapes}
+
+\makeglossaries
 
 \graphicspath{{./figures/}}
 
 %% Glossary and Acronyms %%
 \input{acronyms}
 \input{glossary}
+
+\newcommand\mat[1]{\symbf{#1}}
+\newcommand\arr[1]{\symbf{#1}}
+\DeclareMathOperator*{\argmax}{arg\,max}
 
 %% Custom Definitions %%
 \def\subsubsectionautorefname{Section}

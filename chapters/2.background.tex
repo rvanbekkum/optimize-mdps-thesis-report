@@ -40,6 +40,17 @@ This again is followed by a discussion of the discrete-state Markov Models most 
 \label{subsec:markov-chains}
 % Markov Chains: States and Transitions
 
+The evolution of system or processes can be viewed as so-called \textit{time-series}, in which a set of data-points can be ordered using an underlying physical dimension, typically time \cite{barberBRML2012}.
+Formally, time-series can be defined as a series $x_{a:b}$ of data-points, with $x_{a:b} \equiv x_a, x_{a+1}, \ldots, x_b$.
+By means of these time-series, probabilistic models can be devised for real-world systems or processes, by introducing the notion of \textit{states} as a description of the system at a particular point in time or \textit{stage}.
+
+On the basis of the class of Markov Models lies the simplifying assumption that each state is only dependent on a limited number of previous states.
+Under this assumption a \textit{Markov Chain} can be defined as a model of a series $q_{1:T}$ of transitions between states $q_i$ drawn from a state space $\mathcal{S} = \{s_1,\ldots,s_n\}$. The initial state $q_1$ of a Markov Chain typically is either fixed or drawn from $\mathcal{S}$ using a probability distribution over initial states.
+For the states or variables of a Markov Chain, the earlier mentioned assumption implies the following conditional independence to hold:
+\begin{equation}
+	p(q_t \vert q_1,\ldots,q_{t-1}) = p(q_t \vert q_{t - L}, \ldots, q_{t-1})
+\end{equation}
+where $L$ is the so-called \textit{order} of the Markov Chain.
 % See summary barberBRML2012
 
 \begin{figure}[ht!]
@@ -47,9 +58,9 @@ This again is followed by a discussion of the discrete-state Markov Models most 
 	\centering
 	\subcaptionbox{First-order Markov Chain.\label{fig:markov-chains-first-order}}{\begin{tikzpicture}[->,>=stealth',auto,node distance=2cm]
 		\tikzstyle{every state}=[fill=white,draw=black,text=black,scale=1,double]	% thick
-		\node[state] (s1) {$s_1$};
-		\node[state] (s2) [right of=s1] {$s_2$};
-		\node[state] (s3) [right of=s2] {$s_3$};
+		\node[state] (s1) {$q_1$};
+		\node[state] (s2) [right of=s1] {$q_2$};
+		\node[state] (s3) [right of=s2] {$q_3$};
 		\coordinate (con) at (0,2);
 		\path
 		(s1)
@@ -62,10 +73,10 @@ This again is followed by a discussion of the discrete-state Markov Models most 
 		\end{tikzpicture}} \quad
 		\subcaptionbox{Second-order Markov Chain.\label{fig:markov-chains-second-order}}{\begin{tikzpicture}[->,>=stealth',auto,node distance=2cm]
 		\tikzstyle{every state}=[fill=white,draw=black,text=black,scale=1,double]	% thick
-		\node[state] (s1) {$s_1$};
-		\node[state] (s2) [right of=s1] {$s_2$};
-		\node[state] (s3) [right of=s2] {$s_3$};
-		\node[state] (s4) [right of=s3] {$s_4$};
+		\node[state] (s1) {$q_1$};
+		\node[state] (s2) [right of=s1] {$q_2$};
+		\node[state] (s3) [right of=s2] {$q_3$};
+		\node[state] (s4) [right of=s3] {$q_4$};
 		\path
 		(s1)
 		edge node {} (s2)
@@ -85,6 +96,42 @@ This again is followed by a discussion of the discrete-state Markov Models most 
 	\label{fig:markov-chains}
 \end{figure}
 
+As depicted in \autoref{fig:markov-chains}, Markov Chains of different order can be defined. \autoref{fig:markov-chains-first-order} exemplifying a first-order Markov Chain, in which each state only depends on the previous state, and \autoref{fig:markov-chains-second-order} showing a second-order Markov Chain, in which each state depends on the two prior states of the Markov Chain.
+In the special case where the transition distribution is independent of the stage of the system, but solely on the prior state(s), one speaks of a \textit{stationary} or \textit{homogeneous} Markov Chain.
+
+Though, mostly first-order Markov Chains as depicted in \autoref{fig:markov-chains-first-order}, which are said to satisfy the \textit{Markov Property}, are applied widely for modeling stochastic processes, such as physical phenomena and economic time-series \cite{bacciu2015probabilistic}.
+In addition, mostly compact, stationary, discrete-time, finite-space Markov Chains are used, bearing in mind the computational adequacy of the model (i.e., the larger the state space and order, the more computational cost might be incurred).
+Some concrete examples of practical applications include assessing the reliability and/or safety of appliances in engineering \cite{cochran2001generic, cronvall2009combining,el2008optimal}, modeling water flows \cite{parent1991stochastic}, or modeling loan defaults \cite{grimshaw2011markov} in the financial world (for an overview see \cite{pasanisi2012estimating}).
+
+In these chains the state transition probabilities can be stored in an $n \times n$ transition matrix $\mat{A} = [a_{ij}]$ with each entry
+\begin{equation}
+	a_{ij} = p(q_{t+1} = s_i\vert q_t = s_j)
+\end{equation}
+denoting the probability of state $s_i$ following state $s_j$.
+Similarly, the initial state probabilities can be recorded in an $n \times 1$ initial state vector $\arr{\pi} = [\pi_i]$ with each entry
+\begin{equation}
+	\pi_i = p(q_1 = s_i)
+\end{equation} 
+denoting the probability of state $s_i$ being the initial state of the model.
+Putting these components all together, a discrete stationary first-order Markov Chain can be defined as a 3-tuple $\mathcal{M} = (\mathcal{S}, \mat{A}, \arr{\pi})$ with $\mathcal{S}$ as state space, $\mat{A}$ as transition matrix and $\arr{\pi}$ as initial state vector.
+
+\subsubsection*{Fitting Markov Chains}
+There exist efficient methods for fitting a discrete stationary first-order Markov Chain provided a collected dataset describing the evolution of a stochastic process either by applying maximum likelihood (e.g., see \cite{bacciu2015probabilistic, barberBRML2012, lee1968maximum, teodorescu2009maximum}) or Bayesian inference (e.g., see \cite{barberBRML2012, lee1968maximum, minka2003bayesian}).
+These methods estimate the transition distribution to fit a Markov Chain on a collected sequence of time-ordered states. 
+
+The first-mentioned approach of likelihood maximization, works by estimating the transition probabilities by counting the observed transitions in the state sequence.
+That is, if we let $n_{ij}$ denote the number of observed transitions from state $s_j$ to state $s_i$, then the maximum-likelihood estimation of the corresponding transition probability is
+\begin{equation}
+	p(q_{t+1} = s_i\vert q_t = s_j) = \frac{n_{ij}}{\sum_j n_{ij}}
+\end{equation}
+
+The second-mentioned approach of Bayesian inference is more suitable for many real-life problems, for which state sequences are incomplete, i.e. states are recorded only for certain stages, meaning there might be gaps in-between.
+This type of approach aims to make an estimation of the transition probabilities by adopting a prior for the transition matrix $\mat{A}$, a convenient choice being a factorized prior from the product of $n$ independent \textit{Dirichlet} distributions, one for each row $\mat{A}_j$ such that:
+\begin{equation}
+	p(\mat{A}) = \prod_{j} \text{Dir}(\mat{A}_j \vert \alpha_j)
+\end{equation}
+parametrized by a vector $\arr{\alpha}$ with $\alpha_j > 0$ \cite{pasanisi2012estimating,barberBRML2012}.
+
 \subsection{Hidden Markov Models}
 \label{subsec:hidden-markov-models}
 % Hidden Markov Models: Observations (partially observable) 
@@ -92,7 +139,22 @@ This again is followed by a discussion of the discrete-state Markov Models most 
 % inference problems
 % shortly discuss the succesful applications see \cite{barberBRML2012} speech recognition, object tracking, genetic sequence analysis and add citations to the corresponding works
 
-%
+The Markov Chain model discussed in \autoref{subsec:markov-chains} requires the modeled system or stochastic process to be fully observable, meaning that each of its states correspond directly to an observation.
+However, it is not unusual to encounter real-world systems in which the states are assumed to be unobservable, though are correlated with observable events produced by the system.
+These systems can be modeled by a \acrfull{acr:hmm} in which the states, typically referred to as \textit{hidden} or \textit{latent} variables $h_{1:T}$, are unknown.
+Additionally this model consists of observations, typically referred to as \textit{observed} or \textit{visible} variables $v_{1:T}$, which are dependent on the hidden variables through an emission $p(o_t\vert q_t)$. All by all an \acrshort{acr:hmm}
+consists of the following parts:
+
+\begin{itemize}
+	\item a set of $n$ attainable states $\mathcal{S} = \{s_1, \ldots, s_n\}$, i.e. the underlying \textit{state space}
+	\item a set of $m$ possible observations, $\mathcal{V} = \{v_1, \ldots, v_m\}$, i.e. the \textit{observation space}
+	\item an $n \times n$ transition matrix $\mat{A} = [a_{ij}]$ defining the models' \textit{transition distribution} in which $a_{ij} = p(q_{t+1} = s_i \vert q_t = s_j)$ is the probability of state $s_i$ following state $s_j$ ($s_i, s_j \in \mathcal{S}$)
+	\item an $m \times n$ emission matrix $\mat{B} = [b_{ij}]$ defining the models' \textit{emission distribution} in which $b_{ij} = p(o_t = v_i \vert q_t = s_i)$ the probability of observing $v_i$ from state $s_j$ ($v_i \in \mathcal{V}$, $s_j \in \mathcal{S}$)
+	\item an $n \times 1$ initial state array $\arr{\pi} = [\pi_i]$ in which $\pi_i = p(q_1 = s_i)$ is the probability of having $s_i$ as the initial state ($s_i \in \mathcal{S}$)
+\end{itemize}
+Putting these components all together, an \acrshort{acr:hmm} can be defined as a 5-tuple $\mathcal{M} = (\mathcal{S}, \mathcal{V}, \arr{\pi}, \mat{A}, \mat{B})$ with $\mathcal{S}$ as state space, $\mathcal{V}$ as observation space, $\arr{\pi}$ as initial state vector, $\mat{A}$ as transition matrix and $\mat{B}$ as emission matrix.
+% Input figure showing graphical representation of an HMM
+% Input subsubsection* about inference problems (see the tree in thesis-plan, but also mention the other two)
 
 \subsection{Markov Decision Processes}
 \label{subsec:mdps}
@@ -117,7 +179,7 @@ Apart from the discrete-state Markov Models that were discussed in this section,
 
 \begin{description}
 	\item[Factored Markov Decision Process (FMDP)] An extension of the MDP-model that allows for compact representation of states, transitions and rewards \cite{Degris2010}.
-	\item[To be determined] To be determined 
+	\item[Variable-order Markov Model (VOM)] To be determined 
 	\item[Linear Dynamical System (LDS)] A continuous-state State-Space Model with linear dynamics, Gaussian state-space and the assumption of hidden variables as in \acrshortpl{acr:hmm} \cite{Minka1999, barberBRML2012, Ghahramani2000}.
 \end{description}
 
