@@ -35,6 +35,7 @@ A Markov Model is a stochastic model in which the future states only depend on a
 
 In the remainder of this section the most common types of discrete-state Markov Models are discussed one by one, starting from the fundamental models known as \textit{Markov Chains} in \autoref{subsec:markov-chains}, followed by their extension of \textit{\acrfullpl{acr:hmm}} in \autoref{subsec:hidden-markov-models}.
 This again is followed by a discussion of the discrete-state Markov Models most relevant in \acrshort{acr:dtp}, being \textit{\acrfullpl{acr:mdp}} in \autoref{subsec:mdps} and their extension of \textit{\acrfullpl{acr:pomdp}} in \autoref{subsec:pomdps}.
+%Finally in \autoref{subsec:other-markov-models} other related state space models are briefly discussed.
 
 \subsection{Markov Chains}
 \label{subsec:markov-chains}
@@ -142,19 +143,68 @@ parametrized by a vector $\arr{\alpha}$ with $\alpha_j > 0$ \cite{pasanisi2012es
 The Markov Chain model discussed in \autoref{subsec:markov-chains} requires the modeled system or stochastic process to be fully observable, meaning that each of its states correspond directly to an observation.
 However, it is not unusual to encounter real-world systems in which the states are assumed to be unobservable, though are correlated with observable events produced by the system.
 These systems can be modeled by a \acrfull{acr:hmm} in which the states, typically referred to as \textit{hidden} or \textit{latent} variables $h_{1:T}$, are unknown.
-Additionally this model consists of observations, typically referred to as \textit{observed} or \textit{visible} variables $v_{1:T}$, which are dependent on the hidden variables through an emission $p(o_t\vert q_t)$. All by all an \acrshort{acr:hmm}
+Additionally this model consists of observations, typically referred to as \textit{observed} or \textit{visible} variables $v_{1:T}$, which are dependent on the hidden variables through an emission $p(o_t\vert h_t)$ graphically depicted in \autoref{fig:hmm}. All by all an \acrshort{acr:hmm}
 consists of the following parts:
 
 \begin{itemize}
-	\item a set of $n$ attainable states $\mathcal{S} = \{s_1, \ldots, s_n\}$, i.e. the underlying \textit{state space}
+	\item a discrete set of $n$ attainable states $\mathcal{S} = \{s_1, \ldots, s_n\}$, i.e. the underlying \textit{state space}
 	\item a set of $m$ possible observations, $\mathcal{V} = \{v_1, \ldots, v_m\}$, i.e. the \textit{observation space}
-	\item an $n \times n$ transition matrix $\mat{A} = [a_{ij}]$ defining the models' \textit{transition distribution} in which $a_{ij} = p(q_{t+1} = s_i \vert q_t = s_j)$ is the probability of state $s_i$ following state $s_j$ ($s_i, s_j \in \mathcal{S}$)
-	\item an $m \times n$ emission matrix $\mat{B} = [b_{ij}]$ defining the models' \textit{emission distribution} in which $b_{ij} = p(o_t = v_i \vert q_t = s_i)$ the probability of observing $v_i$ from state $s_j$ ($v_i \in \mathcal{V}$, $s_j \in \mathcal{S}$)
-	\item an $n \times 1$ initial state array $\arr{\pi} = [\pi_i]$ in which $\pi_i = p(q_1 = s_i)$ is the probability of having $s_i$ as the initial state ($s_i \in \mathcal{S}$)
+	\item an $n \times n$ transition matrix $\mat{A} = [a_{ij}]$ defining the models' \textit{transition distribution} in which $a_{ij} = p(h_{t+1} = s_i \vert h_t = s_j)$ is the probability of state $s_i$ following state $s_j$ ($s_i, s_j \in \mathcal{S}$)
+	\item an $m \times n$ emission matrix $\mat{B} = [b_{ij}]$ defining the models' \textit{emission distribution} in which $b_{ij} = p(o_t = v_i \vert h_t = s_j)$ the probability of observing $v_i$ from state $s_j$ ($v_i \in \mathcal{V}$, $s_j \in \mathcal{S}$)
+	\item an $n \times 1$ initial state array $\arr{\pi} = [\pi_i]$ in which $\pi_i = p(h_1 = s_i)$ is the probability of having $s_i$ as the initial state ($s_i \in \mathcal{S}$)
 \end{itemize}
 Putting these components all together, an \acrshort{acr:hmm} can be defined as a 5-tuple $\mathcal{M} = (\mathcal{S}, \mathcal{V}, \arr{\pi}, \mat{A}, \mat{B})$ with $\mathcal{S}$ as state space, $\mathcal{V}$ as observation space, $\arr{\pi}$ as initial state vector, $\mat{A}$ as transition matrix and $\mat{B}$ as emission matrix.
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[->,>=stealth',auto,node distance=2cm]
+	\tikzstyle{every state}=[fill=white,draw=black,text=black,scale=1,double]	% thick
+	\node[state] (h1) {$h_1$};
+	\node[state] (h2) [right of=h1] {$h_2$};
+	\node[state] (h3) [right of=h2] {$h_3$};
+	\node[state, draw=none] (dots) [right of=h3] {$\symbf{\cdots}$};
+	\node[state] (ht) [right of=dots] {$h_t$};
+	\node[state,fill={rgb:black,1;white,10}] (o1) [below of=h1] {$o_1$};
+	\node[state,fill={rgb:black,1;white,10}] (o2) [below of=h2] {$o_2$};
+	\node[state,fill={rgb:black,1;white,10}] (o3) [below of=h3] {$o_3$};
+	\node[state,fill={rgb:black,1;white,10}] (ot) [below of=ht] {$o_t$};
+	\path
+	(h1)
+	edge node {} (h2)
+	(h2)
+	edge node {} (h3)
+	(h3)
+	edge node {} (dots)
+	(dots)
+	edge node {} (ht)
+	(h1)
+	edge node {} (o1)
+	(h2)
+	edge node {} (o2)
+	(h3)
+	edge node {} (o3)
+	(ht)
+	edge node {} (ot)
+	;
+	\end{tikzpicture}
+	\caption{Graphical representation of an \acrshort{acr:hmm} with hidden states $h_t \in \mathcal{S}$ and observations $o_t \in \mathcal{V}$ for $t = 1:T$}
+	\label{fig:hmm}
+\end{figure}
+
+In practice \acrshortpl{acr:hmm} have a wide range of applications. One example is that of object tracking in which inference algorithms for \acrshortpl{acr:hmm} are used to estimate the (unknown) position of objects by a sequence of observations \cite{caelli2001shape}. Another well-known application example of \acrshortpl{acr:hmm} is that in automatic speech recognition \cite{}. % TODO Elaborate (_little_ bit) and add citations
+
 % Input figure showing graphical representation of an HMM
-% Input subsubsection* about inference problems (see the tree in thesis-plan, but also mention the other two)
+% Input subsubsection* about inference problems (see the three in thesis-plan, but also mention the other two)
+
+\subsubsection*{Inference Problems}
+The most notable inference problems for \acrshortpl{acr:hmm} are the following: %TODO Little introduction to this section?
+
+\begin{description}
+	\item[Evaluation] The \textit{Evaluation} or \textit{Likelihood Problem} is, given an \acrshort{acr:hmm} model $\mathcal{M}$ and an observation sequence $O = (o_1,\ldots,o_T)$ of length $T$, to determine $p(O\vert \mathcal{M})$, which is the likelihood of the observation sequence $O$ being produced by $\mathcal{M}$.
+	\item[Optimal States] The \textit{Optimal State Sequence Problem} or \textit{Most Likely Hidden Path Problem} is, given an \acrshort{acr:hmm} model $\mathcal{M}$ and an observation sequence $O = (o_1,\ldots,o_T)$ of length $T$, to determine $H^\ast = \argmax_H p(H \vert O)$, i.e., finding the best state sequence $H^\ast = (h_1^\ast, \ldots, h_T^\ast)$ of length $T$ for the underlying Markov Chain.
+	\item[Learning] The \textit{Learning Problem} is, given a set $\mathcal{O} = \{O_1, \ldots, O_k\}$ of independently and identically distributed observation sequences each of length $T$, to find an \acrshort{acr:hmm} $\mathcal{M}^\ast = \argmax_\mathcal{M} p(\mathcal{O}\vert \mathcal{M})$, i.e., maximizing the probability of the model having produced the observation sequences.
+\end{description}
+Other closely related inference problems are that of \textit{filtering} (inferring the present: $p(h_t\vert o_{1:t})$), \textit{prediction} (inferring the future: $p(h_t \vert o_{1:s})$ with $t > s$) and \textit{smoothing} (inferring the past: $p(h_t \vert o_{1:u})$ with $t < u$).
 
 \subsection{Markov Decision Processes}
 \label{subsec:mdps}
@@ -163,7 +213,18 @@ Putting these components all together, an \acrshort{acr:hmm} can be defined as a
 % 	(Exogeneous) events
 % Policies
 
-%
+Although Markov Chains and \acrshortpl{acr:hmm} can be used to model the evolution of stochastic processes or systems, they do not allow for stochastic control through the actions of a decision maker or \textit{agent} which alter the state of the system.
+The systems of interest in \acrshort{acr:dtp} however, involve agents that are assigned the task of influencing the behavior of the stochastic system by making sequential decisions to achieve certain goals.
+
+\acrfullpl{acr:mdp} extend the basic Markov Chain model by adding a finite set of actions $A$ available to the agent at each stage or \textit{decision epoch}.
+Upon the agent choosing to perform an action $a \in A$, a state transition occurs in response to the action.
+However, due to the uncertainty in the system, the actual transition that occurs might differ from the transition intended by the chosen action.
+
+% Reward structure
+
+% Formal definition
+
+
 
 \subsection{Partially Observable MDPs}
 \label{subsec:pomdps}
@@ -180,7 +241,7 @@ Apart from the discrete-state Markov Models that were discussed in this section,
 \begin{description}
 	\item[Factored Markov Decision Process (FMDP)] An extension of the MDP-model that allows for compact representation of states, transitions and rewards \cite{Degris2010}.
 	\item[Variable-order Markov Model (VOM)] To be determined 
-	\item[Linear Dynamical System (LDS)] A continuous-state State-Space Model with linear dynamics, Gaussian state-space and the assumption of hidden variables as in \acrshortpl{acr:hmm} \cite{Minka1999, barberBRML2012, Ghahramani2000}.
+	\item[Linear Dynamical System (LDS)] A continuous-state State-Space Model with linear dynamics, Gaussian state space and the assumption of hidden variables as in \acrshortpl{acr:hmm} \cite{Minka1999, barberBRML2012, Ghahramani2000}.
 \end{description}
 
 As the remaining chapters only consider systems and processes that are modeled using discrete-state Markov Models, these variations will not be further discussed in more detail.
