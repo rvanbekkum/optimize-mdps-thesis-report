@@ -5,13 +5,84 @@
 \section{Learning SDM Models from Execution Traces}
 \label{sec:learning-models}
 
-
-%% Baum-Welch
+%% Fitting Markov Chains/MDPs:
+	% Refer back to section 2.2.1:
+	% - likelihood maximization
+	% - Bayesian inference/optimization
+%% Fitting HMMs/POMDPs:
+	% ITERATIVE ADJUSTMENT OF PROBABILITIES:
+	% - Baum-Welch Algorithm
+	% - Gradient-Ascent in Likelihood
+	% STATE MERGING
+	% - Best-first
+	% - Trajectory clustering
+%% Reinforcement Learning: Online Model Learning
 
 \section{Bayesian Optimization}
 \label{sec:bayesian-optimization}
 
+One of the problems that is faced in the field of optimization, is that of maximizing a nonlinear, real valued \textit{objective function} $f: \mathcal{X} \mapsto \mathbb{R}$ on a domain $\mathcal{X} \subset \mathbb{R}^m$ ($m \geq 1$).
+Formally, to find a global maximizer $x^\ast \in \mathcal{X}$ for which:
+\begin{equation}
+	x^\ast = \argmax_{x \in \mathcal{X}} f(x)
+\end{equation}
+However, often the objective function presents itself to be unknown and expensive to evaluate (in terms of required computational resources).
+Although this problem of optimizing expensive functions can be found in many different contexts, it is foremost a problem in sequential decision theory. 
+That is, typically one can only hope to estimate objective functions of \acrshort{acr:sdm} problems in AI planning and reinforcement learning through expensive simulations \cite{Brochu2010, Ghahramani2015}.
 
+\subsection{General Formulation}
+\label{sec:bayesian-optimization-introduction}
+
+\textit{Bayesian optimization} is a powerful method for finding the maximum of a typically unknown, expensive, nonlinear objective function, while aiming to minimize the number of objective function evaluations and avoiding local maxima \cite{Brochu2010}.
+This method first requires one to set a prior $p(f)$ over the objective function $f$, representing the belief about the space of plausible objective functions.
+Then, the algorithm starts off by gathering a small set of initial sample-observation pairs of samples $x \in \mathcal{X}$ and corresponding objective values $y = f(x) + \varepsilon$.
+These pairs are then stored in a set $\mathcal{D}_{1:t} = \{(x_i, y_i) \mid i = 1 \ldots t\}$ (i.e., the \textit{evidence set}) where we let $x_i$ denote the $i$th sample and $y_i = f(x_i) + \varepsilon_i$ the corresponding $i$th observation with noise $\varepsilon_i$.
+
+% Posterior / Surrogate Function
+The algorithm then derives a posterior distribution $p(f \vert \mathcal{D}_{1:t})$ which is, according to Bayes' Theorem, said to be proportional to the likelihood $p(\mathcal{D}_{1:t} \vert f)$ and the prior $p(f)$ for the first $t$ gathered observations, s.t.:
+\begin{equation}
+	p(f \vert \mathcal{D}_{1:t}) \propto p(\mathcal{D}_{1:t} \vert f) \cdot p(f)
+\end{equation}
+This posterior can be viewed as an estimation of the objective function $f$, referred to as a \textit{surrogate function}.
+% It does so by applying Bayes' Theorem, which states that the posterior probability $P(M \vert E)$ of a model $M$ given evidence $E$ is proportional to the likelihood $P(E \vert M)$ of $E$ given $M$
+
+% Acquisition function
+To decide on which $x \in \mathcal{X}$ to sample and gather a new observation $f(x)$ from next, a so-called \textit{acquisition function} $u: \mathcal{X} \mapsto \mathbb{R}$ is used, which assigns a certain utility to evaluating $f$ at some particular $x \in \mathcal{X}$ given the evidence set $\mathcal{D}$ at that point.
+This acquisition function should be defined such that it captures a correct balance between \textit{exploration} (to sample from areas with high uncertainty) and \textit{exploitation} (to sample from areas likely to improve on prior observations). For this reason many different classes of acquisition functions exist, which are discussed in little more detail in \autoref{sec:bayesian-optimization-prior-acquisition}.
+
+% General Formulation Algorithm
+
+\begin{algorithm}
+	\caption{Bayesian Optimization (General Formulation) \label{alg:bayesian-optimization}}
+	\begin{algorithmic}[1]
+		\Require{Domain $\mathcal{X} \subset \mathbb{R}^m (m \geq 1)$, prior $p(f)$ and acquisition function $u: \mathcal{X} \mapsto \mathbb{R}$}
+		\Let{$\mathcal{D}_0$}{$\emptyset$} \Comment{$\mathcal{D}$ is the evidence set}
+		\For{$t \gets 1, 2, \ldots$}
+			\Let{$x_t$}{$\argmax_{x \in \mathcal{X}} u(x \vert \mathcal{D}_{1:t-1})$} \Comment{Acquisition based on posterior $p(f \vert \mathcal{D}_{1:t})$}%\Comment{Retrieve the next sample}
+			\Let{$y_t$}{$f(x_t) + \varepsilon_t$}  %\Comment{Record a new observation of $f$}
+			\Let{$\mathcal{D}_{1:t}$}{$\mathcal{D}_{1:t-1} \cup \{(x_t, y_t)\}$} \Comment{Augment $\mathcal{D}$ with the new evidence}
+			\State Update the prior $p(f)$ and posterior $p(f \vert \mathcal{D}_{1:t})$
+			\State \textit{Break} when satisfactory \Comment{Stop condition defined by implementation}
+		\EndFor
+		\State \Return{$\argmax_{(x_i, y_i) \in \mathcal{D}} y_i$}
+	\end{algorithmic}
+\end{algorithm}
+
+The general formulation of the Bayesian Optimization is presented in \autoref{alg:bayesian-optimization}.
+For an implementation of the algorithm still three components need to be defined, which are the domain $\mathcal{X}$ of $f$, the prior over $f$, and last of all the acquisition function $u$.
+
+\subsection{Choice of Prior and Acquisition Function}
+\label{sec:bayesian-optimization-prior-acquisition}
+\blindtext
+% Examples acquisition function: PMAX, IEMAX, MPI, MEI, (GP-)UCB, GP-Hedge
+
+\subsection{Applications of Bayesian Optimization}
+\label{sec:bayesian-optimization-applications}
+\blindtext
+
+\subsection{Extensions on Bayesian Optimization}
+\label{sec:bayesian-optimization-extensions}
+\blindtext
 
 %
 %\section{Overview}

@@ -1,3 +1,5 @@
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \usepackage{amsmath}
 \usepackage{blindtext}	% TODO Remove
 \usepackage{changes}
@@ -25,7 +27,11 @@
 \def\subsubsectionautorefname{Section}
 \def\subsectionautorefname{Section}
 \def\sectionautorefname{Section}
+\def\algorithmautorefname{Algorithm}
 
+%% Pseudocode settings %%
+\newcommand*\Let[2]{\State #1 $\gets$ #2}
+\algrenewcommand{\algorithmiccomment}[1]{\hfill$\rhd$ #1} % Fix for comments in pseudocode
 
 %% Title and Cover Pages %%
 

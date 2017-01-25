@@ -46,7 +46,7 @@ Formally, time-series can be defined as a series $x_{a:b}$ of data-points, with 
 By means of these time-series, probabilistic models can be devised for real-world systems or processes, by introducing the notion of \textit{states} as a description of the system at a particular point in time or \textit{stage}.
 
 On the basis of the class of Markov Models lies the simplifying assumption that each state is only dependent on a limited number of previous states.
-Under this assumption a \textit{Markov Chain} can be defined as a model of a series $q_{1:T}$ of transitions between states $q_i$ drawn from a state space $\mathcal{S} = \{s_1,\ldots,s_n\}$. The initial state $q_1$ of a Markov Chain typically is either fixed or drawn from $\mathcal{S}$ using a probability distribution over initial states.
+Under this assumption a \textit{Markov Chain} (or \textit{Markov Process}) can be defined as a model of a series $q_{1:T}$ of transitions between states $q_i$ drawn from a state space $\mathcal{S} = \{s_1,\ldots,s_n\}$. The initial state $q_1$ of a Markov Chain typically is either fixed or drawn from $\mathcal{S}$ using a probability distribution over initial states.
 For the states or variables of a Markov Chain, the earlier mentioned assumption implies the following conditional independence to hold:
 \begin{equation}
 	p(q_t \vert q_1,\ldots,q_{t-1}) = p(q_t \vert q_{t - L}, \ldots, q_{t-1})
@@ -143,7 +143,7 @@ parametrized by a vector $\arr{\alpha}$ with $\alpha_j > 0$ \cite{pasanisi2012es
 The Markov Chain model discussed in \autoref{subsec:markov-chains} requires the modeled system or stochastic process to be fully observable, meaning that each of its states correspond directly to an observation.
 However, it is not unusual to encounter real-world systems in which the states are assumed to be unobservable, though are correlated with observable events produced by the system.
 These systems can be modeled by a \acrfull{acr:hmm} in which the states, typically referred to as \textit{hidden} or \textit{latent} variables $h_{1:T}$, are unknown.
-Additionally this model consists of observations, typically referred to as \textit{observed} or \textit{visible} variables $v_{1:T}$, which are dependent on the hidden variables through an emission $p(o_t\vert h_t)$ graphically depicted in \autoref{fig:hmm}. All by all an \acrshort{acr:hmm}
+Additionally this model consists of observations, typically referred to as \textit{observed} or \textit{visible} variables $v_{1:T}$, which are dependent on the hidden variables through an emission $p(o_t\vert h_t)$ graphically depicted in \autoref{fig:hmm}. All by all a stationary \acrshort{acr:hmm}
 consists of the following parts:
 
 \begin{itemize}
@@ -153,7 +153,7 @@ consists of the following parts:
 	\item an $m \times n$ emission matrix $\mat{B} = [b_{ij}]$ defining the models' \textit{emission distribution} in which $b_{ij} = p(o_t = v_i \vert h_t = s_j)$ the probability of observing $v_i$ from state $s_j$ ($v_i \in \mathcal{V}$, $s_j \in \mathcal{S}$)
 	\item an $n \times 1$ initial state array $\arr{\pi} = [\pi_i]$ in which $\pi_i = p(h_1 = s_i)$ is the probability of having $s_i$ as the initial state ($s_i \in \mathcal{S}$)
 \end{itemize}
-Putting these components all together, an \acrshort{acr:hmm} can be defined as a 5-tuple $\mathcal{M} = (\mathcal{S}, \mathcal{V}, \arr{\pi}, \mat{A}, \mat{B})$ with $\mathcal{S}$ as state space, $\mathcal{V}$ as observation space, $\arr{\pi}$ as initial state vector, $\mat{A}$ as transition matrix and $\mat{B}$ as emission matrix.
+Putting all of these components together, a stationary \acrshort{acr:hmm} can be defined as a 5-tuple $\mathcal{M} = (\mathcal{S}, \mathcal{V}, \arr{\pi}, \mat{A}, \mat{B})$ with $\mathcal{S}$ as state space, $\mathcal{V}$ as observation space, $\arr{\pi}$ as initial state vector, $\mat{A}$ as transition matrix and $\mat{B}$ as emission matrix.
 
 \begin{figure}
 	\centering
@@ -216,15 +216,25 @@ Other closely related inference problems are that of \textit{filtering} (inferri
 Although Markov Chains and \acrshortpl{acr:hmm} can be used to model the evolution of stochastic processes or systems, they do not allow for stochastic control through the actions of a decision maker or \textit{agent} which alter the state of the system.
 The systems of interest in \acrshort{acr:dtp} however, involve agents that are assigned the task of influencing the behavior of the stochastic system by making sequential decisions to achieve certain goals.
 
-\acrfullpl{acr:mdp} extend the basic Markov Chain model by adding a finite set of actions $A$ available to the agent at each stage or \textit{decision epoch}.
+% Actions
+\acrfullpl{acr:mdp} extend on (stationary) Markov Chains by adding a finite set of actions $A$ available to the agent at each stage or \textit{decision epoch}.
 Upon the agent choosing to perform an action $a \in A$, a state transition occurs in response to the action.
 However, due to the uncertainty in the system, the actual transition that occurs might differ from the transition intended by the chosen action.
+This uncertainty is captured by defining a probabilistic transition function $\delta: \mathcal{S} \times A \times \mathcal{S} \mapsto [0,1]$ which maps the combination of a current state and action to a probability of ending up in a certain next state.
 
 % Reward structure
+As the agent of an \acrshort{acr:mdp} aims to fulfill certain goals through the selection of actions, it requires some means of assessing which action is the best to pick.
+The value measure used in \acrshortpl{acr:mdp} is defined by a mapping $\mathcal{R}: \mathcal{S} \times A \mapsto \mathbb{R}$ from states and actions to real-valued \textit{rewards} (in case of added value) and/or \textit{costs} (in case of lost value).
+Due to the uncertainty in the modeled system, typically the agent uses the \acrshort{acr:mdp}'s transition distribution (defined by transition function $\delta$) to compute expected values, and accordingly selects actions that maximizes this quantity.
 
 % Formal definition
+Putting all of these components together, an \acrshort{acr:mdp} can be defined as a 5-tuple, $\mathcal{M} = (\mathcal{S}, \arr{\pi}, A, \delta, \mathcal{R})$ with $\mathcal{S}$ as state space, $\arr{\pi}$ as initial state vector, $A$ as finite set of possible actions, $\delta$ as probabilistic transition function and $\mathcal{R}$ as reward function.
 
-
+% Policies
+In the context of \acrshort{acr:dtp}, \acrshortpl{acr:mdp} are used to find an optimal course of action, often referred to as a plan or \textit{policy}.
+For an \acrshort{acr:mdp} the optimal policy typically means the policy that when applied by an agent, maximizes the expected value.
+Although, one can also choose to express goals in alternative ways that does not require the specification of a reward function.
+An example of this can be seen in \cite{bhatia2010sampling, lacerda2015optimal}, which replaces the reward function of the classic MDP-framework by a (co-safe) Linear Temporal Logic (LTL) formula to be satisfied.
 
 \subsection{Partially Observable MDPs}
 \label{subsec:pomdps}
@@ -239,10 +249,12 @@ However, due to the uncertainty in the system, the actual transition that occurs
 Apart from the discrete-state Markov Models that were discussed in this section, there exist numerous other types of Markov Models and closely related State-Space Models (SMMs), including among others the following:%, including continuous-state Markov Models (e.g., Linear Dynamical Systems with a Gaussian state-space \cite{Minka1999,barberBRML2012}) and other specialized variations. 
 
 \begin{description}
-	\item[Factored Markov Decision Process (FMDP)] An extension of the MDP-model that allows for compact representation of states, transitions and rewards \cite{Degris2010}.
+	\item[Factored Markov Decision Process (FMDP)] An extension of the MDP model that allows for compact representation of states, transitions and rewards \cite{Degris2010}.
+	\item[Multi-Agent \acrshort{acr:mdp} (MMDP)] An \acrshort{acr:mdp} model for systems that involve multiple decision makers.
 	\item[Variable-order Markov Model (VOM)] To be determined 
 	\item[Linear Dynamical System (LDS)] A continuous-state State-Space Model with linear dynamics, Gaussian state space and the assumption of hidden variables as in \acrshortpl{acr:hmm} \cite{Minka1999, barberBRML2012, Ghahramani2000}.
 \end{description}
+% TODO Extend each with sentence to explain the need for these models
 
 As the remaining chapters only consider systems and processes that are modeled using discrete-state Markov Models, these variations will not be further discussed in more detail.
 
