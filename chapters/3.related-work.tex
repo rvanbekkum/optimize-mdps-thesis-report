@@ -5,6 +5,10 @@
 \section{Learning SDM Models from Execution Traces}
 \label{sec:learning-models}
 
+In \acrshort{acr:dtp} it is common to make use of a (compact) probabilistic model of the environment.
+However, devising an optimal model for a specific system or process can be a daunting and error-prone task, especially with many possibilities while wanting a compact model and computation cost efficient.....
+
+% TODO;s
 %% Fitting Markov Chains/MDPs:
 	% Refer back to section 2.2.1:
 	% - likelihood maximization
@@ -17,6 +21,8 @@
 	% - Best-first
 	% - Trajectory clustering
 %% Reinforcement Learning: Online Model Learning
+
+%% However, most of the previous works assume the state-space of the probabilistic model to be known.
 
 \section{Bayesian Optimization}
 \label{sec:bayesian-optimization}
@@ -73,16 +79,68 @@ For an implementation of the algorithm still three components need to be defined
 
 \subsection{Choice of Prior and Acquisition Function}
 \label{sec:bayesian-optimization-prior-acquisition}
-\blindtext
-% Examples acquisition function: PMAX, IEMAX, MPI, MEI, (GP-)UCB, GP-Hedge
+Introduction is placed here % TODO
 
-\subsection{Applications of Bayesian Optimization}
+\subsubsection*{Prior Distributions}
+\label{sec:bayesian-optimization-prior}
+Information about priors here, like: % TODO
+\begin{itemize}
+	\item \acrfull{acr:gp}
+	\item Wiener Process
+\end{itemize}
+
+
+\subsubsection*{Acquisition Functions}
+\label{sec:bayesian-optimization-acquisition}
+% Examples acquisition function: PMAX, IEMAX, MPI, MEI, (GP-)UCB, GP-Hedge
+% TODO Introduction
+Let us define $f(x^+)$ as the `best' observation, corresponding to the sample $x^+ = \argmax_{x_i \in x_{1:t}} y_i$ when considering the first $t$ samples.
+
+% TODO "Best-known acquisition functions:"
+\begin{description}
+	\item[\acrfull{acr:mpi}] This acquisition function selects the next sample to maximize the probability of improvement, which is the sample $x \in \mathcal{X}$ so that:
+	$$P(f(x) \geq f(x^+) + \xi)$$
+	where $\xi \geq 0$ is a trade-off parameter.
+	\begin{description}
+		\item[Advantages] description
+		\item[Disadvantages] description
+	\end{description}
+	\item[\acrfull{acr:mei}] description
+	\begin{description}
+		\item[Advantages] description
+		\item[Disadvantages] description
+	\end{description}
+	\item[\acrfull{acr:gp-ucb}] description
+	\begin{description}
+		\item[Advantages] description
+		\item[Disadvantages] description
+	\end{description}
+\end{description}
+
+Others possible acquisition functions that are used in Bayesian optimization are PMAX, IEMAX and GP-HEDGE. % TODO
+
+\subsection{Applications of Bayesian Optimization to Planning Problems}
 \label{sec:bayesian-optimization-applications}
-\blindtext
+
+% TODO Write out completely, this is just a short overview
+Most interesting applications that involve or are closely related to \acrshort{acr:dtp}:
+\begin{itemize}
+	\item In \cite{MartinezCantin2009}, Bayesian optimization is applied for a mobile robot that adaptively plans a path while maximizing the information it obtains from observations about its own location and the location of navigation landmarks in the environment.
+	The objective/cost function $C$ is parametrized by a policy-vector $\pi$ and approximations for selected samples are made by different functions over the belief-states of the \acrshort{acr:pomdp}.
+	Typically, estimating the belief-state is an expensive problem, typically carried out through SLAM algorithms in robotics.
+	Therefore, to minimize computational cost, a Bayesian optimization algorithm is applied with the choice of a \acrshort{acr:gp}-prior over $C$ and where new samples are acquired using an \acrshort{acr:mei} acquisition function.
+	\item In \cite{Moldovan2012}, ... (SAFE-MDP)
+	\item 
+\end{itemize}
 
 \subsection{Extensions on Bayesian Optimization}
 \label{sec:bayesian-optimization-extensions}
 \blindtext
+
+\section{Bayesian Reinforcement Learning}
+\label{sec:bayesian-reinforcement-learning}
+
+% 
 
 %
 %\section{Overview}

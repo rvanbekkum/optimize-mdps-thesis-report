@@ -1,0 +1,79 @@
+\chapter{Methodology and Setup}
+\label{ch:setup}
+
+% 
+
+\begin{itemize}
+	\item Introduction
+	\item Explain full algorithm idea?
+\end{itemize}
+
+\section{Application}
+\label{sec:application}
+
+% 
+
+\begin{itemize}
+	\item Mobile robot navigation
+	\item Why this application?
+	\item Generalization possible to other applications?
+\end{itemize}
+
+\section{Exploration Phase}
+\label{sec:exploration-phase}
+
+% 
+
+\begin{itemize}
+	\item Obtain a dataset of observations, for our application this concerns data about attainable positions of the robot that will be controlled
+	\item Under the assumption such a dataset is not yet available to us, this dataset is retrieved in an exploration phase
+	\item In this exploration phase, the robot should explore the environment and periodically record information about its current position while aiming to visit all the locations of importance
+	\item This exploration phase is (preferably) only carried out once
+	\item To obtain a dataset for our tests the exploration phase is carried out in a robot simulator
+	\item The overall algorithm is tested for multiple maps/(office-like) environments, which might differ in their dimensions, number of obstacles or `openness'.
+	\item To take into account dynamically changing environments to some extent, there are also doors that will be open or closed as time passes.
+	\item The simulations are carried out in the Simbad 3D Robot Simulator, in which the exploration is carried out by an agent that randomly navigates an environment.
+\end{itemize}
+
+\section{State Space Aggregation}
+\label{sec:state-space-aggregation}
+
+% 
+
+\begin{itemize}
+	\item Using exploration data
+	\item Unsupervised machine learning to obtain states for an MDP model (various possible methods possible: e.g., kmeans, gmm)
+	\item Unknown parameter $\delta$ of the unsupervised machine learning algorithm to be optimized
+\end{itemize}
+
+\section{Model and Policy Acquisition}
+\label{sec:model-policy-acquisition}
+
+% 
+
+\begin{itemize}
+	\item State space obtained as described in previous section
+	\item Transition function obtained based on exploration data and state space through the likelihood maximization approach.
+	\item For our application the actions are fixed and can either be \textsc{NORTH}, \textsc{EAST}, \textsc{SOUTH}, \textsc{WEST} which makes the robot navigate in the corresponding direction.
+	\item Rewards
+	\item Timesteps
+	\item Policy (various possible `solvers': value iteration, policy iteration)
+\end{itemize}
+
+\section{Bayesian Model Optimization}
+\label{sec:bayesian-model-optimization}
+
+% 
+
+\begin{itemize}
+	\item Optimization of the unknown $\delta$ parameter of the machine learning algorithm for state space aggregation
+	\item Evaluation by simulations of the found policy for the given $\delta$ parameter
+	\item ...
+\end{itemize}
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=\textwidth]{learning-cycle-complete}
+	\caption{Learning Cycle.}
+	\label{fig:learning-cycle-complete}
+\end{figure}

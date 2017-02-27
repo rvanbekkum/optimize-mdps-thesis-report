@@ -3,8 +3,10 @@
 % Introduction on what is Decision-Theoretic Planning
 Automated \acrfull{acr:sdm} comprises the central problem of planning under uncertainty. 
 \acrfull{acr:dtp} is concerned with the design of plans or \textit{policies} for settings in which uncertainty exists about the effects of actions, where the decision maker or \textit{agent} has incomplete information about the environment and its initial conditions, and where trade-offs need to be made between potentially conflicting objectives to determine an optimal course of action.
-% <To be determined>
-% Chapter organized as follows: section x....
+This chapter gives an introduction to the type of problems faced in \acrshort{acr:dtp} and explains how specialized probabilistic models can be used to solve these problems efficiently.
+First of all, in \autoref{sec:problem-formulation} the goal of \acrshort{acr:dtp} and how the problems that are considered are generally approached is discussed.
+Subsequently, \autoref{sec:system-representation} gives an overview of the probabilistic models that are used to make the structure of problems in \acrshort{acr:dtp} explicit.
+Finally, in \autoref{sec:planning} some of the most common algorithmic planning techniques are discussed, which either learn a plan directly or through learning and solving a model.
 
 \section{General Problem Formulation}
 \label{sec:problem-formulation}
@@ -18,10 +20,10 @@ In addition, the agent(s) might be uncertain about the system's current state, i
 Typically the problems under consideration involve certain objectives to be achieved (e.g., tasks to be fulfilled) or properties to be satisfied (e.g., avoiding certain system states). 
 Therefore the agent should decide on a optimal plan or \textit{policy} which makes it most likely for the system to reach its targets, while minimizing the risk of producing undesirable states and the accompanied costs of the policy.
 To find such a policy for \acrlong{acr:sdm} problems, a typical approach is to first setup a probabilistic model of the system and then apply a \acrshort{acr:dtp} algorithm on this model.
-This probabilistic model comprises a system representation which defines the state space in terms of a set of multi-valued features, the set of actions for the agent to select together with the associated uncertainty defined by transition-probabilities, and a goal specification or performance metric regularly expressed by means of a reward structure.
+This probabilistic model comprises a system representation which defines the state space in terms of a set of multi-valued features, the set of actions the agent may select together with the associated uncertainty defined by transition-probabilities, and a goal specification or performance metric typically expressed by means of a reward structure.
 
 Overall \acrshort{acr:dtp} aims to devise planning algorithms for planning under uncertainty, a problem that is addressed in numerous different fields of research such as AI planning and control theory.
-In particular difficulties arise when planning techniques are applied to determine courses of action for real-world settings, such as % TODO
+In particular difficulties arise when planning techniques are applied to determine courses of action for real-world settings, such as motion or path planning in robotics which both involve the possibility of action failures and disturbances caused by exogenous events.
 
 \section{System Representations: Markov Models}
 \label{sec:system-representation}
@@ -30,12 +32,12 @@ In particular difficulties arise when planning techniques are applied to determi
 As the class of problems considered in \acrshort{acr:dtp} oft to present considerable structure, there exist various proposed solutions for planning under uncertainty that apply model-based approaches.
 This type of decision-theoretic planner uses a stochastic model of the environment in which the agent operates, which compasses the uncertainty that is associated with the agent's actions, observations and the exogenous events that might occur.
 Typically the uncertainty is modeled by establishing a \textit{state space} for the system accompanied by a set of possible \textit{transitions} between the states that might be induced with a certain probability by an agent executing \textit{actions}.
-The most common types of stochastic models that are used in \acrshort{acr:dtp} are called \textit{Markov Models} (sometimes also referred to as \textit{Markovian Models}), which has been motivated by their success in other fields such as speech recognition \cite{baker1992large, gales2008application, rabiner1989tutorial} and reinforcement learning techniques \cite{Brafman2002}. %TODO Add more citations for RL
+The most common types of stochastic models that are used in \acrshort{acr:dtp} are called \textit{Markov Models} (sometimes also referred to as \textit{Markovian Models}), which has been motivated by their success in other fields such as speech recognition \cite{baker1992large, gales2008application, rabiner1989tutorial} and reinforcement learning techniques \cite{Brafman2002}.
 A Markov Model is a stochastic model in which the future states only depend on a limited number of prior observations. In fact, mostly processes or systems are modeled by Markov Models that satisfy the \textit{Markov Property}, which means that the state transitions are independent of any previous states or agent actions.
 
 In the remainder of this section the most common types of discrete-state Markov Models are discussed one by one, starting from the fundamental models known as \textit{Markov Chains} in \autoref{subsec:markov-chains}, followed by their extension of \textit{\acrfullpl{acr:hmm}} in \autoref{subsec:hidden-markov-models}.
 This again is followed by a discussion of the discrete-state Markov Models most relevant in \acrshort{acr:dtp}, being \textit{\acrfullpl{acr:mdp}} in \autoref{subsec:mdps} and their extension of \textit{\acrfullpl{acr:pomdp}} in \autoref{subsec:pomdps}.
-%Finally in \autoref{subsec:other-markov-models} other related state space models are briefly discussed.
+Finally in \autoref{subsec:other-markov-models} other related state space models are briefly discussed.
 
 \subsection{Markov Chains}
 \label{subsec:markov-chains}
@@ -54,7 +56,7 @@ For the states or variables of a Markov Chain, the earlier mentioned assumption 
 where $L$ is the so-called \textit{order} of the Markov Chain.
 % See summary barberBRML2012
 
-\begin{figure}[ht!]
+\begin{figure}[t!]
 	\captionsetup[subfigure]{justification=centering}
 	\centering
 	\subcaptionbox{First-order Markov Chain.\label{fig:markov-chains-first-order}}{\begin{tikzpicture}[->,>=stealth',auto,node distance=2cm]
@@ -97,7 +99,7 @@ where $L$ is the so-called \textit{order} of the Markov Chain.
 	\label{fig:markov-chains}
 \end{figure}
 
-As depicted in \autoref{fig:markov-chains}, Markov Chains of different order can be defined. \autoref{fig:markov-chains-first-order} exemplifying a first-order Markov Chain, in which each state only depends on the previous state, and \autoref{fig:markov-chains-second-order} showing a second-order Markov Chain, in which each state depends on the two prior states of the Markov Chain.
+As depicted in \autoref{fig:markov-chains}, Markov Chains of different order can be defined. \autoref{fig:markov-chains-first-order} exemplifying a first-order Markov Chain in which each state only depends on the previous state, and \autoref{fig:markov-chains-second-order} showing a second-order Markov Chain in which each state depends on the two prior states of the Markov Chain.
 In the special case where the transition distribution is independent of the stage of the system, but solely on the prior state(s), one speaks of a \textit{stationary} or \textit{homogeneous} Markov Chain.
 
 Though, mostly first-order Markov Chains as depicted in \autoref{fig:markov-chains-first-order}, which are said to satisfy the \textit{Markov Property}, are applied widely for modeling stochastic processes, such as physical phenomena and economic time-series \cite{bacciu2015probabilistic}.
@@ -155,7 +157,7 @@ consists of the following parts:
 \end{itemize}
 Putting all of these components together, a stationary \acrshort{acr:hmm} can be defined as a 5-tuple $\mathcal{M} = (\mathcal{S}, \mathcal{V}, \arr{\pi}, \mat{A}, \mat{B})$ with $\mathcal{S}$ as state space, $\mathcal{V}$ as observation space, $\arr{\pi}$ as initial state vector, $\mat{A}$ as transition matrix and $\mat{B}$ as emission matrix.
 
-\begin{figure}
+\begin{figure}[t!]
 	\centering
 	\begin{tikzpicture}[->,>=stealth',auto,node distance=2cm]
 	\tikzstyle{every state}=[fill=white,draw=black,text=black,scale=1,double]	% thick
@@ -224,11 +226,11 @@ This uncertainty is captured by defining a probabilistic transition function $\d
 
 % Reward structure
 As the agent of an \acrshort{acr:mdp} aims to fulfill certain goals through the selection of actions, it requires some means of assessing which action is the best to pick.
-The value measure used in \acrshortpl{acr:mdp} is defined by a mapping $\mathcal{R}: \mathcal{S} \times A \mapsto \mathbb{R}$ from states and actions to real-valued \textit{rewards} (in case of added value) and/or \textit{costs} (in case of lost value).
-Due to the uncertainty in the modeled system, typically the agent uses the \acrshort{acr:mdp}'s transition distribution (defined by transition function $\delta$) to compute expected values, and accordingly selects actions that maximizes this quantity.
+The value measure used in \acrshortpl{acr:mdp} is defined by a mapping $R: \mathcal{S} \times A \times \mathcal{S} \mapsto \mathbb{R}$ from states and actions to real-valued \textit{rewards} (in case of added value) and/or \textit{costs} (in case of lost value).
+Due to the uncertainty in the modeled system, typically the agent uses the \acrshort{acr:mdp}'s transition distribution (defined by transition function $\delta$) to compute expected values, and accordingly selects actions that maximize this quantity.
 
 % Formal definition
-Putting all of these components together, an \acrshort{acr:mdp} can be defined as a 5-tuple, $\mathcal{M} = (\mathcal{S}, \arr{\pi}, A, \delta, \mathcal{R})$ with $\mathcal{S}$ as state space, $\arr{\pi}$ as initial state vector, $A$ as finite set of possible actions, $\delta$ as probabilistic transition function and $\mathcal{R}$ as reward function.
+Putting all of these components together, an \acrshort{acr:mdp} can be defined as a 5-tuple, $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$ with $\mathcal{S}$ as state space, $s_0 \in \mathcal{S}$ as the initial state, $A$ as finite set of possible actions, $\delta$ as probabilistic transition function and $R$ as reward function.
 
 % Policies
 In the context of \acrshort{acr:dtp}, \acrshortpl{acr:mdp} are used to find an optimal course of action, often referred to as a plan or \textit{policy}.
@@ -249,8 +251,8 @@ An example of this can be seen in \cite{bhatia2010sampling, lacerda2015optimal},
 Apart from the discrete-state Markov Models that were discussed in this section, there exist numerous other types of Markov Models and closely related State-Space Models (SMMs), including among others the following:%, including continuous-state Markov Models (e.g., Linear Dynamical Systems with a Gaussian state-space \cite{Minka1999,barberBRML2012}) and other specialized variations. 
 
 \begin{description}
-	\item[Factored Markov Decision Process (FMDP)] An extension of the MDP model that allows for compact representation of states, transitions and rewards \cite{Degris2010}.
-	\item[Multi-Agent \acrshort{acr:mdp} (MMDP)] An \acrshort{acr:mdp} model for systems that involve multiple decision makers.
+	\item[Factored Markov Decision Process (FMDP)] An extension of the MDP model that allows for compact representation of states, transitions and rewards \cite{Degris2010}. In many real-life domains especially the state-space grows exponentially with the number of variables. Therefore FMDPs can be used to exponentially reduce the representation by means of a dynamic Bayesian network. The main drawback, however, is that finding the best policy becomes an NP-hard problem.
+	\item[Multi-Agent \acrshort{acr:mdp} (MMDP)] An \acrshort{acr:mdp} model for systems that involve multiple decision makers. In this model each agent chooses an individual action with the goal of optimizing a joint reward. Other variations involving multiple agents are Decentralized \acrshortpl{acr:mdp} (Dec-MDPs) and \acrshortpl{acr:pomdp} (Dec-POMDPs), which differ from MMDPs in that the agents can only approximate the global state of the process by their own (local) observations \cite{Melo20111757}.
 	\item[Variable-order Markov Model (VOM)] To be determined 
 	\item[Linear Dynamical System (LDS)] A continuous-state State-Space Model with linear dynamics, Gaussian state space and the assumption of hidden variables as in \acrshortpl{acr:hmm} \cite{Minka1999, barberBRML2012, Ghahramani2000}.
 \end{description}
@@ -261,25 +263,186 @@ As the remaining chapters only consider systems and processes that are modeled u
 \section{Learning Optimal Policies}
 \label{sec:planning}
 
+In \acrshort{acr:sdm} problems typically the aim is to determine a policy that maximizes the total expected value obtained.
+In algorithmic planning techniques a probabilistic model of the environment, which includes estimates of the transition probabilities and rewards, is used to obtain an optimal policy by exploring its state-space towards a goal.
+On the other hand, in reinforcement learning the optimal policy is learned while interacting with the environment and it is applied when one does not know the transition probabilities and rewards for its states upfront.
+Both techniques have in common that they iteratively update estimations of a value function to derive a policy.
+The main difference though is that in planning this progress is carried out based on simulated experience from a model, while in learning techniques this is based on real experience from executing agents in an environment \cite{sutton1998reinforcement}.
+So, even when considering the differences, various solutions can be exchanged between planning and reinforcement learning techniques.
+In this section the various approaches for finding optimal policies are discussed, where in \autoref{sec:planning} ...
+
 % Sutton and Barto (1998/2012) describe two approaches for rl solutions when the transition and reward functions are not known	(Learning the Structure of Factored Markov Decision Processes inReinforcement Learning Problems)
 % See chapter 8.2, show an adapted version of the figure and explain advantages and disadvantages
-
-\subsection{Model-Free Planning Techniques}		% Also referred to as Direct or value-based approaches
-\label{subsec:model-free-planning}
-
-% 
+% Explain the difference between planning and learning
 
 \subsection{Model-Based Planning Techniques}	% Also referred to as Indirect approaches
 \label{subsec:model-based-planning}
 
-\begin{figure}[ht!]
+% TODO Introduction + generic routine -> reference figure
+% Dynamic programming
+
+\begin{figure}[t!]
 	\centering
 	\includegraphics[width=\textwidth]{mdp-planning-diagram}
 	\caption{Block diagram of the generic routine employed in model-based MDP planning techniques.}
 	\label{fig:model-based-routine}
 \end{figure}
+
+\subsubsection*{Value Iteration}
+\label{sec:value-iteration}
+
+The most well-known algorithm for obtaining optimal policies from \acrshortpl{acr:mdp} is \textit{\acrfull{acr:vi}}, which is a synchronous dynamic programming solution which iteratively updates a value function $V: \mathcal{S} \mapsto \mathbb{R}$ until convergence given an MDP model $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$.
+The updates are performed through so-called \textit{Bellman backups} based on the following Bellman equation:
+\begin{align}
+	V^*(s) &= max_{a \in A} \left[\sum_{s' \in \mathcal{S}} P(s' \vert s, a) \cdot \left[R(s, a, s') + \gamma \cdot V^*_{t}(s')\right]\right]	&\forall s \in \mathcal{S}
+\end{align}
+where $\gamma \in (0,1)$ is a discount factor which expresses the magnitude of preference of short-term solutions over long-term solutions. That is, the smaller the factor $\gamma$, the more important it is that goals are reached in as few steps as possible.
+
+In \autoref{alg:vi}, it is shown how the \acrshort{acr:vi} algorithm can be used to obtain optimal policies for an MDP (based on the formulation in \cite{poole2010artificial}).
+Intuitively, \acrshort{acr:vi} can be viewed as estimating the values starting from the goal-rewards and working backwards.
+The initial values of the value function, stored in $V_0$, can be arbitrarily initialized, but to achieve faster convergence it is customary to do the initialization based on a rough estimation of $V^*$.
+In every iteration, the estimates of the value function are updated by the backup operations based on the value in previous operations.
+After a finite number of iterations the algorithm will converge (as is shown in \cite{puterman2014markov}) and after that point $V(s)$ gives us the maximum to be expected sum of rewards starting from a state $s \in \mathcal{S}$.
+As can be seen in \autoref{alg:vi}, convergence is reached as soon as the change in value gets below a given threshold $\xi > 0$.
+After such convergence has been reached, the policy can be defined by selecting the action $a \in A$ for each state $s \in \mathcal{S}$ that is most likely to maximize the collected rewards based on the value of $V_t(s)$.
+All by all, the algorithm works well when the state space is relatively small, but for large state spaces more storage is required and it may take longer to reach convergence.
+
+Note that an alternative formulation of the \acrshort{acr:vi} algorithm can be given that makes use of a $Q$-table instead of a value-function $V$.
+In this formulation the entries $Q(s, a)$ are updated in each iteration for each state-action pair.
+The optimal policy can then be obtained directly by selecting the action with the maximum value in the $Q$-table for each action, though it requires more storage compared to a value function.
+
+\begin{algorithm}
+	\caption{Value iteration}
+	\label{alg:vi}
+	\begin{algorithmic}[1]
+		\Require{MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$, discount factor $\gamma \in (0, 1)$, threshold $\xi > 0$}
+		\Ensure{Optimal policy $\arr{\pi}^*: \mathcal{S} \mapsto A$}
+		\State{Initialize $V_t: \mathcal{S} \mapsto \mathbb{R}$ arbitrarily for $t = 0$}
+		\State $t \gets 0$
+		\Repeat
+		\State $t \gets t + 1$
+		\ForAll{$s \in \mathcal{S}$}
+		\State{$V_t(s) \gets \max_{a \in A} \left[\sum_{s' \in \mathcal{S}} \delta(s, a, s') \cdot \left[R(s, a, s') + \gamma \cdot V_{t-1}(s')\right]\right]$}
+		\EndFor
+		\Until{$\forall s \in \mathcal{S}: \lvert V_t(s) - V_{t-1}(s) \rvert \leq \xi$}
+		\ForAll{$s \in \mathcal{S}$}
+		\State $\arr{\pi}^*(s) \gets \text{arg max}_{a \in A} \left[\sum_{s' \in \mathcal{S}} \delta(s, a, s') \cdot \left[R(s, a, s') + \gamma \cdot V_{t}(s')\right]\right]$
+		\EndFor
+		\State\Return $\arr{\pi}^*$
+	\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Asynchronous Value Iteration}
+\label{sec:gs-value-iteration}
+
+An adaptation of the traditional \acrshort{acr:vi} algorithm is \textit{asynchronous \acrshort{acr:vi}}, which is an asynchronous dynamic programming solution.
+Almost all of the steps in asynchronous \acrshort{acr:vi} are the same except that rather than updating the value function $V: \mathcal{S} \mapsto \mathbb{R}$ for each state in each iteration, the function is updated only for a single state in each iteration in no particular order (or even randomized).
+In the case of a fixed ordering, this algorithm is usually referred to as \textit{Gauss-Seidel \acrshort{acr:vi}}.
+Compared to the traditional \acrshort{acr:vi} algorithm, the asynchronous adaptation requires less space and converges faster, especially when updates occur more often for most relevant states and the update ordering is adjusted carefully.
+
+\textit{Real-Time Dynamic Programming (RTDP)} \cite{barto1995learning} is a family of asynchronous \acrshort{acr:vi} algorithms which aim to find policies by performing updates and concurrently controlling the \acrshort{acr:mdp} (based on the policy corresponding to the latest estimate of the value function).
+Opposed to traditional \acrshort{acr:vi}, where solving \acrshortpl{acr:mdp} with large state spaces is infeasible, RTDP algorithms often converge without examining all states.
+
+% TODO POMDP Adaptation of Value Iteration See AI: A Modern Approach + Probabilistic Robotics
+
+\subsubsection{Policy Iteration}
+\label{sec:policy-iteration}
+
+Another algorithm that is widely applied for obtaining policies from \acrshortpl{acr:mdp} is known as \textit{\acrfull{acr:pi}}. As shown in \autoref{alg:pi} \acrshort{acr:pi} starts off with an initial policy vector $\arr{\pi}_0$ which may be arbitrarily initialized, but preferably by an approximation of an optimal policy for the input MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$ to achieve faster convergence.
+Then in each iteration, first the value for each state is computed based on the latest policy $\arr{\pi}_t$, which comes down to solving a set of linear equations.
+Solving this set of linear equations can be done by linear programming in (at most) $O(\lvert\mathcal{S}\rvert^3)$ time \cite{littman1995complexity}. 
+An alternative approach, known as \textit{modified policy iteration}, is to solve these by applying a simplified form of value iteration in which the actions to select are already known for each state from the policy (i.e., $\arr{\pi}_t(s)$ for each $s \in \mathcal{S}$).
+This step which is known as \textit{policy evaluation} is followed by a \textit{policy improvement} step in which the policy is greedily updated based on the latest value function $V_\arr{\pi}$.
+This process is repeated until no improvements are possible and the policy stops changing.
+
+Compared to \acrshort{acr:vi} the algorithm always converges in a finite number of iterations. However, solving the set of linear equations in each iteration is a more time-costly operation, especially for large state spaces.
+That is, in \acrshort{acr:vi} each iteration takes $O(\lvert\mathcal{S}\rvert^2\cdot\lvert A\rvert)$ time, although one must note that the number of iterations is not finite, while \acrshort{acr:pi} finds an optimum in a finite number.
+
+\begin{algorithm}
+	\caption{Policy iteration}
+	\label{alg:pi}
+	\begin{algorithmic}[1]
+		\Require{MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$, discount factor $\gamma \in (0, 1)$}
+		\Ensure{Optimal policy $\arr{\pi}^*: \mathcal{S} \mapsto A$}
+		\State{Initialize $\arr{\pi}_0$}
+		\State $t \gets 0$
+		\Repeat
+		\State Solve $\forall s \in \mathcal{S}$: $V_{\arr{\pi}_{t}}(s) \gets \sum_{s' \in \mathcal{S}} \delta(s, \arr{\pi}_t(s), s') \cdot \left[R(s, \arr{\pi}_t(s), s') + \gamma \cdot V_{\arr{\pi}_{t}}(s')\right]$
+		\State $t \gets t + 1$
+		\ForAll{$s \in \mathcal{S}$}
+		\State $\arr{\pi}_t(s) \gets \argmax_{a \in A} \left[\sum_{s' \in \mathcal{S}} \delta(s, a, s') \cdot \left[R(s, a, s') + \gamma \cdot V_{\arr{\pi}_{t - 1}}(s')\right]\right]$
+		\EndFor
+		\Until{$\arr{\pi}_{t} = \arr{\pi}_{t-1}$}
+		\State\Return $\arr{\pi}_t$
+	\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Backwards Induction}
+\label{sec:backwards-induction}
+
+In the special case of a finite horizon \acrshort{acr:mdp} it is possible to obtain an optimal policy by applying \textit{backwards induction} \cite{chamie2015finite} shown in \autoref{alg:backwards-induction}.
+As the name suggests the algorithm works backwards, starting from the last step $h$ and recursively using the value function of step $t + 1$ to compute that of step $t$.
+Even though the algorithm works well when dealing with finite horizons, typically in real world scenarios more often deal with infinite horizons for planning under uncertainty.
+
+\begin{algorithm}
+	\caption{Backwards Induction}
+	\label{alg:backwards-induction}
+	\begin{algorithmic}[1]
+		\Require{MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$, horizon $h \in \mathbb{N}$}
+		\Ensure{Optimal policy $\arr{\pi}^*: \mathcal{S} \mapsto A$}
+		\State $t \gets h$
+		\State $\forall s \in \mathcal{S}: V_h(s) \gets 0$
+		\Repeat
+		\State $t \gets t - 1$
+		\ForAll{$s \in \mathcal{S}$}
+		\State $V_t(s) \gets \max_{a \in A} \left[\sum_{s' \in \mathcal{S}} \delta(s,a,s') \cdot \left[R(s,a,s') + V_{t+1}(s')\right]\right]$
+		\EndFor
+		\Until{$t = 1$}
+		\ForAll{$s \in \mathcal{S}$}
+		\State $\arr{\pi}^*(s) \gets \argmax_{a \in A} \left[\sum_{s' \in \mathcal{S}} \delta(s,a,s') \cdot \left[R(s,a,s') + V_{1}(s')\right]\right]$
+		\EndFor
+		\State\Return $\arr{\pi}^*$
+	\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Linear Programming}
+\label{sec:linear-programming}
+
+A less frequently applied approach is that of formulating the \acrshort{acr:mdp} as a \acrfull{acr:lp} and solving it using so-called \textit{simplex} methods.
+Following this approach, an \acrshort{acr:lp} formulation for an MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$, as explained in \cite{littman1995complexity}, is:
+
+%\begin{align}
+%\max_{\lambda} &\sum_{s \in \mathcal{S}}\sum_{a \in A}\sum_{s' \in \mathcal{S}} \lambda(s, a) \delta(s, a, s')R(s, a, s') &\nonumber\\
+%\text{s.t.} &\sum_{a' \in A} \lambda(s', a') = \mu_0(s) + \gamma \sum_{s \in \mathcal{S}}\sum_{a \in A} \lambda(s,a)\delta(s,a,s')	&\forall s' \in \mathcal{S} \\
+%&\lambda(s,a) \geq 0 &\forall s \in \mathcal{S}, \forall a \in A \nonumber
+%\end{align}
+\begin{align}
+\min_{V} &\sum_{s' \in \mathcal{S}} \mu_0(s) \cdot V(s) &\nonumber\\
+\text{s.t. } &V(s) \geq \sum_{s' \in \mathcal{S}} \delta(s, a, s') \left[R(s,a,s') + \gamma\cdot V(s')\right]	&\forall s \in \mathcal{S}, \forall a \in A
+\end{align}
+where $\mu_0: \mathcal{S} \mapsto [0,1]$ is a probability distribution over the states.
+
+From the solution $V^*$ of this \acrshort{acr:lp} formulation, a policy $\arr{\pi}^*$ can be obtained by letting $\arr{\pi}^*(s) = \argmax_{a \in A} \sum_{s' \in \mathcal{S}} \delta(s, a, s') \left[R(s,a,s') + \gamma\cdot V(s')\right]$ for each state $s \in \mathcal{S}$. This primal formulation optimizes a value function $V$, but alternative the policy can be optimized directly by considering the dual formulation.
+Comparing \acrshort{acr:lp} solutions to the specialized \acrshort{acr:vi} and \acrshort{acr:pi} solutions, the latter are typically than general-purpose \acrshort{acr:lp} algorithms, although the \acrshort{acr:lp} scale better to larger \acrshort{acr:mdp} planning problems.
+
 % Planning algorithms for MDPs
 % Planning algorithms for POMDPs
+
+\subsection{Reinforcement Learning Techniques}
+\label{subsec:reinforcement-learning}
+
+% TODO Introduction
+
+\subsubsection{Q-Learning}
+\label{sec:q-learning}
+
+% 
+% Also note that it can be used for planning
+
+\subsubsection{SARSA}
+\label{sec:sarsa}
+
+% 
 
 % \subsection{Integrated Architectures}
 % Dyna Architecture -- combines model-learning and direct/value-based approaches, applies these iteratively even in execution of the agent --> 'hybrid' approach?

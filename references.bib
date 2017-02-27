@@ -22,6 +22,17 @@
 	publisher = {{Cambridge University Press}},
 	year = 2012}
 
+@article{barto1995learning,
+	title={Learning to act using real-time dynamic programming},
+	author={Barto, Andrew G and Bradtke, Steven J and Singh, Satinder P},
+	journal={Artificial intelligence},
+	volume={72},
+	number={1-2},
+	pages={81--138},
+	year={1995},
+	publisher={Elsevier}
+}
+
 @inproceedings{bhatia2010sampling,
 	title={Sampling-based motion planning with temporal goals},
 	author={Bhatia, Amit and Kavraki, Lydia E and Vardi, Moshe Y},
@@ -88,6 +99,13 @@
 	pages={197--221},
 	year={2001},
 	publisher={World Scientific}
+}
+
+@article{chamie2015finite,
+	title={Finite-Horizon Markov Decision Processes with State Constraints},
+	author={Chamie, Mahmoud El and Acikmese, Behcet},
+	journal={arXiv preprint arXiv:1507.01585},
+	year={2015}
 }
 
 @article{cochran2001generic,
@@ -209,6 +227,51 @@
 	publisher={Taylor \& Francis Group}
 }
 
+@inproceedings{littman1995complexity,
+	title={On the complexity of solving Markov decision problems},
+	author={Littman, Michael L and Dean, Thomas L and Kaelbling, Leslie Pack},
+	booktitle={Proceedings of the Eleventh conference on Uncertainty in artificial intelligence},
+	pages={394--402},
+	year={1995},
+	organization={Morgan Kaufmann Publishers Inc.}
+}
+
+@article{MartinezCantin2009,
+	abstract = {We address the problem of online path planning for optimal sensing with a mobile robot. The objective of the robot is to learn the most about its pose and the environment given time constraints. We use a POMDP with a utility function that depends on the belief state to model the finite horizon planning problem. We replan as the robot progresses throughout the environment. The POMDP is high-dimensional, continuous, non-differentiable, nonlinear, non-Gaussian and must be solved in real-time. Most existing techniques for stochastic planning and reinforcement learning are therefore inapplicable. To solve this extremely complex problem, we propose a Bayesian optimization method that dynamically trades off exploration (minimizing uncertainty in unknown parts of the policy space) and exploitation (capitalizing on the current best solution). We demonstrate our approach with a visually-guide mobile robot. The solution proposed here is also applicable to other closely-related domains, including active vision, sequential experimental design, dynamic sensing and calibration with mobile sensors.},
+	archivePrefix = {arXiv},
+	arxivId = {0712.3744},
+	author = {Martinez-Cantin, Ruben and {De Freitas}, Nando and Brochu, Eric and Castellanos, Jos{\'{e}} and Doucet, Arnaud},
+	doi = {10.1007/s10514-009-9130-2},
+	eprint = {0712.3744},
+	file = {:C$\backslash$:/Users/Rob/TU Delft/Thesis/Papers/Bayesian Optimization/A Bayesian exploration-exploitation approach for optimal online sensing and planning with a visually guided mobile robot.pdf:pdf},
+	isbn = {0929-5593},
+	issn = {09295593},
+	journal = {Autonomous Robots},
+	keywords = {Active SLAM,Active learning,Active vision,Attention and gaze planning,Bayesian optimization,Dynamic sensor networks,Model predictive control,Online path planning,Policy search,Reinforcement learning,Sequential experimental design},
+	mendeley-groups = {Bayesian Optimization},
+	number = {2},
+	pages = {93--103},
+	title = {{A Bayesian exploration-exploitation approach for optimal online sensing and planning with a visually guided mobile robot}},
+	volume = {27},
+	year = {2009}
+}
+
+@article{Melo20111757,
+	title = "Decentralized \{MDPs\} with sparse interactions ",
+	journal = "Artificial Intelligence ",
+	volume = "175",
+	number = "11",
+	pages = "1757 - 1789",
+	year = "2011",
+	note = "",
+	issn = "0004-3702",
+	doi = "http://dx.doi.org/10.1016/j.artint.2011.05.001",
+	url = "http://www.sciencedirect.com/science/article/pii/S0004370211000634",
+	author = "Francisco S. Melo and Manuela Veloso",
+	keywords = "Multiagent coordination",
+	keywords = "Sparse interaction",
+	keywords = "Decentralized Markov decision processes "
+}
 
 @article{Minka1999,
 	author = {Minka, T},
@@ -226,6 +289,24 @@
 	journal={Online tutorial},
 	year={2003}
 }
+
+@article{Moldovan2012,
+	abstract = {In environments with uncertain dynamics exploration is necessary to learn how to perform well. Existing reinforcement learning algorithms provide strong exploration guarantees, but they tend to rely on an ergodicity assumption. The essence of ergodicity is that any state is eventually reachable from any other state by following a suitable policy. This assumption allows for exploration algorithms that operate by simply favoring states that have rarely been visited before. For most physical systems this assumption is impractical as the systems would break before any reasonable exploration has taken place, i.e., most physical systems don't satisfy the ergodicity assumption. In this paper we address the need for safe exploration methods in Markov decision processes. We first propose a general formulation of safety through ergodicity. We show that imposing safety by restricting attention to the resulting set of guaranteed safe policies is NP-hard. We then present an efficient algorithm for guaranteed safe, but potentially suboptimal, exploration. At the core is an optimization formulation in which the constraints restrict attention to a subset of the guaranteed safe policies and the objective favors exploration policies. Our framework is compatible with the majority of previously proposed exploration methods, which rely on an exploration bonus. Our experiments, which include a Martian terrain exploration problem, show that our method is able to explore better than classical exploration methods.},
+	archivePrefix = {arXiv},
+	arxivId = {1205.4810},
+	author = {Moldovan, Teodor Mihai and Abbeel, Pieter},
+	eprint = {1205.4810},
+	file = {:C$\backslash$:/Users/Rob/TU Delft/Thesis/Papers/Bayesian Optimization/Safe Exploration (SafeMDP) in Finite Markov Decision Processes with Gaussin Processes.pdf:pdf},
+	isbn = {978-1-4503-1285-1},
+	journal = {Proceedings of the 29th International Conference on Machine Learning},
+	keywords = {ICML,exploration,machine learning,safe,safety},
+	mendeley-groups = {Bayesian Optimization},
+	number = {Nips},
+	title = {{Safe Exploration in Markov Decision Processes}},
+	url = {http://arxiv.org/abs/1205.4810},
+	year = {2012}
+}
+
 
 @incollection{parent1991stochastic,
 	title={Stochastic modeling of a water resource system: analytical techniques versus synthetic approaches},
@@ -247,6 +328,19 @@
 	publisher={Elsevier}
 }
 
+@book{poole2010artificial,
+	title={Artificial Intelligence: foundations of computational agents},
+	author={Poole, David L and Mackworth, Alan K},
+	year={2010},
+	publisher={Cambridge University Press}
+}
+
+@book{puterman2014markov,
+	title={Markov decision processes: discrete stochastic dynamic programming},
+	author={Puterman, Martin L},
+	year={2014},
+	publisher={John Wiley \& Sons}
+}
 
 @article{rabiner1989tutorial,
 	title={A tutorial on hidden Markov models and selected applications in speech recognition},
@@ -257,6 +351,15 @@
 	pages={257--286},
 	year={1989},
 	publisher={IEEE}
+}
+
+@book{sutton1998reinforcement,
+	title={Reinforcement learning: An introduction},
+	author={Sutton, Richard S and Barto, Andrew G},
+	volume={1},
+	number={1},
+	year={1998},
+	publisher={MIT press Cambridge}
 }
 
 @article{teodorescu2009maximum,
