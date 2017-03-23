@@ -1,43 +1,34 @@
-\chapter{Related Work}
-\label{ch:related-work}
+\chapter{Bayesian Optimization}
+\label{ch:bayesian-optimization}
+This chapter elaborates upon a method known as Bayesian optimization, which is used to automate the process of optimizing the parameters of an unknown objective.
+First \autoref{sec:bayesian-optimization-problem} introduces the optimization tasks this method is aimed at and how these are relevant to \acrshort{acr:sdm} problems.
+Subsequently, in \autoref{sec:bayesian-optimization-algorithm} the optimization method is formally described.
+In \autoref{sec:bayesian-optimization-prior-acquisition} the configurable parts of the method are discussed, considering both advantages and disadvantages of available options.
+Finally, in \autoref{sec:bayesian-optimization-applications} a number of applications of Bayesian optimization in the field of planning under uncertainty are discussed, serving as an overview of the method's success in this field.
 
+% More applications:
+%https://www.cs.ox.ac.uk/people/nando.defreitas/publications/BayesOptLoop.pdf
 
-\section{Learning SDM Models from Execution Traces}
-\label{sec:learning-models}
+\section{Problem Formulation}
+\label{sec:bayesian-optimization-problem}
 
-In \acrshort{acr:dtp} it is common to make use of a (compact) probabilistic model of the environment.
-However, devising an optimal model for a specific system or process can be a daunting and error-prone task, especially with many possibilities while wanting a compact model and computation cost efficient.....
-
-% TODO;s
-%% Fitting Markov Chains/MDPs:
-	% Refer back to section 2.2.1:
-	% - likelihood maximization
-	% - Bayesian inference/optimization
-%% Fitting HMMs/POMDPs:
-	% ITERATIVE ADJUSTMENT OF PROBABILITIES:
-	% - Baum-Welch Algorithm
-	% - Gradient-Ascent in Likelihood
-	% STATE MERGING
-	% - Best-first
-	% - Trajectory clustering
-%% Reinforcement Learning: Online Model Learning
-
-%% However, most of the previous works assume the state-space of the probabilistic model to be known.
-
-\section{Bayesian Optimization}
-\label{sec:bayesian-optimization}
-
-One of the problems that is faced in the field of optimization, is that of maximizing a nonlinear, real valued \textit{objective function} $f: \mathcal{X} \mapsto \mathbb{R}$ on a domain $\mathcal{X} \subset \mathbb{R}^m$ ($m \geq 1$).
+One of the problems that is faced in the field of optimization is that of maximizing a nonlinear, real valued \textit{objective function} $f: \mathcal{X} \mapsto \mathbb{R}$ on a domain $\mathcal{X} \subset \mathbb{R}^m$ ($m \geq 1$).
 Formally, to find a global maximizer $x^\ast \in \mathcal{X}$ for which:
 \begin{equation}
 	x^\ast = \argmax_{x \in \mathcal{X}} f(x)
 \end{equation}
-However, often the objective function presents itself to be unknown and expensive to evaluate (in terms of required computational resources).
+In particular the problem turns out to be a common bottleneck when dealing with an objective function that is unknown and expensive to evaluate in terms of the required computational resources.
+As an example, one could think of finding the hyper-parameters for a neural network which maximize the performance, where each single evaluation of a set of parameters requires one to train the neural network and assess the performance on a huge dataset.
+
 Although this problem of optimizing expensive functions can be found in many different contexts, it is foremost a problem in sequential decision theory. 
 That is, typically one can only hope to estimate objective functions of \acrshort{acr:sdm} problems in AI planning and reinforcement learning through expensive simulations \cite{Brochu2010, Ghahramani2015}.
 
-\subsection{General Formulation}
-\label{sec:bayesian-optimization-introduction}
+A naive approach for optimizing the objective would be to evaluate a set of (random) combinations of parameters and see which parameter-settings seem to give the best results.
+This approach however, usually requires expert knowledge and might demand a large number of function evaluations that do not necessarily provide new information about the parameter-space.
+The method known as \textit{Bayesian optimization}, described in \autoref{sec:bayesian-optimization-algorithm}, improves on these naive approaches by making predictions about which regions of the parameter-space are expected to give the best results and hence limiting the number of function-evaluations.
+
+\section{Algorithm Description}
+\label{sec:bayesian-optimization-algorithm}
 
 \textit{Bayesian optimization} is a powerful method for finding the maximum of a typically unknown, expensive, nonlinear objective function, while aiming to minimize the number of objective function evaluations and avoiding local maxima \cite{Brochu2010}.
 This method first requires one to set a prior $p(f)$ over the objective function $f$, representing the belief about the space of plausible objective functions.
@@ -77,20 +68,26 @@ This acquisition function should be defined such that it captures a correct bala
 The general formulation of the Bayesian Optimization is presented in \autoref{alg:bayesian-optimization}.
 For an implementation of the algorithm still three components need to be defined, which are the domain $\mathcal{X}$ of $f$, the prior over $f$, and last of all the acquisition function $u$.
 
-\subsection{Choice of Prior and Acquisition Function}
+\section{Choice of Prior and Acquisition Function}
 \label{sec:bayesian-optimization-prior-acquisition}
-Introduction is placed here % TODO
+In order to apply Bayesian optimization there are two major choices that need to be made, which are those of the prior distribution over the objective and the acquisition function. In this section the different options and corresponding considerations that need to be made for these two components are elaborated upon.
 
-\subsubsection*{Prior Distributions}
+\subsection*{Prior Distributions}
 \label{sec:bayesian-optimization-prior}
-Information about priors here, like: % TODO
-\begin{itemize}
-	\item \acrfull{acr:gp}
-	\item Wiener Process
-\end{itemize}
+In Bayesian optimization the most common choice for the prior distribution is a \acrfull{acr:gp}, which is typically well-suited as it accounts for the uncertainty associated with each prediction.
+Intuitively a \acrshort{acr:gp} can be viewed as a prior which assumes that similar inputs result in similar outputs.
+For an objective function $f$, the \acrshort{acr:gp} defines a Gaussian probability distribution over $f(x)$ for each $x$, so that a \acrshort{acr:gp} can be expressed as a probability distribution over functions:
+\begin{equation}
+	P(f(x) \vert x) = \mathcal{N}(\mu(x), \sigma^2(x))
+\end{equation}
+where $\mathcal{N}$ denotes a normal distribution, while $\mu$ and $\sigma$ denote mean and standard deviation respectively.
+%\begin{itemize}
+%	\item \acrfull{acr:gp}
+%	\item Wiener Process
+%\end{itemize}
 
 
-\subsubsection*{Acquisition Functions}
+\subsection*{Acquisition Functions}
 \label{sec:bayesian-optimization-acquisition}
 % Examples acquisition function: PMAX, IEMAX, MPI, MEI, (GP-)UCB, GP-Hedge
 % TODO Introduction
@@ -119,31 +116,19 @@ Let us define $f(x^+)$ as the `best' observation, corresponding to the sample $x
 
 Others possible acquisition functions that are used in Bayesian optimization are PMAX, IEMAX and GP-HEDGE. % TODO
 
-\subsection{Applications of Bayesian Optimization to Planning Problems}
+\section{Applications of Bayesian Optimization to Planning Problems}
 \label{sec:bayesian-optimization-applications}
 
 % TODO Write out completely, this is just a short overview
 Most interesting applications that involve or are closely related to \acrshort{acr:dtp}:
-\begin{itemize}
-	\item In \cite{MartinezCantin2009}, Bayesian optimization is applied for a mobile robot that adaptively plans a path while maximizing the information it obtains from observations about its own location and the location of navigation landmarks in the environment.
-	The objective/cost function $C$ is parametrized by a policy-vector $\pi$ and approximations for selected samples are made by different functions over the belief-states of the \acrshort{acr:pomdp}.
-	Typically, estimating the belief-state is an expensive problem, typically carried out through SLAM algorithms in robotics.
-	Therefore, to minimize computational cost, a Bayesian optimization algorithm is applied with the choice of a \acrshort{acr:gp}-prior over $C$ and where new samples are acquired using an \acrshort{acr:mei} acquisition function.
-	\item In \cite{Moldovan2012}, ... (SAFE-MDP)
-	\item 
-\end{itemize}
 
-\subsection{Extensions on Bayesian Optimization}
-\label{sec:bayesian-optimization-extensions}
-\blindtext
+In \cite{MartinezCantin2009}, Bayesian optimization is applied for a mobile robot that adaptively plans a path while maximizing the information it obtains from observations about its own location and the location of navigation landmarks in the environment.
+The objective/cost function $C$ is parametrized by a policy-vector $\pi$ and approximations for selected samples are made by different functions over the belief-states of the \acrshort{acr:pomdp}.
+Typically, estimating the belief-state is an expensive problem, typically carried out through SLAM algorithms in robotics.
+Therefore, to minimize computational cost, a Bayesian optimization algorithm is applied with the choice of a \acrshort{acr:gp}-prior over $C$ and where new samples are acquired using an \acrshort{acr:mei} acquisition function.
 
-\section{Bayesian Reinforcement Learning}
-\label{sec:bayesian-reinforcement-learning}
+In \cite{Moldovan2012}, ... (SAFE-MDP)
 
-% 
-
-%
-%\section{Overview}
-%\label{sec:related-work-overview}
-%
-%% 
+%\subsection{Extensions on Bayesian Optimization}
+%\label{sec:bayesian-optimization-extensions}
+%\blindtext
