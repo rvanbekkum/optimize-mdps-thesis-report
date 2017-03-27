@@ -164,7 +164,7 @@ Putting all of these components together, a stationary \acrshort{acr:hmm} can be
 	\node[state] (h1) {$h_1$};
 	\node[state] (h2) [right of=h1] {$h_2$};
 	\node[state] (h3) [right of=h2] {$h_3$};
-	\node[state, draw=none] (dots) [right of=h3] {$\symbf{\cdots}$};
+	\node[state, draw=none] (dots) [right of=h3] {$\pmb{\cdots}$};
 	\node[state] (ht) [right of=dots] {$h_t$};
 	\node[state,fill={rgb:black,1;white,10}] (o1) [below of=h1] {$o_1$};
 	\node[state,fill={rgb:black,1;white,10}] (o2) [below of=h2] {$o_2$};
@@ -362,7 +362,7 @@ Another algorithm that is widely applied for obtaining policies from \acrshortpl
 Then in each iteration, first the value for each state is computed based on the latest policy $\arr{\pi}_t$, which comes down to solving a set of linear equations.
 Solving this set of linear equations can be done by linear programming in (at most) $O(\lvert\mathcal{S}\rvert^3)$ time \cite{littman1995complexity}. 
 An alternative approach, known as \textit{modified policy iteration}, is to solve these by applying a simplified form of value iteration in which the actions to select are already known for each state from the policy (i.e., $\arr{\pi}_t(s)$ for each $s \in \mathcal{S}$).
-This step which is known as \textit{policy evaluation} is followed by a \textit{policy improvement} step in which the policy is greedily updated based on the latest value function $V_\arr{\pi}$.
+This step which is known as \textit{policy evaluation} is followed by a \textit{policy improvement} step in which the policy is greedily updated based on the latest value function $V_{\arr{\pi}}$.
 This process is repeated until no improvements are possible and the policy stops changing.
 
 Compared to \acrshort{acr:vi} the algorithm always converges in a finite number of iterations. However, solving the set of linear equations in each iteration is a more time-costly operation, especially for large state spaces.

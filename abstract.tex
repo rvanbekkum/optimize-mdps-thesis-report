@@ -1,0 +1,11 @@
+\chapter*{Abstract}
+\label{ch:abstract}
+
+Motion and path planning in robotics are few of the many applications that require agents that account for uncertainty in the form of action failures or disturbances caused by exogenous events.
+A typical approach for planning in these domains involving uncertainty is to setup a probabilistic model of the environment, a typical choice being a Markov Decision Process (MDP), and apply existing decision-theoretic planning techniques to obtain an optimal plan.
+However, devising these probabilistic models usually requires expert knowledge on the domain and might be a daunting and error-prone task.
+Therefore it is desirable to automatize the process of obtaining probabilistic models through autonomous learning algorithms.
+Even though some work already has been done on crafting such learning algorithms, most of these algorithms assume the state-space of the model to be already known.
+In this work we propose a method that autonomously learns MDPs solely from execution traces obtained from a exploration phase of which state spaces are learned by applying unsupervised machine learning methods.
+The model quality is assessed by running simulations of the system using policies from standard MDP solvers, and in order to obtain the best MDP model, Bayesian Optimization is applied over the parameter space of the machine learning method.
+The approach is tested for mobile robot navigation, as the robots in this domain operate under significantly uncertainty and can illustrate the method well as positions can be mapped to states and actions are limited to a finite set of rotations and translations.

@@ -4,7 +4,7 @@ This chapter elaborates upon a method known as Bayesian optimization, which is u
 First \autoref{sec:bayesian-optimization-problem} introduces the optimization tasks this method is aimed at and how these are relevant to \acrshort{acr:sdm} problems.
 Subsequently, in \autoref{sec:bayesian-optimization-algorithm} the optimization method is formally described.
 In \autoref{sec:bayesian-optimization-prior-acquisition} the configurable parts of the method are discussed, considering both advantages and disadvantages of available options.
-Finally, in \autoref{sec:bayesian-optimization-applications} a number of applications of Bayesian optimization in the field of planning under uncertainty are discussed, serving as an overview of the method's success in this field.
+Finally, in \autoref{sec:bayesian-optimization-applications} a number of applications of Bayesian optimization in the field of planning under uncertainty are discussed, serving as an overview of the method's successes in this field.
 
 % More applications:
 %https://www.cs.ox.ac.uk/people/nando.defreitas/publications/BayesOptLoop.pdf
@@ -75,12 +75,27 @@ In order to apply Bayesian optimization there are two major choices that need to
 \subsection*{Prior Distributions}
 \label{sec:bayesian-optimization-prior}
 In Bayesian optimization the most common choice for the prior distribution is a \acrfull{acr:gp}, which is typically well-suited as it accounts for the uncertainty associated with each prediction.
+Another important aspect that makes a \acrshort{acr:gp} a convenient choice for the prior distribution is that it induces a posterior distribution over the objective function that is analytically tractable.
 Intuitively a \acrshort{acr:gp} can be viewed as a prior which assumes that similar inputs result in similar outputs.
 For an objective function $f$, the \acrshort{acr:gp} defines a Gaussian probability distribution over $f(x)$ for each $x$, so that a \acrshort{acr:gp} can be expressed as a probability distribution over functions:
 \begin{equation}
 	P(f(x) \vert x) = \mathcal{N}(\mu(x), \sigma^2(x))
 \end{equation}
 where $\mathcal{N}$ denotes a normal distribution, while $\mu$ and $\sigma$ denote mean and standard deviation respectively.
+By this definition, a \acrshort{acr:gp} can be viewed as a function that returns the mean and variance of a normal distribution over the possible values of $f$ at $x$. A \acrshort{acr:gp} as prior over an objective function $f$ is typically denoted as: 
+\begin{equation}
+\label{eq:gp}
+f \sim GP(m(\cdot), K(\cdot, \cdot))
+\end{equation}
+so that the \acrshort{acr:gp} is completely specified by a mean function $m$ and a \textit{kernel} function $K$ defining the covariance.
+The mean function $\mu$ is typically initialized by a constant mean, usually zero, due to the assumption that all points in the parameter space are equally likely and because the conditional mean can still be flexibly specified by the kernel function $K$ \cite{kawaguchi2015bayesian}.
+
+The choice of the kernel or covariance function of the \acrshort{acr:gp} determines the smoothness of the estimations on the performance and confidence intervals of unexplored samples in the parameter space.
+According to the various literature in the field of Bayesian Optimization the most common kernels are said to be the \textit{squared exponential} (also known as \textit{radial basis function (RBF)} or Gaussian) kernel and Mat\'ern kernel.
+However, the squared exponential kernel turns out unrealistically smooth for practical applications \cite{snoek2012practical} and therefore would require properly selecting its hyper-parameters.
+The Mat\'ern kernel serves as a more flexible class, where the hyper-parameters allow tweaking the distance at which there are almost no effects from previous samples and the rate at which these effects decrease, for which a reoccurring kernel appears to be an automatic relevance determination (ARD) Mat\'ern 5/2 kernel for machine learning applications \cite{snoek2012practical, kawaguchi2015bayesian}.
+
+
 %\begin{itemize}
 %	\item \acrfull{acr:gp}
 %	\item Wiener Process
@@ -128,6 +143,8 @@ Typically, estimating the belief-state is an expensive problem, typically carrie
 Therefore, to minimize computational cost, a Bayesian optimization algorithm is applied with the choice of a \acrshort{acr:gp}-prior over $C$ and where new samples are acquired using an \acrshort{acr:mei} acquisition function.
 
 In \cite{Moldovan2012}, ... (SAFE-MDP)
+
+In \cite{martinez2007active}, ... (Robot Planning and Exploration under uncertainty)
 
 %\subsection{Extensions on Bayesian Optimization}
 %\label{sec:bayesian-optimization-extensions}
