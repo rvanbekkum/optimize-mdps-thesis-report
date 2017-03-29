@@ -116,6 +116,7 @@ In DTP systems are modeled by probabilistic models, e.g. MDPs:
 
 \begin{frame}
 \frametitle{Decision-Theoretic Planning}
+\framesubtitle{Model Development}
 
 %\begin{center}
 	\textcolor{tudBlack}{\textbf{Problem:}} How to find a suitable MDP model?
@@ -127,14 +128,27 @@ In DTP systems are modeled by probabilistic models, e.g. MDPs:
 		\item Typically demands knowledge/experience, accompanied by high costs
 	\end{itemize}
 	\pause
-%	\vfill
-%	\textcolor{black}{\textbf{Alternative:}} Use reinforcement learning
 	\vfill
-	\textcolor{tudBlack}{\textbf{Idea:}} Automate the model building process by learning algorithms 
+	\textcolor{tudBlack}{\textbf{Alternative:}} Use Reinforcement Learning instead of Planning, however:
 	\begin{itemize}
-		\item Learn from (exploration) data about the environment
-		\item Optimization for the best MDP model
+		\item Requires direct interaction with environment %(slow in complex dynamic environment) % (chance of errors)
+		\item One might require \textit{reusable} models, applicable for multiple tasks % You do have model-based RL, but we might want a model that generalizes for multiple tasks
+		%\item Still requires definition of state-spaces (and actions and rewards)
 	\end{itemize}
+
 %\end{center}
+\end{frame}
+
+\begin{frame}[t]
+\frametitle{Decision-Theoretic Planning}
+\framesubtitle{Model Development}
+\vspace{8pt}
+\textcolor{tudBlack}{\textbf{Problem:}} How to find a suitable MDP model?\\
+\vspace{14pt}
+\textcolor{tudBlack}{\textbf{Idea:}} Automate the model building process by learning algorithms 
+\begin{itemize}
+	\item Learn from (exploration) data about the environment
+	\item Optimization for the best MDP model
+\end{itemize}
 
 \end{frame}

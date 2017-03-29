@@ -1,4 +1,4 @@
-\section{Model Optimization}
+\section{Model Learning \& Optimization}
 
 \begin{frame}
 \frametitle{Mobile Robot Navigation}
@@ -6,16 +6,19 @@
 \vfill
 
 \begin{columns}[T]
-\begin{column}{0.6\textwidth}
+\begin{column}{0.5\textwidth}
 MDP Model $\mathcal{M}$ should define:
 \begin{itemize}
-	\item Attainable states, corresponding to locations
-	\item Possible actions, robot translations
+	\item States \hspace{12.75pt}$\mapsto$ locations
+	\item Actions \hspace{7.5pt}$\mapsto$ robot translations
+	\item Rewards $\mapsto$ goal areas
+	\item Transition-function
 \end{itemize}
+
 \end{column}
 
-\begin{column}{0.4\textwidth}
-	
+\begin{column}{0.425\textwidth}
+\includegraphics[width=\textwidth]{figures/simulator_6_crop}
 \end{column}
 
 \end{columns}
@@ -28,8 +31,13 @@ MDP Model $\mathcal{M}$ should define:
 \begin{columns}[T]
 \begin{column}{0.6\textwidth}
 \begin{itemize}
+	\item Existing approaches for state-space acquisition:
+	\begin{itemize}
+		\item Grid Discretization
+		\item Best-First Model Merging % TODO Add cite
+		\item State-Merging by Trajectory Clustering % TODO Add cite
+	\end{itemize}
 	\item \textbf{TODO}
-	\item[] 
 	\item Simulation in Morse with a Scitos A5 robot
 \end{itemize}
 \end{column}
