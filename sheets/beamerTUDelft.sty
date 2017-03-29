@@ -1,0 +1,151 @@
+\usepackage{marvosym}
+
+%\setbeamersize{sidebar width left=0.5cm}
+%\usepackage[dutch]{babel}
+\usepackage{tikz}
+%\newcommand{\field}[1]{\mathbb{#1}}
+%\newcommand{\Zset}{\field{Z}}
+\mode<presentation>
+{\usetheme{Boadilla} % This theme will be adjusted into the TUDelft lay-out
+\setbeamercovered{transparent}}
+\definecolor{tudblue}{RGB}{61,152,222} % definition TUDelft blue color
+\definecolor{tudCyan}{RGB}{61,152,222}
+\definecolor{tudBlack}{RGB}{0,0,0}
+\definecolor{tudWhite}{RGB}{255,255,255}
+% Basic colors
+\definecolor{tudSeaGreen}{RGB}{111,189,165}
+\definecolor{tudGreen}{RGB}{39,131,142}
+\definecolor{tudDarkBlue}{RGB}{34,70,122}
+\definecolor{tudPurple}{RGB}{36,46,131}
+\definecolor{tudTurquoise}{RGB}{50,154,179}
+\definecolor{tudSkyBlue}{RGB}{130,187,206}
+% Accent colors
+\definecolor{tudLavender}{RGB}{121,150,180}
+\definecolor{tudOrange}{RGB}{216,130,62}
+\definecolor{tudWarmPurple}{RGB}{110,50,122}
+\definecolor{tudFuchsia}{RGB}{178,72,146}
+\definecolor{tudBrightGreen}{RGB}{183,200,34}
+\definecolor{tudYellow}{RGB}{247,234,151}
+
+
+\setbeamercolor{structure}{fg=tudblue}
+\setbeamercolor{palette primary}{fg=white,bg=tudblue!85}       % Right field
+\setbeamercolor{palette secondary}{fg=white,bg=tudblue!85}     % Middle field
+\setbeamercolor{palette tertiary}{fg=white,bg=tudblue!85} % Left field
+\setbeamersize{text margin left=1cm}
+\setbeamersize{text margin right=1cm}
+
+ \AtBeginSubsection[]
+ {
+ \begin{frame}<beamer>\frametitle{\textbf{\LARGE{\textrm{\subsection}}}}
+     \tableofcontents[currentsection,currentsubsection]  % Generation of the Table of Contents
+ \end{frame}
+ }
+\tikzset{textlabel/.style={color=white}}
+%\beamersetuncovermixins{\opaqueness<1>{25}}{\opaqueness<2->{15}} % Transparency Effect
+%\beamertemplatetransparentcovereddynamicmedium
+
+% \mode<presentation>
+% {
+%   \usetheme{Pittsburgh}
+%   % or ...
+
+%   \setbeamercovered{transparent}
+%   % or whatever (possibly just delete it)
+% }
+
+%\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+
+\usepackage{graphicx,url,psfrag,amsmath}
+%\usepackage[round]{natbib}
+%\usepackage{movie15}
+
+\usepackage[normalem]{ulem}
+\usepackage[percent]{overpic}
+
+% no hyphenations in presentations
+\usepackage[none]{hyphenat}
+
+%\title[]%[Short Paper Title] % (optional, use only with long paper titles)
+%{}
+
+%\subtitle
+%{Include Only If Paper Has a Subtitle}
+
+\author%[Author, Another] % (optional, use only with lots of authors)
+{Rob van Bekkum}
+%\inst{1} \and S.~Another\inst{2}}
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute[TU Delft]%[Universities of Somewhere and Elsewhere] % (optional, but mostly needed)
+{
+%  \inst{1}%
+  Delft University of Technology\\
+  Delft, The Netherlands
+}
+%  \and
+%  \inst{2}%
+%  Department of Theoretical Philosophy\\
+%  University of Elsewhere}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date%[CFP 2003] % (optional, should be abbreviation of conference name)
+[\today]
+{\today%\\
+%~\\
+%\includegraphics[height=0.7cm]{EUflag_2colors}\hspace{0.5cm}\includegraphics[height=0.7cm]{Logo_Marie-Curie}
+}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+%\subject{Theoretical Computer Science}
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+
+
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+%\pgfdeclareimage[height=0.5cm]{university-logo}{tudelftLogo}
+%\logo{\vspace{-0.25cm}\pgfuseimage{university-logo}\hfill}
+
+
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+% \AtBeginSubsection[]
+% {
+%   \begin{frame}<beamer>{Outline}
+%     \tableofcontents[currentsection,currentsubsection]
+%   \end{frame}
+% }
+% \AtBeginSection[]
+% {
+%   \begin{frame}<beamer>{Outline}
+%     \tableofcontents[currentsection,currentsubsection]
+%   \end{frame}
+% }
+
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+\setbeamertemplate{navigation symbols}{}
+
+\setbeamercovered{invisible}
+
+\usepackage{ifthen}
+\providecommand{\notInHandout}[1]{\ifthenelse{\equal{\handout}{true}}{}{#1}}
