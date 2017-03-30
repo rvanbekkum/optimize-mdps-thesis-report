@@ -4,7 +4,24 @@
 \frametitle{Bayesian Optimization}
 
 \begin{itemize}
-	\item \textbf{TODO}
+	\item Given an expensive, unknown objective function $f: \mathcal{X} \mapsto \mathbb{R}$ ($\mathcal{X} \subset \mathbb{R}^m$)
+	\pause
+	\item Find global maximizer $x^* \in \mathcal{X}$ s.t.:
+	\begin{align*}
+		x^* &= \arg\max_{x \in \mathcal{X}} f(x)
+	\end{align*}
+	\pause
+	\item Bayesian Optimization components:
+	\begin{itemize}
+		\pause
+		\item \textit{Prior over $f$}: Gaussian Process $f \sim GP(\mu(\cdot), K(\cdot, \cdot))$	% (Gaussian) probability distribution over functions
+		\pause
+		\item \textit{Evidence set}: $\mathcal{D}_{1:t} = \{(x_i, y_i) \mid i = 1 \ldots t\}$
+		\pause
+		\item \textit{Posterior} or \textit{Surrogate function} ('estimate of $f$')
+		\pause
+		\item \textit{Acquisition} or \textit{Utility function}: $u: \mathcal{X} \mapsto \mathbb{R}$ 
+	\end{itemize}
 \end{itemize}
 \end{frame}
 
