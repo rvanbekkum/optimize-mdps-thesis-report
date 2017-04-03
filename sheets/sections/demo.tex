@@ -1,0 +1,51 @@
+\section{Demo \& Next Steps}
+
+\begin{frame}
+\frametitle{Implementation of Model-Optimization Routine}
+
+\begin{itemize}
+	\item<1-> \textbf{Exploration:} 'Randomly' navigating, writing execution trace to files
+	\item<2-> \textbf{Optimization:} Objective function defined by performance in simulations:
+	\begin{itemize}
+		\item Goal area(s) reached (before time-out)?
+		\item Time passed
+		\item Part of goal area covered by corresponding final states
+	\end{itemize}
+	\vfill
+	\item<3-> \textbf{Software:} Python, ROS, Morse simulator
+	\item<3-> \textbf{Robot:} Scitos A5, mobile service robot
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\begin{center}
+
+\Huge
+\textbf{\textcolor{tudblue}{DEMO}}
+
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Next Steps}
+
+\begin{itemize}
+	\item<1-> Cost-Sensitive Optimization 
+	\begin{itemize}
+		\item BO acquisition based on \textit{Expected Improvement per second}
+	\end{itemize}
+	\item<2-> Identification of incomplete exploration data
+	\begin{itemize}
+		\item Feedback from simulation trajectories
+		\item Use feedback in BO to reduce noise/uncertainty in observations
+	\end{itemize}
+	\item<3-> Variable Resolution in State-Space Acquisition
+	\item<4-> Inspect influence of other variables in the optimization loop
+	\begin{itemize}
+		\item Discount factor $\gamma$ in MDP solver
+		\item ML-algorithm (K-Means, GMM, $\ldots$)
+		\item Gaussian-Process hyper-parameters?
+	\end{itemize}
+\end{itemize}
+\end{frame}
