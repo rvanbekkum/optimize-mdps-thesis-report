@@ -244,7 +244,13 @@ An example of this can be seen in \cite{bhatia2010sampling, lacerda2015optimal},
 % Observations: .. POMDP
 % Reward Models and Value Functions
 
-% 
+An extension of the traditional \acrshort{acr:mdp} models, are the \acrfull{acr:pomdp} models which account for uncertainty in the observations that are made by agents.
+That is, while an \acrshort{acr:mdp} is used to model systems that are fully observable, in a \acrshort{acr:pomdp} the states are not observable and can only be inferred from the observations that are perceived.
+In other words, we can intuitively view a \acrshort{acr:pomdp} as the combination of a \acrshort{acr:hmm} and an \acrshort{acr:mdp}.
+
+As such, a \acrshort{acr:pomdp} can be defined as a 7-tuple $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, \mathcal{O}, \Omega, R)$ with $\mathcal{S}$ as state space, $s_0 \in \mathcal{S}$ as the initial state, $A$ as finite set of possible actions, $\delta$ the transition function, $\mathcal{O}$ the observation space, $\Omega$ an emission or observation probability function and $R$ as reward function.
+As the true state of a \acrshort{acr:pomdp} is unknown, the transition function $\delta$ is defined over beliefs of states, and accordingly a policy $\pi$ maps beliefs to actions.
+The observation function $\Omega: \mathcal{S}\times A \mapsto \mathcal{O}$ defines the probability of observations from state-action pairs in the \acrshort{acr:pomdp} and is used to iteratively update the belief-state of an agent.
 
 \subsection{Other Markov Models and Related State-Space Models}
 \label{subsec:other-markov-models}
@@ -253,7 +259,7 @@ Apart from the discrete-state Markov Models that were discussed in this section,
 \begin{description}
 	\item[Factored Markov Decision Process (FMDP)] An extension of the MDP model that allows for compact representation of states, transitions and rewards \cite{Degris2010}. In many real-life domains especially the state-space grows exponentially with the number of variables. Therefore FMDPs can be used to exponentially reduce the representation by means of a dynamic Bayesian network. The main drawback, however, is that finding the best policy becomes an NP-hard problem.
 	\item[Multi-Agent \acrshort{acr:mdp} (MMDP)] An \acrshort{acr:mdp} model for systems that involve multiple decision makers. In this model each agent chooses an individual action with the goal of optimizing a joint reward. Other variations involving multiple agents are Decentralized \acrshortpl{acr:mdp} (Dec-MDPs) and \acrshortpl{acr:pomdp} (Dec-POMDPs), which differ from MMDPs in that the agents can only approximate the global state of the process by their own (local) observations \cite{Melo20111757}.
-	\item[Variable-order Markov Model (VOM)] To be determined 
+	%\item[Variable-order Markov Model (VOM)] To be determined 
 	\item[Linear Dynamical System (LDS)] A continuous-state State-Space Model with linear dynamics, Gaussian state space and the assumption of hidden variables as in \acrshortpl{acr:hmm} \cite{Minka1999, barberBRML2012, Ghahramani2000}.
 \end{description}
 % TODO Extend each with sentence to explain the need for these models
@@ -269,11 +275,19 @@ On the other hand, in \acrfull{acr:rl} the optimal policy is learned while inter
 Both techniques have in common that they iteratively update estimations of a value function to derive a policy.
 The main difference though is that in planning this progress is carried out based on simulated experience from a model, while in learning techniques this is based on real experience from executing agents in an environment \cite{sutton1998reinforcement}.
 So, even when considering the differences, various solutions can be exchanged between planning and \acrshort{acr:rl} techniques.
+
 In this section the various approaches for finding optimal policies are discussed, where the planning techniques are discussed in \autoref{subsec:model-based-planning}, and \acrshort{acr:rl} techniques are discussed in \autoref{subsec:reinforcement-learning}.
 
 % Sutton and Barto (1998/2012) describe two approaches for rl solutions when the transition and reward functions are not known	(Learning the Structure of Factored Markov Decision Processes inReinforcement Learning Problems)
 % See chapter 8.2, show an adapted version of the figure and explain advantages and disadvantages
 % Explain the difference between planning and learning
+
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=\textwidth]{mdp-planning-diagram-v2}
+	\caption{Block diagram of the generic routine employed in model-based MDP planning techniques.}
+	\label{fig:model-based-routine}
+\end{figure}
 
 \subsection{Model-Based Planning Techniques}	% Also referred to as Indirect approaches
 \label{subsec:model-based-planning}
@@ -291,12 +305,26 @@ After evaluating the current policy, one may choose to stick with the current po
 There are several options for the \acrshort{acr:mdp} solver, which compute an optimal policy by maximization of the expected value to be obtained.
 In the remainder of this section various of these planning algorithms for \acrshortpl{acr:mdp} are discussed and evaluated.
 
-\begin{figure}[t!]
-	\centering
-	\includegraphics[width=\textwidth]{mdp-planning-diagram}
-	\caption{Block diagram of the generic routine employed in model-based MDP planning techniques.}
-	\label{fig:model-based-routine}
-\end{figure}
+\begin{algorithm}[]
+	\caption{Value iteration}
+	\label{alg:vi}
+	\begin{algorithmic}[1]
+		\Require{MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$, discount factor $\gamma \in (0, 1)$, threshold $\xi > 0$}
+		\Ensure{Optimal policy $\arr{\pi}^*: \mathcal{S} \mapsto A$}
+		\State{Initialize $V_t: \mathcal{S} \mapsto \mathbb{R}$ arbitrarily for $t = 0$}
+		\State $t \gets 0$
+		\Repeat
+		\State $t \gets t + 1$
+		\ForAll{$s \in \mathcal{S}$}
+		\State{$V_t(s) \gets \max_{a \in A} \left[\sum_{s' \in \mathcal{S}} \delta(s, a, s') \cdot \left[R(s, a, s') + \gamma \cdot V_{t-1}(s')\right]\right]$}
+		\EndFor
+		\Until{$\forall s \in \mathcal{S}: \lvert V_t(s) - V_{t-1}(s) \rvert \leq \xi$}
+		\ForAll{$s \in \mathcal{S}$}
+		\State $\arr{\pi}^*(s) \gets \text{arg max}_{a \in A} \left[\sum_{s' \in \mathcal{S}} \delta(s, a, s') \cdot \left[R(s, a, s') + \gamma \cdot V_{t}(s')\right]\right]$
+		\EndFor
+		\State\Return $\arr{\pi}^*$
+	\end{algorithmic}
+\end{algorithm}
 
 \subsubsection*{Value Iteration}
 \label{sec:value-iteration}
@@ -319,28 +347,7 @@ All by all, the algorithm works well when the state space is relatively small, b
 
 Note that an alternative formulation of the \acrshort{acr:vi} algorithm can be given that makes use of a $Q$-table instead of a value-function $V$.
 In this formulation the entries $Q(s, a)$ are updated in each iteration for each state-action pair.
-The optimal policy can then be obtained directly by selecting the action with the maximum value in the $Q$-table for each action, though it requires more storage compared to a value function.
-
-\begin{algorithm}
-	\caption{Value iteration}
-	\label{alg:vi}
-	\begin{algorithmic}[1]
-		\Require{MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$, discount factor $\gamma \in (0, 1)$, threshold $\xi > 0$}
-		\Ensure{Optimal policy $\arr{\pi}^*: \mathcal{S} \mapsto A$}
-		\State{Initialize $V_t: \mathcal{S} \mapsto \mathbb{R}$ arbitrarily for $t = 0$}
-		\State $t \gets 0$
-		\Repeat
-		\State $t \gets t + 1$
-		\ForAll{$s \in \mathcal{S}$}
-		\State{$V_t(s) \gets \max_{a \in A} \left[\sum_{s' \in \mathcal{S}} \delta(s, a, s') \cdot \left[R(s, a, s') + \gamma \cdot V_{t-1}(s')\right]\right]$}
-		\EndFor
-		\Until{$\forall s \in \mathcal{S}: \lvert V_t(s) - V_{t-1}(s) \rvert \leq \xi$}
-		\ForAll{$s \in \mathcal{S}$}
-		\State $\arr{\pi}^*(s) \gets \text{arg max}_{a \in A} \left[\sum_{s' \in \mathcal{S}} \delta(s, a, s') \cdot \left[R(s, a, s') + \gamma \cdot V_{t}(s')\right]\right]$
-		\EndFor
-		\State\Return $\arr{\pi}^*$
-	\end{algorithmic}
-\end{algorithm}
+The optimal policy can then be obtained directly by selecting the action with the maximum value in the $Q$-table for each action, though it requires more storage compared to a value function.\newpage
 
 \subsubsection{Asynchronous Value Iteration}
 \label{sec:gs-value-iteration}
@@ -355,20 +362,7 @@ Opposed to traditional \acrshort{acr:vi}, where solving \acrshortpl{acr:mdp} wit
 
 % TODO POMDP Adaptation of Value Iteration See AI: A Modern Approach + Probabilistic Robotics
 
-\subsubsection{Policy Iteration}
-\label{sec:policy-iteration}
-
-Another algorithm that is widely applied for obtaining policies from \acrshortpl{acr:mdp} is known as \textit{\acrfull{acr:pi}}. As shown in \autoref{alg:pi} \acrshort{acr:pi} starts off with an initial policy vector $\arr{\pi}_0$ which may be arbitrarily initialized, but preferably by an approximation of an optimal policy for the input MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$ to achieve faster convergence.
-Then in each iteration, first the value for each state is computed based on the latest policy $\arr{\pi}_t$, which comes down to solving a set of linear equations.
-Solving this set of linear equations can be done by linear programming in (at most) $O(\lvert\mathcal{S}\rvert^3)$ time \cite{littman1995complexity}. 
-An alternative approach, known as \textit{modified policy iteration}, is to solve these by applying a simplified form of value iteration in which the actions to select are already known for each state from the policy (i.e., $\arr{\pi}_t(s)$ for each $s \in \mathcal{S}$).
-This step which is known as \textit{policy evaluation} is followed by a \textit{policy improvement} step in which the policy is greedily updated based on the latest value function $V_{\arr{\pi}}$.
-This process is repeated until no improvements are possible and the policy stops changing.
-
-Compared to \acrshort{acr:vi} the algorithm always converges in a finite number of iterations. However, solving the set of linear equations in each iteration is a more time-costly operation, especially for large state spaces.
-That is, in \acrshort{acr:vi} each iteration takes $O(\lvert\mathcal{S}\rvert^2\cdot\lvert A\rvert)$ time, although one must note that the number of iterations is not finite, while \acrshort{acr:pi} finds an optimum in a finite number.
-
-\begin{algorithm}
+\begin{algorithm}[]
 	\caption{Policy iteration}
 	\label{alg:pi}
 	\begin{algorithmic}[1]
@@ -387,12 +381,18 @@ That is, in \acrshort{acr:vi} each iteration takes $O(\lvert\mathcal{S}\rvert^2\
 	\end{algorithmic}
 \end{algorithm}
 
-\subsubsection{Backwards Induction}
-\label{sec:backwards-induction}
+\subsubsection{Policy Iteration}
+\label{sec:policy-iteration}
 
-In the special case of a finite horizon \acrshort{acr:mdp} it is possible to obtain an optimal policy by applying \textit{backwards induction} \cite{chamie2015finite} shown in \autoref{alg:backwards-induction}.
-As the name suggests the algorithm works backwards, starting from the last step $h$ and recursively using the value function of step $t + 1$ to compute that of step $t$.
-Even though the algorithm works well when dealing with finite horizons, typically in real world scenarios more often deal with infinite horizons for planning under uncertainty.
+Another algorithm that is widely applied for obtaining policies from \acrshortpl{acr:mdp} is known as \textit{\acrfull{acr:pi}}. As shown in \autoref{alg:pi} \acrshort{acr:pi} starts off with an initial policy vector $\arr{\pi}_0$ which may be arbitrarily initialized, but preferably by an approximation of an optimal policy for the input MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$ to achieve faster convergence.
+Then in each iteration, first the value for each state is computed based on the latest policy $\arr{\pi}_t$, which comes down to solving a set of linear equations.
+Solving this set of linear equations can be done by linear programming in (at most) $O(\lvert\mathcal{S}\rvert^3)$ time \cite{littman1995complexity}. 
+An alternative approach, known as \textit{modified policy iteration}, is to solve these by applying a simplified form of value iteration in which the actions to select are already known for each state from the policy (i.e., $\arr{\pi}_t(s)$ for each $s \in \mathcal{S}$).
+This step which is known as \textit{policy evaluation} is followed by a \textit{policy improvement} step in which the policy is greedily updated based on the latest value function $V_{\arr{\pi}}$.
+This process is repeated until no improvements are possible and the policy stops changing.
+
+Compared to \acrshort{acr:vi} the algorithm always converges in a finite number of iterations. However, solving the set of linear equations in each iteration is a more time-costly operation, especially for large state spaces.
+That is, in \acrshort{acr:vi} each iteration takes $O(\lvert\mathcal{S}\rvert^2\cdot\lvert A\rvert)$ time, although one must note that the number of iterations is not finite, while \acrshort{acr:pi} finds an optimum in a finite number.\newpage
 
 \begin{algorithm}
 	\caption{Backwards Induction}
@@ -414,6 +414,13 @@ Even though the algorithm works well when dealing with finite horizons, typicall
 		\State\Return $\arr{\pi}^*$
 	\end{algorithmic}
 \end{algorithm}
+
+\subsubsection{Backwards Induction}
+\label{sec:backwards-induction}
+
+In the special case of a finite horizon \acrshort{acr:mdp} it is possible to obtain an optimal policy by applying \textit{backwards induction} \cite{chamie2015finite} shown in \autoref{alg:backwards-induction}.
+As the name suggests the algorithm works backwards, starting from the last step $h$ and recursively using the value function of step $t + 1$ to compute that of step $t$.
+Even though the algorithm works well when dealing with finite horizons, typically in real world scenarios more often deal with infinite horizons for planning under uncertainty.
 
 \subsubsection{Linear Programming}
 \label{sec:linear-programming}
@@ -438,10 +445,23 @@ Comparing \acrshort{acr:lp} solutions to the specialized \acrshort{acr:vi} and \
 \subsection{Reinforcement Learning Techniques}
 \label{subsec:reinforcement-learning}
 
-% TODO Introduction
+\acrfull{acr:rl} techniques work on real experience based on which they update the behavior of the agent that is defined by an action-selection policy. To do this they require direct interaction with the environment to obtain experience and update value function estimations accordingly during execution.
+There are several techniques that exist, of which the most common ones are discussed in the remainder of this section.
 
 \subsubsection{Q-Learning}
 \label{sec:q-learning}
+
+Q-Learning is a model-free reinforcement learning technique which discovers an action-selection policy by learning estimates of the optimal Q-values of an \acrshort{acr:mdp}.
+The technique starts off with a Q-table $Q$, which is arbitrarily initialized, containing the Q-values $Q(s,a)$ for each state-action pair $(s,a)$.
+In each point in time, the agent for which the Q-Learning technique is applied, is assumed to be in a certain state $s$, and chooses a next action $a$ to execute based on the current Q-value estimates.
+After executing an action the agent ends up in a new state $s'$ and observes a certain reward $r$.
+The Q-table is then updated accordingly based on the following update rule:
+\[
+Q(s, a) = Q(s, a) + \alpha \Big[r + \gamma \max_{a'} Q(s',a') - Q(s, a)\Big]
+\]
+where $\alpha \in (0,1)$ is the learning rate and $\gamma$ the discount factor.
+Over time the estimates in the Q-table will improve such that the revenue is maximized.
+A near-optimal policy can then be constructed by selecting the action with the highest Q-value from the Q-table for each state.
 
 % 
 % Also note that it can be used for planning
