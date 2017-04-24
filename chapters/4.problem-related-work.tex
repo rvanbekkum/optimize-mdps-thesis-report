@@ -1,7 +1,7 @@
 \chapter{Related Work}
 \label{ch:problem-related-work}
 
-As was discussed in \autoref{ch:introduction}, a common approach in \acrshort{acr:dtp} is to formulate plans by making use of (compact) probabilistic models of the systems under consideration.
+A common approach in \acrshort{acr:dtp}, as was discussed in \autoref{ch:introduction}, is to formulate plans by making use of (compact) probabilistic models of the systems under consideration.
 In particular we focus our attention to devising \acrshort{acr:mdp} models, which need to accurately define what constitutes the state of the system, reflect uncertainty through transition probabilities, and specify goals through rewards.
 The problem we face is that hand-crafting accurate, well-generalizing models is a difficult and time-costly process for a human designer.
 To overcome this problem the goal is to automatize the model development process by applying learning algorithms on data that describes the stochastics of the system under consideration.
@@ -19,6 +19,14 @@ Subsequently, \autoref{sec:bayesian-reinforcement-learning} looks into the work 
 
 \section{Learning Probabilistic Models from Execution Traces}
 \label{sec:learning-state-spaces}
+
+To facilitate learning system models, the first step is to obtain a dataset which describes the stochastics of the system under consideration.
+A common approach of obtaining this data is through the recording of observations made in an exploration phase in which the system aims to gather information about the effect of performing various actions in different situations.
+The next step is to learn a probabilistic model which most accurately explains the execution traces obtained in this exploration phase.
+
+The most widely applied approaches for learning probabilistic models are based on maximizing the likelihood of observing the execution traces of the dataset.
+When the goal is to learn the parameters of a Markov Chain, the transition probabilities can be estimated as we have seen in \autoref{subsec:markov-chains}, by the ratio between the times a particular transition is observed and the total number of transitions observed from the corresponding starting state.
+However, while Markov Chains are similar to \acrshortpl{acr:mdp} in that they describe the evolution of a stochastic process over time, they do not involve decisions on the actions to perform.
 
 \showoutline{
 

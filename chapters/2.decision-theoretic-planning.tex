@@ -119,7 +119,7 @@ denoting the probability of state $s_i$ being the initial state of the model.
 Putting these components all together, a discrete stationary first-order Markov Chain can be defined as a 3-tuple $\mathcal{M} = (\mathcal{S}, \mat{A}, \arr{\pi})$ with $\mathcal{S}$ as state space, $\mat{A}$ as transition matrix and $\arr{\pi}$ as initial state vector.
 
 \subsubsection*{Fitting Markov Chains}
-There exist efficient methods for fitting a discrete stationary first-order Markov Chain provided a collected dataset describing the evolution of a stochastic process either by applying maximum likelihood (e.g., see \cite{bacciu2015probabilistic, barberBRML2012, lee1968maximum, teodorescu2009maximum}) or Bayesian inference (e.g., see \cite{barberBRML2012, lee1968maximum, minka2003bayesian}).
+There exist efficient methods for fitting a discrete stationary first-order Markov Chain provided a collected dataset describing the evolution of a stochastic process either by applying likelihood maximization (e.g., see \cite{bacciu2015probabilistic, barberBRML2012, lee1968maximum, teodorescu2009maximum}) or Bayesian inference (e.g., see \cite{barberBRML2012, lee1968maximum, minka2003bayesian}).
 These methods estimate the transition distribution to fit a Markov Chain on a collected sequence of time-ordered states. 
 
 The first-mentioned approach of likelihood maximization, works by estimating the transition probabilities by counting the observed transitions in the state sequence.
