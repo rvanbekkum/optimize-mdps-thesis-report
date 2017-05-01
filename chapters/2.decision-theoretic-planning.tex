@@ -395,7 +395,7 @@ Compared to \acrshort{acr:vi} the algorithm always converges in a finite number 
 That is, in \acrshort{acr:vi} each iteration takes $O(\lvert\mathcal{S}\rvert^2\cdot\lvert A\rvert)$ time, although one must note that the number of iterations is not finite, while \acrshort{acr:pi} finds an optimum in a finite number.\newpage
 
 \begin{algorithm}
-	\caption{Backwards Induction}
+	\caption{Backwards induction}
 	\label{alg:backwards-induction}
 	\begin{algorithmic}[1]
 		\Require{MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$, horizon $h \in \mathbb{N}$}
@@ -420,7 +420,7 @@ That is, in \acrshort{acr:vi} each iteration takes $O(\lvert\mathcal{S}\rvert^2\
 
 In the special case of a finite horizon \acrshort{acr:mdp} it is possible to obtain an optimal policy by applying \textit{backwards induction} \cite{chamie2015finite} shown in \autoref{alg:backwards-induction}.
 As the name suggests the algorithm works backwards, starting from the last step $h$ and recursively using the value function of step $t + 1$ to compute that of step $t$.
-Even though the algorithm works well when dealing with finite horizons, typically in real world scenarios more often deal with infinite horizons for planning under uncertainty.
+Even though the algorithm works well when dealing with finite horizons, typically real world scenarios more often deal with infinite horizons for planning under uncertainty.
 
 \subsubsection{Linear Programming}
 \label{sec:linear-programming}
@@ -440,7 +440,7 @@ Following this approach, an \acrshort{acr:lp} formulation for an MDP $\mathcal{M
 where $\mu_0: \mathcal{S} \mapsto [0,1]$ is a probability distribution over the states.
 
 From the solution $V^*$ of this \acrshort{acr:lp} formulation, a policy $\arr{\pi}^*$ can be obtained by letting $\arr{\pi}^*(s) = \argmax_{a \in A} \sum_{s' \in \mathcal{S}} \delta(s, a, s') \left[R(s,a,s') + \gamma\cdot V(s')\right]$ for each state $s \in \mathcal{S}$. This primal formulation optimizes a value function $V$, but alternatively the policy can be optimized directly by considering the dual formulation (see \cite{littman1995complexity}).
-Comparing \acrshort{acr:lp} solutions to the specialized \acrshort{acr:vi} and \acrshort{acr:pi} solutions, the latter are typically than general-purpose \acrshort{acr:lp} algorithms, although the \acrshort{acr:lp} scale better to larger \acrshort{acr:mdp} planning problems.
+Comparing \acrshort{acr:lp} solutions to the specialized \acrshort{acr:vi} and \acrshort{acr:pi} solutions, the latter typically hold more promise for efficient solutions than general-purpose \acrshort{acr:lp} algorithms, although the \acrshort{acr:lp} scale better to larger \acrshort{acr:mdp} planning problems.
 
 \subsection{Reinforcement Learning Techniques}
 \label{subsec:reinforcement-learning}
