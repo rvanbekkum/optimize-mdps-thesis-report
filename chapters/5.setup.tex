@@ -1,6 +1,20 @@
 \chapter{Methodology and Setup}
 \label{ch:setup}
 
+% There have been debates about the performance
+% measure that should be maximized during learning {
+% one point of view is that the available data should be
+% used to learn all possible perceptual distinctions in the
+% real world 
+
+% One of the main issues faced in learning \acrshort{acr:mdp} models is that of deciding on the state space, while one typically does not know the size of the true state space of the real-world process that generated the training data.
+%In fact this state space might even have been continuous, while the state space of the model is typically discrete.
+%In particular this might form an issue in the planning phase where a reward function needs to be defined to express the goals in the \acrshort{acr:mdp}, for which there may not be a clear one-to-one mapping from real-world states to model states.
+
+% Two approaches:
+% - Clustering training data to obtain states
+% - Trajectory Clustering
+
 \textbf{Note:} These bullet-points have not been completely updated yet although most are still relevant. Outline should be such that we first discuss the framework for model learning and optimization without considering incomplete data or doing cost-sensitive optimization, which are discussed next ('why and how').
 Probably describing the framework should be separated from the application to mobile robot navigation and how it is implemented, which should be described afterwards.
 

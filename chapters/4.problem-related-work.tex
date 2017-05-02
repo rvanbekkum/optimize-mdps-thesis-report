@@ -20,10 +20,10 @@ Subsequently, \autoref{sec:bayesian-reinforcement-learning} looks into the work 
 \section{Learning Probabilistic Models from Execution Traces}
 \label{sec:learning-state-spaces}
 
-To facilitate learning system models, the first step is to obtain a dataset which describes the stochastics of the system under consideration.
+To facilitate the learning of system models, the first step is to obtain a dataset which describes the stochastics of the system under consideration.
 A common approach of obtaining this data is through the recording of observations made in an exploration phase in which the system aims to gather information about the effect of performing various actions in different situations.
 The next step is to learn a probabilistic model which most accurately explains the execution traces obtained in this exploration phase.
-In this section a number of these algorithms are considered, where \autoref{sec:baum-welch} evaluates the well-known \textit{Baum-Welch} algorithm that iteratively updates transition and emission probabilities starting from a model with initial estimates of these probabilities, while \autoref{sec:state-merging} addresses a class of algorithms based on merging (time-)states to develop \acrshortpl{acr:mdp}.
+In this section a number of the algorithms for this purpose are considered, where \autoref{sec:baum-welch} evaluates the well-known \textit{Baum-Welch} algorithm that iteratively updates transition and emission probabilities starting from a model with initial estimates of these probabilities, while \autoref{sec:state-merging} addresses a class of algorithms based on merging (time-)states for developing \acrshortpl{acr:mdp}.
 
 \subsection{The Baum-Welch Algorithm}
 \label{sec:baum-welch}
@@ -50,7 +50,7 @@ Based on a set of gathered odometric readings an initial \textit{topological} mo
 Then an adapted version of Baum-Welch is applied which takes into account odometric informaton to iteratively update the model.
 The obtained results are compared to those that emerge from the traditional Baum-Welch algorithm, which is used to demonstrate that exploiting odometric information can reduce the number of iterations and improve the final model.
 
-Similarly, an adaptation of the Baum-Welch algorithm is applied in \cite{koenig1996unsupervised} to learn \acrshortpl{acr:pomdp} which exploits prior knowledge of map symmetry and does not adjust probabilities that are assumed to be approximately correct while sensor and actuator models are expected to be similar in different environments.
+Similarly, an adaptation of the Baum-Welch algorithm is applied in \cite{koenig1996unsupervised} to learn \acrshortpl{acr:pomdp} which exploits prior knowledge of map symmetry and does not adjust probabilities that are assumed to be approximately correct because the sensor and actuator models are expected to be similar in different environments.
 In this way the amount of required training data is restricted and updating the model happens more selectively and efficiently, although it demands the need for hand-crafting an initial topological model and defining constraints on the model structure.
 
 % Explain drawbacks of Baum-Welch for planning: e.g. local maxima
@@ -78,12 +78,7 @@ A particular advantage of this approach for planning is that one can choose to a
 However, a major disadvantage of the approach is that alternative merges are never considered by the algorithm, although in the end they may result in better models.
 This means that the approach is prone to local maxima, although this can be avoided to some extent by considering a set of most promising merges in each iteration, although it would make the algorithm even more cost-expensive than it already is.
 
-A variation of the algorithm is a method seen in \cite{nikovski1999learning} that goes under the name of \textit{State Merging by Trajectory Clustering}, which makes the state merging approach more resilient to \textit{perceptual aliasing}.
-In this approach the merging criterion is changed such that in each iteration those pairs of states are merged whose prior and posterior trajectories in the training set are most similar.
-The pseudo-code of this method is shown in \autoref{alg:trajectory-clustering} where the similarity of states is thus defined by the length of the trajectories from and towards the states. 
-In case of metric observations, one can choose to apply algorithms like $k$-means clustering to cluster the most similar states, or alternatively turn to clustering methods that work on similarity matrices.
-
-\begin{algorithm}
+\begin{algorithm}[t]
 	\caption{State Merging by Trajectory Clustering}
 	\label{alg:trajectory-clustering}
 	\begin{algorithmic}[1]
@@ -95,6 +90,11 @@ In case of metric observations, one can choose to apply algorithms like $k$-mean
 		\State \Return \acrshort{acr:mdp} $\mathcal{M}$
 	\end{algorithmic}
 \end{algorithm}
+
+A variation of the algorithm is a method seen in \cite{nikovski1999learning} that goes under the name of \textit{State Merging by Trajectory Clustering}, which makes the state merging approach more resilient to \textit{perceptual aliasing}.
+In this approach the merging criterion is changed such that in each iteration those pairs of states are merged whose prior and posterior trajectories in the training set are most similar.
+The pseudo-code of this method is shown in \autoref{alg:trajectory-clustering} where the similarity of states is thus defined by the length of the common trajectories from and towards the states. 
+In case the observations have an underlying metric space, one can choose to apply algorithms like $k$-means clustering to cluster the most similar time-states, or alternatively turn to clustering methods that work on similarity matrices.
 
 
 %One of the main issues faced in learning \acrshort{acr:mdp} models is that of deciding on the state space, while one typically does not know the size of the true state space of the real-world process that generated the training data.
@@ -134,39 +134,89 @@ In case of metric observations, one can choose to apply algorithms like $k$-mean
 %
 %}
 
-\section{Active (Reinforcement) Learning}
+\section{Active Learning}
 \label{sec:active-learning}
 
-\showoutline{
-	\begin{itemize}
-		\item Mention Model-Based \acrshort{acr:rl} or Online Model Learning
-		\item Refer to approach of combining offline and online planning: using an offline-obtained model and policy, apply model-based \acrshort{acr:rl} to update the parameters \cite{epshteyn2008active}
-		\item .....
-	\end{itemize}
-}
+Devising a completely accurate specification of the \acrshort{acr:mdp}'s transition probabilities typically turns out infeasible for real-world \acrshort{acr:dtp} problems.
+However it should be noted that the learning algorithms that have been addressed earlier, usually recover enough to let an \acrshort{acr:mdp} reflect the actual environment in which an agent operates.
+The plans that are derived accordingly from these models yield better performance than a random choice of actions in the execution of the system would.
+A class of approaches that we consider in this section are those that combine offline model learning and planning methods with online (reinforcement) learning methods which incrementally update the model parameters.
 
-\section{Bayesian Reinforcement Learning}
+\subsection{Active Reinforcement Learning}
+\label{sec:active-reinforcement-learning}
+%TODO
+\blindtext
+
+\blindtext
+
+%\showoutline{
+%	\begin{itemize}
+%		\item Mention Model-Based \acrshort{acr:rl} or Online Model Learning
+%		\item Refer to approach of combining offline and online planning: using an offline-obtained model and policy, apply model-based \acrshort{acr:rl} to update the parameters \cite{epshteyn2008active}
+%		\item .....
+%	\end{itemize}
+%}
+
+\newpage
+
+\subsection{Bayesian Reinforcement Learning}
 \label{sec:bayesian-reinforcement-learning}
 
-\showoutline{
-\begin{itemize}
-	\item Bayesian Inference (see section 2.2.1)
-	\item BRL: Maintaining a posterior distribution over possible model parameters
-	\item Framework description: \cite{png2011bayesian}
-	\begin{itemize}
-		\item Initialize distributions over unknown parameters (defining a prior, typically Dirichlet distribution)
-		\item Select action based on distributions
-		\item Execute action
-		\item Observe resulting reward and observation
-		\item Update posterior counts of unknown parameters based on observed information
-	\end{itemize}
-	\item MEDUSA, BEETLE + Other examples?
-	\item ..... (To be determined)
-\end{itemize}
-}
+\begin{algorithm}[t]
+	\caption{Model-Based Bayesian Reinforcement Learning}
+	\label{alg:bayesian-reinforcement-learning}
+	\begin{algorithmic}[1]
+		\Require{Initial \acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$}
+		%\Ensure{\acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$} \Comment{$s_0$ and $R$ are here irrelevant}
+		\State Initialize prior distribution(s) over unknown parameter(s)
+		\Repeat
+		\State Select action $a \in A$ based on the posteriors
+		\State Execute action $a$
+		\State Record observed reward and state
+		\State Update posterior of unknown parameters based on observations
+		\Until Agent terminates
+	\end{algorithmic}
+\end{algorithm}
+
+%TODO
+\blindtext
+
+\blindtext
+
+%\showoutline{
+%\begin{itemize}
+%	\item Bayesian Inference (see section 2.2.1)
+%	\item BRL: Maintaining a posterior distribution over possible model parameters
+%	\item Framework description: \cite{png2011bayesian}
+%	\begin{itemize}
+%		\item Initialize distributions over unknown parameters (defining a prior, typically Dirichlet distribution)
+%		\item Select action based on distributions
+%		\item Execute action
+%		\item Observe resulting reward and observation
+%		\item Update posterior counts of unknown parameters based on observed information
+%	\end{itemize}
+%	\item MEDUSA, BEETLE + Other examples?
+%	\item ..... (To be determined)
+%\end{itemize}
+%}
 
 % https://people.eecs.berkeley.edu/~avivt/BRLS_journal.pdf
 
+\section{MDP Models with Transition Probability Uncertainty}
+\label{sec:mdp-uncertain-probabilities}
+
+Another method to overcome the in-feasibility of obtaining completely accurate specifications of transition probabilities is to extend the models and planning algorithms to take imprecise probabilities into account.
+Over the years various frameworks have been introduced that utilize this idea, such as the \textit{\acrfull{acr:mdpip}} first introduced in \cite{satia1973markovian} which describes the transition probabilities as a set of linear inequalities to represent incomplete, ambiguous or conflicting beliefs over these probabilities.
+That is, in this framework the probability of moving from a state $s_i$ to $s_j$ with action $a$ could for instance be expressed by a variable $p_{ij}$ s.t. a constraint $0 \leq p_{ij} \leq 0.5$.
+An illustrative example of a possible application of such a framework would be that of \acrshortpl{acr:mdp} for traffic light control, for which the estimation of lane-turning probabilities for all traffic lanes is problematic, especially as they may be different over the day or throughout the year \cite{delgado2011efficient}.
+For these type of domains in particular, the \acrshort{acr:mdpip} framework was devised to account for strict uncertainty in the transition function.
+The framework also allows one to find plans under either optimistic or pessimistic assumptions about the true transition function.
+However, while the traditional \acrshort{acr:mdpip} framework demands solution techniques that are notably time-expensive, in practice factored \acrshort{acr:mdpip} representations are used for efficient planning, for instance by synchronous dynamic programming based on parameterized algebraic decision diagrams (PADDs) \cite{delgado2011efficient} or \acrshort{acr:rtdp} solutions \cite{delgado2016real}.
+
+An alternative framework is the \textit{\acrfull{acr:bmdp}} where a range of the transition probabilities and rewards are known, such that it can be viewed as a set of possible \acrshortpl{acr:mdp}.
+In fact, \acrshortpl{acr:bmdp} are a special case of \acrshortpl{acr:mdpip} where the attainable probabilities can be defined by a discrete set rather than linear constraints, but where ranges can also be defined on the rewards.
+When it is possible to restrict the parameters of the \acrshort{acr:mdp} at intervals as is done in \acrshort{acr:bmdp}, the algorithms that exist for \acrshortpl{acr:bmdp} exploit the restricted structure of the parameters more efficiently than \acrshortpl{acr:mdpip}, because the \acrshort{acr:mdpip} solutions demand \acrshort{acr:lp} approaches in each iteration.
+For \acrshortpl{acr:bmdp} solution techniques exist that can efficiently learn optimal policies, such as \textit{interval \acrshort{acr:vi}} \cite{givan2000bounded} or robust versions of \acrshort{acr:rtdp} \cite{buffet2005robust}.
 
 % TODO;s
 %% Fitting Markov Chains/MDPs:

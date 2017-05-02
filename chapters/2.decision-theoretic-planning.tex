@@ -357,7 +357,7 @@ Almost all of the steps in asynchronous \acrshort{acr:vi} are the same except th
 In the case of a fixed ordering, this algorithm is usually referred to as \textit{Gauss-Seidel \acrshort{acr:vi}}.
 Compared to the traditional \acrshort{acr:vi} algorithm, the asynchronous adaptation requires less space and converges faster, especially when updates occur more often for most relevant states and the update ordering is adjusted carefully.
 
-\textit{Real-Time Dynamic Programming (RTDP)} \cite{barto1995learning} is a family of asynchronous \acrshort{acr:vi} algorithms which aim to find policies by performing updates and concurrently controlling the \acrshort{acr:mdp} (based on the policy corresponding to the latest estimate of the value function).
+\textit{\acrfull{acr:rtdp}} \cite{barto1995learning} is a family of asynchronous \acrshort{acr:vi} algorithms which aim to find policies by performing updates and concurrently controlling the \acrshort{acr:mdp} (based on the policy corresponding to the latest estimate of the value function).
 Opposed to traditional \acrshort{acr:vi}, where solving \acrshortpl{acr:mdp} with large state spaces is infeasible, RTDP algorithms often converge without examining all states.
 
 % TODO POMDP Adaptation of Value Iteration See AI: A Modern Approach + Probabilistic Robotics
