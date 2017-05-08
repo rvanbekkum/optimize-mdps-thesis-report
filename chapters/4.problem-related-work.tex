@@ -9,7 +9,7 @@ Therefore this chapter aims to provide some insight into the existing approaches
 
 First \autoref{sec:learning-state-spaces} gives an overview of the existing algorithms for learning models from execution traces of the system.
 Then, in \autoref{sec:active-learning} a number of approaches are examined, which combine offline methods for learning (initial) models with \acrshort{acr:rl} algorithms which update the model parameters online.
-Subsequently, \autoref{sec:bayesian-reinforcement-learning} looks into the work that applies a technique known as Bayesian \acrlong{acr:rl} for learning models.
+Finally, \autoref{sec:mdp-uncertain-probabilities} looks into approaches that extend the traditional \acrshort{acr:mdp} framework by accounting for uncertainty in the transition probabilities, with the aim to overcome the in-feasibility of obtaining completely accurate probabilistic models.
 
 %\section{Problem Formulation}
 %\label{sec:problem-formulation}
@@ -33,7 +33,7 @@ When the goal is to learn the parameters of a Markov Chain, the transition proba
 However, while Markov Chains are similar to \acrshortpl{acr:mdp} in that they describe the evolution of a stochastic process over time, they do not involve decisions on actions to perform.
 Due to the close nature of these probabilistic models the likelihood maximization can be applied almost directly to learn the transition probabilities of \acrshortpl{acr:mdp}, although requires more data due to the addition of actions.
 
-In practice, it is more usual to only have a sequence of observations at one's disposal which do not directly map to the states of the system.
+In practice, it is more common to only have a sequence of observations at one's disposal which do not directly map to the states of the system.
 The approach of likelihood maximization generalizes to learning partially observable Markov Models through the well-known Baum-Welch algorithm, which is a special instance of the Expectation Maximization (EM) algorithm generally used for learning the parameters of \acrshortpl{acr:hmm}.
 Given a discrete or continuous observation space $\mathcal{V}$, a discrete state space $\mathcal{S}$, and a set $\mathcal{O}$ of i.i.d. observation sequences, the algorithm learns a model $\mathcal{M}^\ast = \argmax_\mathcal{M} p(\mathcal{O}\vert\mathcal{M})$.
 Informally, this is done by first providing manual estimates of the model parameters and then iteratively computing the expectations of how frequently the transitions and emissions are used (i.e., the \textit{E-step}) and updating these parameters based on those computed expectations (i.e., the \textit{M-step}).
@@ -142,12 +142,32 @@ However it should be noted that the learning algorithms that have been addressed
 The plans that are derived accordingly from these models yield better performance than a random choice of actions in the execution of the system would.
 A class of approaches that we consider in this section are those that combine offline model learning and planning methods with online (reinforcement) learning methods which incrementally update the model parameters.
 
+\subsection{Model-Based Reinforcement Learning}
+\label{sec:model-based-reinforcement-learning}
+
+In \acrshort{acr:rl} a distinction exists between model-free and model-based methods, where in the former the choice of action is made based on previously realized value, while the latter evaluates candidate actions based on their expected future rewards.
+Model-free or \textit{direct} \acrshort{acr:rl} can therefore be viewed as corresponding to habitual behavior, while model-based \acrshort{acr:rl} corresponds to goal-directed behavior.
+When the system under consideration encompasses considerable structure and its dynamics can be modeled accurately, model-based approaches oft to use experiential data more efficiently, be more resilient to changing goals and are better capable of obtaining near-optimal policies \cite{atkeson1997}.
+The planning problems involving these type of systems are those that qualify for applying model-based \acrshort{acr:rl} where the initial \acrshort{acr:mdp} could be acquired by offline model learning.
+
+To improve the estimations of the model parameters, the algorithms in model-based \acrshort{acr:rl} demand for efficient exploration, for which various approaches exist that are optimistic in face of uncertainty.
+An example is the $E^3$ algorithm \cite{kearns2002near} which explicitly chooses between exploiting the known part of the \acrshort{acr:mdp} and optimally reaching the part that needs to be explored. 
+Its exploration is based on \textit{balanced wandering}, which means that the agent will prefer the action that has been executed the least from its current state (breaking ties randomly) until the state has been visited a sufficient number of times.
+Another algorithm is the $R$-Max algorithm \cite{Brafman2002}, which has a built-in mechanism for switching between exploitation and exploration and differs in its exploration by letting the agent make the assumption that a maximum possible reward can be obtained from unexplored state-action pairs.
+
+Another issue that should be taken care of in model-based \acrshort{acr:rl} is when and how to update the \acrshort{acr:mdp} and its plan based on acquired experience. A simple approach would be to update the plan on each model update applying well-known algorithm like \acrshort{acr:vi}, although this is computationally expensive.
+To gain efficiency, frameworks like \textsc{RTMBA} \cite{hester2012rtmba} or \textsc{DYNA} and its various extensions \cite{silver2008sample}, aim to update their plans more intelligently (e.g., by updating value functions only for a subset of state-action pairs).
+A different approach could be to limit exhaustive exploration of states in the first place, exemplified by the \textsc{RL-DT} algorithm proposed in \cite{hester2010generalized}, which generalizes the effects of actions across states.
+This however, is particularly useful for these domains that require sample-efficient learning and for which the available time for exploration is limited.
+
 \subsection{Active Reinforcement Learning}
 \label{sec:active-reinforcement-learning}
-%TODO
-\blindtext
 
-\blindtext
+An appealing approach to overcome inaccuracies of offline learned probabilistic models is to use them as prior models for the model-based \acrshort{acr:rl} algorithms shown in \autoref{sec:model-based-reinforcement-learning}.
+In \cite{epshteyn2008active} an approach referred to as \textit{Active \acrlong{acr:rl}} is presented which uses a provided \acrshort{acr:mdp} specification as prior knowledge for exploration through model-based \acrshort{acr:rl}.
+Rather than using this \acrshort{acr:mdp} for planning, its model parameters are used as a blueprint for exploration in the actual environment.
+The algorithm guides the exploration by selecting these actions for which is known that the `prior' \acrshort{acr:mdp} is most-sensitive to changes in the corresponding transition probabilities and rewards.
+
 
 %\showoutline{
 %	\begin{itemize}
@@ -156,8 +176,6 @@ A class of approaches that we consider in this section are those that combine of
 %		\item .....
 %	\end{itemize}
 %}
-
-\newpage
 
 \subsection{Bayesian Reinforcement Learning}
 \label{sec:bayesian-reinforcement-learning}
@@ -170,7 +188,7 @@ A class of approaches that we consider in this section are those that combine of
 		%\Ensure{\acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$} \Comment{$s_0$ and $R$ are here irrelevant}
 		\State Initialize prior distribution(s) over unknown parameter(s)
 		\Repeat
-		\State Select action $a \in A$ based on the posteriors
+		\State Select action $a \in A$ based on the posterior distribution(s)
 		\State Execute action $a$
 		\State Record observed reward and state
 		\State Update posterior of unknown parameters based on observations
@@ -178,10 +196,15 @@ A class of approaches that we consider in this section are those that combine of
 	\end{algorithmic}
 \end{algorithm}
 
-%TODO
-\blindtext
+Considerable work has been conducted on investigating the application of Bayesian methods to \acrshort{acr:rl} motivated by their close relation to decision theory, used for making decisions under uncertainty. 
+In \textit{\acrfull{acr:brl}} the idea is to learn a model of the environment by considering the unknown parameters of the model as random variables.
+Over these random variables a distribution is defined to quantify the uncertainty over the parameters.
+Then, as evidence is gathered, the distribution is iteratively updated from which an estimation of the model parameters can be obtained.
+A general formulation of the steps of (model-based) \acrshort{acr:brl} with \acrshortpl{acr:mdp} is shown in \autoref{alg:bayesian-reinforcement-learning} (based on \cite{png2011bayesian}).
 
-\blindtext
+\blindtext %TODO
+
+\newpage
 
 %\showoutline{
 %\begin{itemize}
