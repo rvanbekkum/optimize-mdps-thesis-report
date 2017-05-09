@@ -198,11 +198,15 @@ The algorithm guides the exploration by selecting these actions for which is kno
 
 Considerable work has been conducted on investigating the application of Bayesian methods to \acrshort{acr:rl} motivated by their close relation to decision theory, used for making decisions under uncertainty. 
 In \textit{\acrfull{acr:brl}} the idea is to learn a model of the environment by considering the unknown parameters of the model as random variables.
-Over these random variables a distribution is defined to quantify the uncertainty over the parameters.
-Then, as evidence is gathered, the distribution is iteratively updated from which an estimation of the model parameters can be obtained.
-A general formulation of the steps of (model-based) \acrshort{acr:brl} with \acrshortpl{acr:mdp} is shown in \autoref{alg:bayesian-reinforcement-learning} (based on \cite{png2011bayesian}).
+Over these random variables a prior distribution $p(\theta)$ is defined corresponding to the prior beliefs over the unknown parameters $\theta$ of the model.
+A common choice for discrete-state and action \acrshortpl{acr:mdp} is a multinomial \textit{Dirichlet} prior, which is parameterized by a count-vector $\Phi = (\phi_1, \ldots, \phi_k)$ which defines the number of observations of all possible transitions.
+Then, as evidence is gathered, the posterior on $\theta$ (which quantifies the uncertainty over the parameters) is updated based on Bayes' rule from which an estimation of the model parameters can be obtained.
+A framework that is accordingly used in model-based \acrshort{acr:brl} is the Bayes-Adaptive \acrshort{acr:mdp}, which augments the original state space $\mathcal{S}$, transition function $\delta$ and reward function $R$ by jointly combining them with the posterior's hyper-parameters $\Phi$ \cite{guez2012efficient}.
+A general formulation of the steps of model-based \acrshort{acr:brl} (based on \cite{png2011bayesian}) is shown in \autoref{alg:bayesian-reinforcement-learning}.
 
-\blindtext %TODO
+A major drawback of model-based \acrshort{acr:brl} is that obtaining exact solutions appears computationally intractable.
+Nonetheless various approximate \acrshort{acr:brl} methods have been devised to provide feasible solutions (such as Bayesian DP, BOSS and Monte-Carlo tree search approaches), of which a majority is summarized in \cite{ghavamzadeh2015bayesian} for the interested reader.
+Still, a major challenge is scaling \acrshort{acr:brl} methods to large-scale \acrshortpl{acr:mdp} and models with continuous spaces.
 
 \newpage
 
