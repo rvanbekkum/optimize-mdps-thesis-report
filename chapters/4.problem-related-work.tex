@@ -7,7 +7,7 @@ The problem we face is that hand-crafting accurate, well-generalizing models is 
 To overcome this problem the goal is to automatize the model development process by applying learning algorithms on data that describes the stochastics of the system under consideration.
 Therefore this chapter aims to provide some insight into the existing approaches for automating the development of probabilistic models for planning under uncertainty.
 
-First \autoref{sec:learning-state-spaces} gives an overview of the existing algorithms for learning models from execution traces of the system.
+First \autoref{sec:learning-probabilistic-models} gives an overview of the existing algorithms for learning models from execution traces of the system.
 Then, in \autoref{sec:active-learning} a number of approaches are examined, which combine offline methods for learning (initial) models with \acrshort{acr:rl} algorithms which update the model parameters online.
 Finally, \autoref{sec:mdp-uncertain-probabilities} looks into approaches that extend the traditional \acrshort{acr:mdp} framework by accounting for uncertainty in the transition probabilities, with the aim to overcome the in-feasibility of obtaining completely accurate probabilistic models.
 
@@ -18,7 +18,7 @@ Finally, \autoref{sec:mdp-uncertain-probabilities} looks into approaches that ex
 %However, devising an optimal model for a specific system or process can be a daunting and error-prone task, when considering the wide range of possibilities while wanting a compact and computation-cost efficient model.
 
 \section{Learning Probabilistic Models from Execution Traces}
-\label{sec:learning-state-spaces}
+\label{sec:learning-probabilistic-models}
 
 To facilitate the learning of system models, the first step is to obtain a dataset which describes the stochastics of the system under consideration.
 A common approach of obtaining this data is through the recording of observations made in an exploration phase in which the system aims to gather information about the effect of performing various actions in different situations.
@@ -196,19 +196,18 @@ The algorithm guides the exploration by selecting these actions for which is kno
 	\end{algorithmic}
 \end{algorithm}
 
-Considerable work has been conducted on investigating the application of Bayesian methods to \acrshort{acr:rl} motivated by their close relation to decision theory, used for making decisions under uncertainty. 
+Considerable work has been conducted on investigating the application of Bayesian methods to \acrshort{acr:rl} motivated by their close relation to decision theory for making decisions under uncertainty. 
 In \textit{\acrfull{acr:brl}} the idea is to learn a model of the environment by considering the unknown parameters of the model as random variables.
 Over these random variables a prior distribution $p(\theta)$ is defined corresponding to the prior beliefs over the unknown parameters $\theta$ of the model.
 A common choice for discrete-state and action \acrshortpl{acr:mdp} is a multinomial \textit{Dirichlet} prior, which is parameterized by a count-vector $\Phi = (\phi_1, \ldots, \phi_k)$ which defines the number of observations of all possible transitions.
 Then, as evidence is gathered, the posterior on $\theta$ (which quantifies the uncertainty over the parameters) is updated based on Bayes' rule from which an estimation of the model parameters can be obtained.
-A framework that is accordingly used in model-based \acrshort{acr:brl} is the Bayes-Adaptive \acrshort{acr:mdp}, which augments the original state space $\mathcal{S}$, transition function $\delta$ and reward function $R$ by jointly combining them with the posterior's hyper-parameters $\Phi$ \cite{guez2012efficient}.
+A framework that is accordingly used in model-based \acrshort{acr:brl} is the \textit{Bayes-Adaptive \acrshort{acr:mdp}}, which augments the original state space $\mathcal{S}$, transition function $\delta$ and reward function $R$ by jointly combining them with the posterior's hyper-parameters $\Phi$ \cite{guez2012efficient}.
 A general formulation of the steps of model-based \acrshort{acr:brl} (based on \cite{png2011bayesian}) is shown in \autoref{alg:bayesian-reinforcement-learning}.
 
 A major drawback of model-based \acrshort{acr:brl} is that obtaining exact solutions appears computationally intractable.
 Nonetheless various approximate \acrshort{acr:brl} methods have been devised to provide feasible solutions (such as Bayesian DP, BOSS and Monte-Carlo tree search approaches), of which a majority is summarized in \cite{ghavamzadeh2015bayesian} for the interested reader.
 Still, a major challenge is scaling \acrshort{acr:brl} methods to large-scale \acrshortpl{acr:mdp} and models with continuous spaces.
-
-\newpage
+%TODO Maybe rewrite these sentences
 
 %\showoutline{
 %\begin{itemize}
