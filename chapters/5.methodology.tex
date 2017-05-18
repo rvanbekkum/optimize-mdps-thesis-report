@@ -65,9 +65,9 @@ The learning routine described in this section aims to achieve this by posing th
 
 The value of \acrshort{acr:mdp} $\mathcal{M}$ is defined as:
 \begin{equation}
-	V_{\mathcal{M}} = \alpha \cdot V_\mathit{DTP} + (1 - \alpha) \cdot V_\mathit{SIM}
+	V_{\mathcal{M}} = \beta \cdot V_\mathit{DTP} + (1 - \beta) \cdot V_\mathit{SIM}
 \end{equation}
-where $\alpha \in [0, 1]$ is a parameter which specifies the relative weight of $V_\mathit{DTP}$ against that of $V_\mathit{SIM}$.
+where $\beta \in [0, 1]$ is a parameter which specifies the relative weight of $V_\mathit{DTP}$ against that of $V_\mathit{SIM}$.
 
 \begin{itemize}
 	\item Multiple starting positions/initial states
@@ -82,16 +82,16 @@ where $\alpha \in [0, 1]$ is a parameter which specifies the relative weight of 
 % - Clustering training data to obtain states
 % - Trajectory Clustering
 
-\section{Cost-Effective Optimization}
+\section{Cost-Incremental Optimization}
 \label{sec:cost-effective-optimization}
 
 \begin{itemize}
-	\item Change the $\alpha$-parameter of Eq 5.1 over time
+	\item Change the $\beta$-parameter of Eq 5.1 over time
 	\item The $\gamma$ discount factor (low values $\to$ faster planning)
 	\item Three 'phases':
 	\begin{itemize}
-		\item First phase: Performance assessment solely based on $V_\mathit{DTP}$ (i.e., initially $\alpha = 1$). No simulations. $\gamma$ parameter starts off low and increases over time. This means this first phase is relatively cost-cheap, but might give us a global idea of the interesting area of the parameter-space so that we could narrow this space down.
-		\item Second phase: $\alpha$ decreases over time, which means $V_\mathit{SIM}$ starts to play a role, and assessment becomes more accurate, but also more cost-expensive.
+		\item First phase: Performance assessment solely based on $V_\mathit{DTP}$ (i.e., initially $\beta = 1$). No simulations. $\gamma$ parameter starts off low and increases over time. This means this first phase is relatively cost-cheap, but might give us a global idea of the interesting area of the parameter-space so that we could narrow this space down.
+		\item Second phase: $\beta$ decreases over time, which means $V_\mathit{SIM}$ starts to play a role, and assessment becomes more accurate, but also more cost-expensive.
 		\item Third phase: Starts when the parameter-space has sufficiently been narrowed down. To further improve learned models we would like to see if the opportunity exists of having higher resolution in some areas of the state space to better reflect the data-set.
 	\end{itemize}
 \end{itemize}
