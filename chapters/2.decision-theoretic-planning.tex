@@ -446,7 +446,10 @@ Comparing \acrshort{acr:lp} solutions to the specialized \acrshort{acr:vi} and \
 \label{subsec:reinforcement-learning}
 
 \acrfull{acr:rl} techniques work on real experience based on which they update the behavior of the agent that is defined by an action-selection policy. To do this they require direct interaction with the environment to obtain experience and update value function estimations accordingly during execution.
+Although most planning algorithms cannot be used for learning problems, learning algorithms can be used for planning problems as they can make use of simulated experience.
 There are several techniques that exist, of which the most common ones are discussed in the remainder of this section.
+
+\newpage
 
 \subsubsection{Q-Learning}
 \label{sec:q-learning}
@@ -459,7 +462,8 @@ The Q-table is then updated accordingly based on the following update rule:
 \[
 Q(s, a) = Q(s, a) + \alpha \Big[r + \gamma \max_{a'} Q(s',a') - Q(s, a)\Big]
 \]
-where $\alpha \in (0,1)$ is the learning rate and $\gamma$ the discount factor.
+where $\alpha \in (0,1)$ is the learning rate and $\gamma \in (0, 1)$ the discount factor.
+The learning rate expresses the rate at which newly acquired information overrides the old information in the Q-table.
 Over time the estimates in the Q-table will improve such that the revenue is maximized.
 A near-optimal policy can then be constructed by selecting the action with the highest Q-value from the Q-table for each state.
 
@@ -469,20 +473,24 @@ A near-optimal policy can then be constructed by selecting the action with the h
 \subsubsection{SARSA}
 \label{sec:sarsa}
 
-% 
+\begin{algorithm}
+	\caption{SARSA}
+	\label{alg:sarsa}
+	\begin{algorithmic}[1]
+		\Require{MDP $\mathcal{S}, A, \alpha, \gamma$}
+		\Ensure{Optimal policy $\arr{\pi}^*: \mathcal{S} \mapsto A$}
+		\State Initialize $Q: \mathcal{S} \times A \mapsto \mathbb{R}$ arbitrarily
+		\Repeat
+		\State Pick $s \in \mathcal{S}$ arbitrarily
+		\State $a \gets \pi[s]$ %TODO
+			\Repeat
+			\State 
+			\Until{$s$ is terminal}
+		\Until{$Q$ converged}
+		\State\Return $\arr{\pi}^*$
+	\end{algorithmic}
+\end{algorithm}
 
-% \subsection{Integrated Architectures}
-% Dyna Architecture -- combines model-learning and direct/value-based approaches, applies these iteratively even in execution of the agent --> 'hybrid' approach?
-	% See "Integrated Learning and Planning" Lecture sheets by David Silver	[Integrated Architecture]
-	% 
-
-% 7.9.2
-
-
-
-
-
-
-
-
-% perceptual aliasing!!!!!!
+Another algorithm, similar to Q-Learning, is known as SARSA.
+While Q-Learning is an off-policy method which learns the value of the optimal policy, SARSA is an on-policy method which learns the value of the policy it currently follows in order to iteratively improve this policy.
+In each iteration, it takes the action yielded by its policy and observes
