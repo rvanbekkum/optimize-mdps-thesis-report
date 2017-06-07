@@ -51,6 +51,7 @@ In order to obtain accurate probabilistic models for the system under considerat
 To achieve this we pose the adjustment of the learning algorithm parameters as an optimization task to maximize the performance that follows from executing plans derived from learned \acrshort{acr:mdp} models.
 The optimization is then done by applying a technique known as Bayesian Optimization, so that we define a probability distribution over functions to model the performance measure and iteratively sample parameter-settings towards a global maximizer of the performance.
 
+%TODO Update this part?
 To address model inadequacies that are due to incomplete data, we propose to incorporate the identification of insufficient exploration for the transitions from those states that are visited in the execution of obtained plans.
 That is, for those learned models for which the data was observed to be incomplete, the observations of the performance for the corresponding parameter-settings are modeled as noisy or uncertain.
 This serves the purpose of more cautious exploitation of those areas of the parameter space which mostly produce noisy observations of the performance measure.

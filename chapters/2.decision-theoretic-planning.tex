@@ -470,27 +470,27 @@ A near-optimal policy can then be constructed by selecting the action with the h
 % 
 % Also note that it can be used for planning
 
-\subsubsection{SARSA}
-\label{sec:sarsa}
-
 \begin{algorithm}
 	\caption{SARSA}
 	\label{alg:sarsa}
 	\begin{algorithmic}[1]
-		\Require{MDP $\mathcal{S}, A, \alpha, \gamma$}
+		\Require{State-space $\mathcal{S}$, action space $A$, learning rate $\alpha$, discount factor $\gamma$}
 		\Ensure{Optimal policy $\arr{\pi}^*: \mathcal{S} \mapsto A$}
 		\State Initialize $Q: \mathcal{S} \times A \mapsto \mathbb{R}$ arbitrarily
 		\Repeat
 		\State Pick $s \in \mathcal{S}$ arbitrarily
 		\State $a \gets \pi[s]$ %TODO
-			\Repeat
-			\State 
-			\Until{$s$ is terminal}
+		\Repeat
+		\State 
+		\Until{$s$ is terminal}
 		\Until{$Q$ converged}
 		\State\Return $\arr{\pi}^*$
 	\end{algorithmic}
 \end{algorithm}
 
-Another algorithm, similar to Q-Learning, is known as SARSA.
+\subsubsection{SARSA}
+\label{sec:sarsa}
+
+SARSA is another model-free \acrshort{acr:rl} algorithm which is similar to Q-Learning.
 While Q-Learning is an off-policy method which learns the value of the optimal policy, SARSA is an on-policy method which learns the value of the policy it currently follows in order to iteratively improve this policy.
 In each iteration, it takes the action yielded by its policy and observes

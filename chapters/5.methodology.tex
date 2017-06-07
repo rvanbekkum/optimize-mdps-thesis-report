@@ -17,7 +17,7 @@ There are two major reasons for a learned model to not yield good performance.
 First of all, the learned model may be too complicated for the amount of available data, which leads to model over-fitting.
 On the other hand, one could acquire a model that is too simple to explain the available data and so does not accurately reflect the underlying system in that situation.
 Therefore, the parameters of the learning algorithm should be properly adjusted in order to acquire accurate probabilistic models.
-The learning routine described in this section aims to achieve this by posing the adjustment of these parameters as an optimization task, with the objective of obtaining an \acrshort{acr:mdp} model that maximizes the performance of executing the plans that are derived from it.
+The learning routine described in this section, depicted in \autoref{fig:learning-routine-complete}, aims to achieve this by posing the adjustment of these parameters as an optimization task, with the objective of obtaining an \acrshort{acr:mdp} model that maximizes the performance of executing the plans that are derived from it.
 
 \begin{figure}[!h]%[t]
 	\centering
@@ -29,27 +29,49 @@ The learning routine described in this section aims to achieve this by posing th
 \subsection{Learning Step}
 \label{sec:routine-description}
 
-\begin{itemize}
-	\item Start off with data-set of execution traces obtained beforehand
-	\item A number of parameter-settings $\theta$ for the model-learning are initially sampled at random from a designer-specified domain $\Theta$ (i.e., the parameter-space).
-	\item Acquire state-space by an unsupervised machine learning method
-	\item Acquire transition function by applying a known model-learning algorithm as in \autoref{sec:learning-probabilistic-models} (e.g., a maximum likelihood approach)
-	\item Goals are mapped to a reward function $R$ over the acquired state-space $\mathcal{S}$ (or possibly over state-action pairs or state-action-state triplets)
-	\item Then the state-space $\mathcal{S}$, transition function $\delta$, action set $A$, reward function $R$ and a configurable initial state $s_0$ form an \acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$.
-	\item To asses the associated performance or value of $\mathcal{M}$, we solve the \acrshort{acr:mdp} using known \acrshort{acr:dtp} algorithms like \acrshort{acr:vi} (see \autoref{sec:planning}) to obtain one or more policies $\pi$.
-	\item The value of the model $V_\mathcal{M}$ is then determined by checking how the system would perform by execution according to the derived policies (e.g., based on simulations and/or the value function of \acrshort{acr:vi}).
-\end{itemize}
+The routine can be viewed as consisting of two subsequent steps which are repeated until an \acrshort{acr:mdp} model that yields satisfactory performance is obtained.
+The first of these two main steps will be referred to as the \textit{learning step}, in which an \acrshort{acr:mdp} model is acquired.
+This learning step starts off with a data-set of execution traces obtained beforehand.
+Given a parameter-setting $\theta$ for a selected unsupervised machine learning algorithm, a state-space $\mathcal{S}$ is acquired using the execution traces as training set.
+Subsequently a transition function $\delta$ is acquired by applying a known model-learning (as described in \autoref{sec:learning-probabilistic-models}) given the data-set, state-space $\mathcal{S}$ and possible actions $A$.
+The goals of the systems are accordingly mapped to a reward function $R$ over the acquired state-space $\mathcal{S}$ (or alternatively over state-action pairs or state-action-state triplets).
+The state-space $\mathcal{S}$, transition function $\delta$, action set $A$, reward function $R$ and a configurable initial state $s_0$ are then combined into an \acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$.
+
+To assess the performance yielded by $\mathcal{M}$, the \acrshort{acr:mdp} is solved by applying known \acrshort{acr:dtp} algorithms like \acrshort{acr:vi} or \acrshort{acr:pi} and obtaining policies for a set of tasks the system is expected to perform.
+The value of the model $V_{\mathcal{M}}$ is then determined by checking how well the system is expected to perform by execution according to the derived policies (e.g., based on simulations and/or the value function obtained by a \acrshort{acr:dtp} algorithm).
+\autoref{sec:performance-measure} describes in detail how the performance yielded by the learned \acrshortpl{acr:mdp} is assessed and how a fair comparison of different \acrshortpl{acr:mdp} may be achieved for this routine.
+
+%\begin{itemize}
+%	\item Start off with data-set of execution traces obtained beforehand
+%	\item A number of parameter-settings $\theta$ for the model-learning are initially sampled at random from a designer-specified domain $\Theta$ (i.e., the parameter-space).
+%	\item Acquire state-space by an unsupervised machine learning method
+%	\item Acquire transition function by applying a known model-learning algorithm as in \autoref{sec:learning-probabilistic-models} (e.g., a maximum likelihood approach)
+%	\item Goals are mapped to a reward function $R$ over the acquired state-space $\mathcal{S}$ (or possibly over state-action pairs or state-action-state triplets)
+%	\item Then the state-space $\mathcal{S}$, transition function $\delta$, action set $A$, reward function $R$ and a configurable initial state $s_0$ form an \acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$.
+%	\item To asses the associated performance or value of $\mathcal{M}$, we solve the \acrshort{acr:mdp} using known \acrshort{acr:dtp} algorithms like \acrshort{acr:vi} (see \autoref{sec:planning}) to obtain one or more policies $\pi$.
+%	\item The value of the model $V_\mathcal{M}$ is then determined by checking how the system would perform by execution according to the derived policies (e.g., based on simulations and/or the value function of \acrshort{acr:vi}).
+%\end{itemize}
 
 \subsection{Optimization Step}
 \label{sec:optimization-step}
 
-\begin{itemize}
-	\item As said, at first a number $n$ of parameter-settings are selected randomly, stored in evidence set $\mathcal{D}$.
-	\item For these parameter-settings we obtain an estimation of the performance of executing plans derived from the learned \acrshortpl{acr:mdp}
-	\item Define the objective function $f$ such that it maps parameter-settings $\theta$ to real-valued model performance $f: \Theta \mapsto \mathbb{R}$ 
-	\item Bayesian Optimization: Motivate the application of this method to these type of problems `again'. Defines prior over $f$ and posterior based on the gathered evidence in $\mathcal{D}$.
-	\item New evidence is then acquired based on the utility function used in the optimization.
-\end{itemize}
+The second main step of the routine will be referred to as the \textit{optimization step}, in which a parameter-setting $\theta$ is selected for the next learning step in such way that yielded performance converges to a global maximum as quickly as possible.
+As initially there is no knowledge of the performance given the settings of the learning parameter(s) $\theta$, in the first few routine-iterations parameter-settings are selected at random from the designer-specified domain $\Theta$ (i.e., the parameter-space).
+Together with the value $V_{\mathcal{M}}$ of the corresponding model obtained in the learning step for each of these parameters $\theta$, they are stored in an evidence set $\mathcal{D}$.
+The objective function $f: \Theta \mapsto \mathbb{R}$ is then defined such that it maps parameter-settings $\theta \in \Theta$ to real-valued performance yielded by \acrshortpl{acr:mdp}.
+
+As discussed earlier in  \autoref{sec:bayesian-optimization-problem}, the objective functions for the class of \acrshort{acr:sdm} problems tend to be expensive to evaluate as proper estimations can only be made through expensive simulations.
+Therefore, Bayesian optimization emerges as an attractive method to find a global maximizer $\theta^\ast \in \Theta$ for our objective function.
+After each iteration the evidence set $\mathcal{D}$ is augmented with a new observation, based on which the posterior $p(f\vert \mathcal{D})$ of the objective function $f$ is updated accordingly.
+A new parameter-setting for the next learning step is then sampled, for which the utility is maximal in the selected acquisition function.
+
+%\begin{itemize}
+%	\item As said, at first a number $n$ of parameter-settings are selected randomly, stored in evidence set $\mathcal{D}$.
+%	\item For these parameter-settings we obtain an estimation of the performance of executing plans derived from the learned \acrshortpl{acr:mdp}
+%	\item Define the objective function $f$ such that it maps parameter-settings $\theta$ to real-valued model performance $f: \Theta \mapsto \mathbb{R}$ 
+%	\item Bayesian Optimization: Motivate the application of this method to these type of problems `again'. Defines prior over $f$ and posterior based on the gathered evidence in $\mathcal{D}$.
+%	\item New evidence is then acquired based on the utility function used in the optimization.
+%\end{itemize}
 
 \subsection{Performance Measure}
 \label{sec:performance-measure}
