@@ -63,7 +63,7 @@ The objective function $f: \Theta \mapsto \mathbb{R}$ is then defined such that 
 As discussed earlier in  \autoref{sec:bayesian-optimization-problem}, the objective functions for the class of \acrshort{acr:sdm} problems tend to be expensive to evaluate as proper estimations can only be made through expensive simulations.
 Therefore, Bayesian optimization emerges as an attractive method to find a global maximizer $\theta^\ast \in \Theta$ for our objective function.
 After each iteration the evidence set $\mathcal{D}$ is augmented with a new observation, based on which the posterior $p(f\vert \mathcal{D})$ of the objective function $f$ is updated accordingly.
-A new parameter-setting for the next learning step is then sampled, for which the utility is maximal in the selected acquisition function.
+A new parameter-setting for the next learning step is then sampled, corresponding to maximal utility in the selected acquisition function.
 
 %\begin{itemize}
 %	\item As said, at first a number $n$ of parameter-settings are selected randomly, stored in evidence set $\mathcal{D}$.
@@ -95,6 +95,8 @@ where $\beta \in [0, 1]$ is a parameter which specifies the relative weight of $
 	\item Multiple starting positions/initial states
 	\item Multiple goals/reward functions
 	\item $V_\mathit{DTP}$, how to deal with problem of less states -> less steps. Need fair comparison.
+	\item Discrepancy factor; obtained value based on part of the state covering the goal
+	\item Goal state to trap state to avoid acquiring unlimited reward
 \end{itemize}
 
 % One of the main issues faced in learning \acrshort{acr:mdp} models is that of deciding on the state space, while one typically does not know the size of the true state space of the real-world process that generated the training data.
