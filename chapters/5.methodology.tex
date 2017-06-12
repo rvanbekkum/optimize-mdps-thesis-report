@@ -124,6 +124,42 @@ where $\beta \in [0, 1]$ is a parameter which specifies the relative weight of $
 \section{Application to Mobile Robot Navigation}
 \label{sec:application-mobile-robot}
 
+\begin{figure}[t]
+\centering
+
+\captionsetup{font=small}
+\captionsetup[subfigure]{font=footnotesize}
+\captionsetup[subfigure]{justification=centering}
+\begin{subfigure}{.5\textwidth}
+	\centering
+	\includegraphics[width=.8\linewidth]{dummy-map-2-1}
+	\caption{Simple environment with a mobile robot and goal area.}
+	\label{fig:dummy-map-1}
+\end{subfigure}\hfill
+\begin{subfigure}{.5\textwidth}
+	\centering
+	\includegraphics[width=.8\linewidth]{dummy-map-2-2}
+	\caption{Data-points of execution traces from exploration depicted.}
+	\label{fig:dummy-map-2}
+\end{subfigure}
+
+\bigskip
+
+\begin{subfigure}{.5\textwidth}
+	\centering
+	\includegraphics[width=.8\linewidth]{dummy-map-2-3}
+	\caption{State-space of a learned \acrshort{acr:mdp} depicted.}
+	\label{fig:dummy-map-3}
+\end{subfigure}\hfill
+\begin{subfigure}{.5\textwidth}
+	\centering
+	\includegraphics[width=.8\linewidth]{dummy-map-2-4}
+	\caption{Corresponding optimal policy for the \acrshort{acr:mdp}.}
+	\label{fig:dummy-map-4}
+\end{subfigure}
+	\caption{Planning for the navigation of a mobile robot by learning \acrshortpl{acr:mdp} from data about the environment.}
+\end{figure}
+
 \begin{itemize}
 	\item Description
 	\item Motivation of this application
