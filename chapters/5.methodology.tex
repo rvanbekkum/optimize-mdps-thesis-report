@@ -22,10 +22,10 @@ Therefore, the parameters of the learning algorithm should be properly adjusted 
 
 The learning and optimization routine described in this section, depicted in \autoref{fig:learning-routine-complete}, aims to achieve this by posing the adjustment of these parameters as an optimization task, with the objective of obtaining an \acrshort{acr:mdp} model that maximizes the performance of executing the plans that are derived from it.
 
-\begin{figure}[!h]%[t]
+\begin{figure}[t]
 	\centering
 	\includegraphics[width=\textwidth]{learning-cycle-complete-v2}
-	\caption{Diagram of the model learning and optimization routine}
+	\caption{Diagram of the model learning and optimization routine.}
 	\label{fig:learning-routine-complete}
 \end{figure}
 
@@ -81,11 +81,11 @@ A new parameter-setting for the next learning step is then sampled, correspondin
 
 \begin{figure}[t!]
 \centering
-\begin{tikzpicture}[->,>=stealth',auto,node distance=2.5cm,every label/.style=draw]
+\begin{tikzpicture}[->,>=stealth',auto,node distance=2.5cm,every label/.style=draw,every initial by arrow/.style={dashed}]
 \tikzstyle{every state}=[fill=white,draw=black,text=black,scale=1]	% thick
-\node[state,label={50:\small$+0$}] (s1) {};
-\node[state,label={50:\small$+0$}] (s2) [below of=s1] {};
-\node[state,label={50:\small$+0$}] (s3) [right of=s1] {};
+\node[state,initial,initial text={},label={50:\small$+0$}] (s1) {};
+\node[state,initial,initial text={},label={50:\small$+0$}] (s2) [below of=s1] {};
+\node[state,initial,initial text={},label={50:\small$+0$}] (s3) [right of=s1] {};
 \node[state,label={50:\small$+1$}] (goal) [below of=s3] {G};
 \node[state,label={50:\small$+0$}] (trap) [right of=goal] {\text{T}};
 \coordinate (con) at (0,2);
@@ -104,7 +104,7 @@ edge [loop above] node {$A$} (trap)
 %\draw [->, dashed, shorten >=0pt] (s3) to[right] node[auto] {} ++(1.3,0)
 ;
 \end{tikzpicture}
-\caption{One-time reward in goal state G in an \acrshort{acr:mdp} realized by a trap state T}
+\caption{One-time reward in goal state G in an \acrshort{acr:mdp} realized by a trap state T.}
 \label{fig:goal-trap-state}
 \end{figure}
 
@@ -149,6 +149,7 @@ Then accordingly we can define $T = \mathcal{S_0} \times R_G$ as the set of task
 
 \noindent Putting this all together, the performance of an \acrshort{acr:mdp} $\mathcal{M}$ can in this way be expressed as:
 \begin{equation}
+\label{eq:vm}
 	V_{\mathcal{M}} = \frac{\sum_{\forall t \in T} \beta \cdot V_{\mathit{DTP}, t} + (1 - \beta) \cdot V_{\mathit{SIM}, t}}{|T|}
 \end{equation}
 where $T$ is the set consisting of the pairs of initial states and reward functions of the tasks over which the performance is assessed.
@@ -187,16 +188,45 @@ where $T$ is the set consisting of the pairs of initial states and reward functi
 \section{Cost-Incremental Optimization}
 \label{sec:cost-effective-optimization}
 
-\begin{itemize}
-	\item Change the $\beta$-parameter of Eq 5.1 over time
-	\item The $\gamma$ discount factor (low values $\to$ faster planning)
-	\item Three 'phases':
-	\begin{itemize}
-		\item First phase: Performance assessment solely based on $V_\mathit{DTP}$ (i.e., initially $\beta = 1$). No simulations. $\gamma$ parameter starts off low and increases over time. This means this first phase is relatively cost-cheap, but might give us a global idea of the interesting area of the parameter-space so that we could narrow this space down.
-		\item Second phase: $\beta$ decreases over time, which means $V_\mathit{SIM}$ starts to play a role, and assessment becomes more accurate, but also more cost-expensive.
-		\item Third phase: Starts when the parameter-space has sufficiently been narrowed down. To further improve learned models we would like to see if the opportunity exists of having higher resolution in some areas of the state space to better reflect the data-set.
-	\end{itemize}
-\end{itemize}
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=0.7\textwidth]{abstraction-5-1}
+	\caption{Correspondence of the phases of the model learning framework to the different levels of abstraction.}
+	\label{fig:abstraction-cost}
+\end{figure}
+
+To make the solution more cost-effective, the framework is extended by defining three phases with the aim of exploiting the lower cost of computing the value function for \acrshortpl{acr:mdp} in comparison to the cost of executing plans in simulations or the real world.
+That is, assessing performance solely based on learned \acrshort{acr:mdp} models is less cost-expensive, although the model might not accurately reflect the real world as its abstracts over low-level details.
+This section defines the phases of the extension, of which each subsequent phase better reflects the real world, but on the other hand are accompanied by higher costs as depicted in \autoref{fig:abstraction-cost}.
+
+%\blindtext
+
+%\begin{itemize}
+%	\item Change the $\beta$-parameter of Eq 5.1 over time
+%	\item The $\gamma$ discount factor (low values $\to$ faster planning)
+%	\item Three 'phases':
+%\end{itemize}
+
+\subsection{Phase 1: Value Function Pre-Processing}
+\label{sec:phase-1}
+
+First phase: Performance assessment solely based on $V_\mathit{DTP}$ (i.e., initially $\beta = 1$). No simulations. $\gamma$ parameter starts off low and increases over time. This means this first phase is relatively cost-cheap, but might give us a global idea of the interesting area of the parameter-space so that we could narrow this space down.
+
+%\blindtext
+
+\subsection{Phase 2: Simulation-Based Optimization}
+\label{sec:phase-2}
+
+Second phase: $\beta$ decreases over time, which means $V_\mathit{SIM}$ starts to play a role, and assessment becomes more accurate, but also more cost-expensive.
+
+%\blindtext
+
+\subsection{Phase 3: Resolution Post-Processing}
+\label{sec:phase-3}
+
+Third phase: Starts when the parameter-space has sufficiently been narrowed down. To further improve learned models we would like to see if the opportunity exists of having higher resolution in some areas of the state space to better reflect the data-set.
+
+%\blindtext
 
 \newpage
 
