@@ -79,15 +79,48 @@ A new parameter-setting for the next learning step is then sampled, correspondin
 \subsection{Performance Measure}
 \label{sec:performance-measure}
 
+\begin{figure}[t!]
+\centering
+\begin{tikzpicture}[->,>=stealth',auto,node distance=2.5cm,every label/.style=draw]
+\tikzstyle{every state}=[fill=white,draw=black,text=black,scale=1]	% thick
+\node[state,label={50:\small$+0$}] (s1) {};
+\node[state,label={50:\small$+0$}] (s2) [below of=s1] {};
+\node[state,label={50:\small$+0$}] (s3) [right of=s1] {};
+\node[state,label={50:\small$+1$}] (goal) [below of=s3] {G};
+\node[state,label={50:\small$+0$}] (trap) [right of=goal] {\text{T}};
+\coordinate (con) at (0,2);
+\path
+(s1)
+edge node {$a_i$} (goal)
+(s2)
+edge node {$a_j$} (goal)
+(s3)
+edge node {$a_k$} (goal)
+(goal)
+edge node {$A$} (trap)
+(trap)
+edge [loop above] node {$A$} (trap)
+;
+%\draw [->, dashed, shorten >=0pt] (s3) to[right] node[auto] {} ++(1.3,0)
+;
+\end{tikzpicture}
+\caption{One-time reward in goal state G in an \acrshort{acr:mdp} realized by a trap state T}
+\label{fig:goal-trap-state}
+\end{figure}
+
 Posing the learning of probabilistic models as an optimization task requires us to define a mapping of \acrshortpl{acr:mdp} to a performance measure that can fairly compare different models.
 As discussed earlier, one can express the performance of an \acrshort{acr:mdp} in terms of how well the agent performs tasks following policies that are derived from the model.
 Therefore, one option is to make use of the value function $V$ obtained by a \acrshort{acr:dtp} algorithm (e.g., \acrshort{acr:vi} or \acrshort{acr:pi}).
-Then a possible expression of how well the agent executes its task is:
+
+One problem that emerges, however, is that there might not be a one-to-one correspondence between learned and true (goal) states, which leads to the possibility of small state spaces yielding high value while the goal states might not map well to the true goal states.
+To take care of this, we introduce a discrepancy factor $\xi \in [0, 1]$, which corresponds to the fraction of data points within the goal state that map to the true goal.
+
+Accordingly, a possible expression of how well the agent executes its task then is:
 \begin{equation}
 \label{eq:vdtp}
-V_{\mathit{DTP},(s_0,R)} = V[s_0]
+V_{\mathit{DTP},(s_0,R)} = \xi \cdot V[s_0]
 \end{equation}
-where $s_0 \in \mathcal{S}$ is the initial state and $R$ the reward function of the \acrshort{acr:mdp}.
+where $s_0 \in \mathcal{S}$ is the initial state and $R$ the reward function of the \acrshort{acr:mdp} for the task.
 
 However, although the \acrshort{acr:dtp} algorithm may yield high value for the task, it might be that the agent will not perform well following the policy in the real world.
 To better assess the performance, one could execute simulations in which the agent follows the policy derived from the \acrshort{acr:mdp} model.
@@ -102,20 +135,23 @@ where $s_0 \in \mathcal{S}$ is the initial state, $R$ the reward function, $\gam
 Combining the expressions of \autoref{eq:vdtp} and \autoref{eq:vsim} yields the following expression of the performance on a task:
 \begin{equation}
 \label{eq:vcom}
-\beta \cdot V_{\mathit{DTP}, (s_0, R)} + (1 - \beta) \cdot V_{\mathit{SIM}, (s_0, R)}
+\beta \cdot V_{\mathit{DTP}, t=(s_0, R)} + (1 - \beta) \cdot V_{\mathit{SIM}, t=(s_0, R)}
 \end{equation}
-where $\beta \in [0, 1]$ is a parameter which specifies the relative weight of $V_{\mathit{DTP}, t}$ against that of $V_{\mathit{SIM}, t}$ and where $s_0$ and $R$ are the initial state and reward function respectively.
+where $\beta \in [0, 1]$ is a parameter which specifies the relative weight of $V_{\mathit{DTP}, t}$ against that of $V_{\mathit{SIM}, t}$ and where $s_0$ and $R$ are the initial state and reward function for the task respectively.
 
 As the desire is to obtain a well-generalizing model that performs well on different tasks, we estimate the performance by obtaining the value yielded for multiple tasks.
 To achieve this, let us first define multiple starting configurations and multiple goals for the system.
 The starting configurations are each mapped to corresponding states in the \acrshort{acr:mdp}, so that one can define $\mathcal{S}_0 \subseteq \mathcal{S}$ as a set of initial states.
 Similarly, the goals are each mapped to states, such that one can define $\mathcal{S}_G \subseteq \mathcal{S}$ as a set of goals.
-Let us then define $R_G$ as a set of reward functions $R_i$ for each $i \in \mathcal{S}_G$ in which a one-time reward is received only in goal-state $i$.
+Let us then define $R_G$ as a set of reward functions $R_i$ for each $i \in \mathcal{S}_G$ in which a one-time reward (which is realized as depicted in \autoref{fig:goal-trap-state}) is received only in goal-state $i$.
+The reason the reward can only be obtained is because in that case $V_{\mathit{DTP}, t}$ and $V_{\mathit{SIM}, t}$ will be in the same range.
 Then accordingly we can define $T = \mathcal{S_0} \times R_G$ as the set of tasks, in the form of all pairs of initial and goal states, over which the performance is assessed.
 
+\noindent Putting this all together, the performance of an \acrshort{acr:mdp} $\mathcal{M}$ can in this way be expressed as:
 \begin{equation}
 	V_{\mathcal{M}} = \frac{\sum_{\forall t \in T} \beta \cdot V_{\mathit{DTP}, t} + (1 - \beta) \cdot V_{\mathit{SIM}, t}}{|T|}
 \end{equation}
+where $T$ is the set consisting of the pairs of initial states and reward functions of the tasks over which the performance is assessed.
 
 % There have been debates about the performance
 % measure that should be maximized during learning {
