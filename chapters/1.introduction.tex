@@ -31,7 +31,7 @@ In practice, this problem is tackled by domain experts by iteratively tweaking t
 
 An alternative that one ought to consider, is that of applying \acrshort{acr:rl} techniques rather than planning algorithms.
 However, although ideas from planning and \acrshort{acr:rl} are interchangeable, these techniques typically demand direct interaction with the environment which is something that cannot always be readily offered.
-That is, \acrshort{acr:rl} techniques turn out as time-consuming and sometimes even dangerous when applied in real-world environments.
+That is, \acrshort{acr:rl} techniques turn out as time-consuming and sometimes even riskful or dangerous when applied in real-world environments.
 Those domains for which plans need to be formulated offline, demand the acquisition of probabilistic models which accurately define what constitutes the state of the system, reflect uncertainty through transition probabilities and some manner of specifying goals.%TODO Rewrite 'some manner of specifying goals'?
 
 An attractive approach of bypassing the daunting and error-prone task of handcrafting probabilistic models, is that of automatizing the model development process by applying learning algorithms on data that describes the dynamics of the system.
@@ -97,5 +97,10 @@ The proposed solution to this problem is explained in \autoref{ch:methodology}, 
 To test and evaluate our solution we choose to make an implementation for the optimization of probabilistic models for the path planning of a mobile robot.
 In \autoref{ch:experimental-results} we discuss the results obtained from testing the proposed solution with our implementation for mobile robot navigation.
 Finally, in \autoref{ch:conclusions} we summarize and evaluate the proposed solution.
+
+%
+\vspace{12pt}
+\noindent\fbox{\textbf{TODO:} Needs small updates, in Contributions and the chapter overview}
+%
 
 %TODO Update this overview (e.g., Chapter 4 only presents related work; other chapters may change and we should describe (really) short the contents)

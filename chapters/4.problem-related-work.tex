@@ -22,6 +22,7 @@ Finally, \autoref{sec:mdp-uncertain-probabilities} looks into approaches that ex
 
 To facilitate the learning of system models, the first step is to obtain a dataset which describes the stochastics of the system under consideration.
 A common approach of obtaining this data is through the recording of observations made in an exploration phase in which the system aims to gather information about the effect of performing various actions in different situations.
+This exploration could be done selecting actions at random, executing a specific policy, or following another method of choosing actions.
 The next step is to learn a probabilistic model which most accurately explains the execution traces obtained in this exploration phase.
 In this section a number of the algorithms for this purpose are considered, where \autoref{sec:baum-welch} evaluates the well-known \textit{Baum-Welch} algorithm that iteratively updates transition and emission probabilities starting from a model with initial estimates of these probabilities, while \autoref{sec:state-merging} addresses a class of algorithms based on merging (time-)states for developing \acrshortpl{acr:mdp}.
 

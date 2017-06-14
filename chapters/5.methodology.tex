@@ -130,7 +130,7 @@ Accordingly, let us express the performance on a task in the simulations as:
 \label{eq:vsim}
 V_{\mathit{SIM}, (s_0, R)} = \gamma^{t} \cdot R[i]
 \end{equation}
-where $s_0 \in \mathcal{S}$ is the initial state, $R$ the reward function, $\gamma$ the discount factor, $i$ the goal state and $t$ the number of steps to reach the goal.
+where $s_0 \in \mathcal{S}$ is the initial state, $R$ the reward function, $\gamma$ the discount factor, $i \in \mathcal{S}$ the goal state and $t$ the number of steps taken to reach the goal.
 
 Combining the expressions of \autoref{eq:vdtp} and \autoref{eq:vsim} yields the following expression of the performance on a task:
 \begin{equation}
@@ -144,7 +144,7 @@ To achieve this, let us first define multiple starting configurations and multip
 The starting configurations are each mapped to corresponding states in the \acrshort{acr:mdp}, so that one can define $\mathcal{S}_0 \subseteq \mathcal{S}$ as a set of initial states.
 Similarly, the goals are each mapped to states, such that one can define $\mathcal{S}_G \subseteq \mathcal{S}$ as a set of goals.
 Let us then define $R_G$ as a set of reward functions $R_i$ for each $i \in \mathcal{S}_G$ in which a one-time reward (which is realized as depicted in \autoref{fig:goal-trap-state}) is received only in goal-state $i$.
-The reason the reward can only be obtained is because in that case $V_{\mathit{DTP}, t}$ and $V_{\mathit{SIM}, t}$ will be in the same range.
+The reason the reward can only be obtained once is because in that case $V_{\mathit{DTP}, t}$ and $V_{\mathit{SIM}, t}$ will be in the same range.
 Then accordingly we can define $T = \mathcal{S_0} \times R_G$ as the set of tasks, in the form of all pairs of initial and goal states, over which the performance is assessed.
 
 \noindent Putting this all together, the performance of an \acrshort{acr:mdp} $\mathcal{M}$ can in this way be expressed as:
@@ -197,7 +197,7 @@ where $T$ is the set consisting of the pairs of initial states and reward functi
 
 To make the solution more cost-effective, the framework is extended by defining three phases with the aim of exploiting the lower cost of computing the value function for \acrshortpl{acr:mdp} in comparison to the cost of executing plans in simulations or the real world.
 That is, assessing performance solely based on learned \acrshort{acr:mdp} models is less cost-expensive, although the model might not accurately reflect the real world as its abstracts over low-level details.
-This section defines the phases of the extension, of which each subsequent phase better reflects the real world, but on the other hand are accompanied by higher costs as depicted in \autoref{fig:abstraction-cost}.
+This section defines the phases of the extension, of which each subsequent phase better reflects the real world, but on the other hand are accompanied by higher costs as is depicted in \autoref{fig:abstraction-cost}.
 
 %\blindtext
 
@@ -210,25 +210,41 @@ This section defines the phases of the extension, of which each subsequent phase
 \subsection{Phase 1: Value Function Pre-Processing}
 \label{sec:phase-1}
 
-First phase: Performance assessment solely based on $V_\mathit{DTP}$ (i.e., initially $\beta = 1$). No simulations. $\gamma$ parameter starts off low and increases over time. This means this first phase is relatively cost-cheap, but might give us a global idea of the interesting area of the parameter-space so that we could narrow this space down.
+In the first phase the performance is assessed solely based on the value functions derived by the \acrshort{acr:dtp} algorithm used for planning.
+This means the $\beta$ parameter is set to $\beta = 1$ such that the performance $V_{\mathcal{M}}$ of \acrshort{acr:mdp} $\mathcal{M}$ is expressed only in terms of $V_\mathit{DTP}$ and so no simulations are performed in this phase.
+Therefore, this first phase is relatively cost-cheap, and although it abstracts from the real-world the most, it may be used to identify the interesting area of the parameter space.
+Hence, the goal of this first phase is to narrow down the search space to a subspace of learning parameters more likely to yield high performance.
+In practice this could be done by setting a threshold, say, $\eta \in [0, 1]$, that specifies the allowed deviation from the observed maximum in the evidence set $\mathcal{D}$, i.e. $\max_\mathcal{(x_i, y_i) \in D} y_i$, which can be used to define parameter bounds based on the posterior mean.
+
+%First phase: Performance assessment solely based on $V_\mathit{DTP}$ (i.e., initially $\beta = 1$). No simulations. $\gamma$ parameter starts off low and increases over time. This means this first phase is relatively cost-cheap, but might give us a global idea of the interesting area of the parameter-space so that we could narrow this space down.
 
 %\blindtext
 
 \subsection{Phase 2: Simulation-Based Optimization}
 \label{sec:phase-2}
 
-Second phase: $\beta$ decreases over time, which means $V_\mathit{SIM}$ starts to play a role, and assessment becomes more accurate, but also more cost-expensive.
+The second phase limits the optimization to the narrowed down parameter space that follows from the first phase.
+In this phase the performance assessment becomes more cost-expensive, but is also made more accurate by performing simulations and weighing the observed $V_\mathit{SIM}$ in the performance measure.
+This means, we either fix the $\beta$ parameter to a value in $[0, 1)$, or alternatively, gradually decrease it over time so that $V_\mathit{SIM}$ plays a more significant role the more iterations have passed.
 
-%\blindtext
-
-\subsection{Phase 3: Resolution Post-Processing}
-\label{sec:phase-3}
-
-Third phase: Starts when the parameter-space has sufficiently been narrowed down. To further improve learned models we would like to see if the opportunity exists of having higher resolution in some areas of the state space to better reflect the data-set.
+%Second phase: $\beta$ decreases over time, which means $V_\mathit{SIM}$ starts to play a role, and assessment becomes more accurate, but also more cost-expensive.
 
 %\blindtext
 
 \newpage
+
+\subsection{Phase 3: Resolution Post-Processing}
+\label{sec:phase-3}
+
+The last phase starts when the parameter space has been narrowed down sufficiently or the parameter search has converged to an optimum.
+In this phase, the goal is to further improve learned models by checking whether the transition probabilities are likely to match reality.
+The identification of discrepancies in these probabilities happens by executing actions in those areas of the state-space that are visited most often and in which the agent tends to get stuck (according to the transition probabilities) and seeing if the observed transitions yield comparable probabilities.
+For those areas and their corresponding states for which mismatches are identified, higher resolution is provided to better reflect the system's true stochastics.
+\fbox{\textbf{TODO:} Enough detail for this section?}
+
+%Third phase: Starts when the parameter-space has sufficiently been narrowed down. To further improve learned models we would like to see if the opportunity exists of having higher resolution in some areas of the state space to better reflect the data-set.
+
+%\blindtext
 
 \section{Application to Mobile Robot Navigation}
 \label{sec:application-mobile-robot}
@@ -269,12 +285,31 @@ Third phase: Starts when the parameter-space has sufficiently been narrowed down
 	\caption{Planning for the navigation of a mobile robot by learning \acrshortpl{acr:mdp} from data about the environment.}
 \end{figure}
 
-\begin{itemize}
-	\item Description
-	\item Motivation of this application
-	\item Generalization to other applications
-	\item Details on how we apply the framework to this application
-\end{itemize}
+%\begin{itemize}
+%	\item Description
+%	\item Motivation of this application
+%	\item Generalization to other applications
+%	\item Details on how we apply the framework to this application
+%\end{itemize}
+
+An example application for which the model learning framework described in this chapter could be used is that of mobile robot navigation.
+The problem statement is that an agent has control over a mobile robot that should be able to navigate from one location to another in an open world, say, an office environment, as fast as possible.
+This problem domain is particularly suited as the robots oft to operate under significant uncertainty in their actions (e.g., slipping) and observations (e.g., sensor noise).
+Although there are other potential applications as we described in \autoref{ch:introduction}, this particular application can be used to illustrate the complete procedure of learning \acrshort{acr:mdp} from data and obtaining plans accordingly quite well.
+
+For example, let us consider the scenario in which the robot needs to operate in an environment as depicted in \autoref{fig:dummy-map-1}.
+Then, before our model learning framework is applied to learn \acrshortpl{acr:mdp} for the system, the data about the environment could have been obtained in the form of execution traces that consist of logs of the robot's location and the (next) action its about to take.
+This could then give a set of data-points, as depicted in \autoref{fig:dummy-map-2}, which can be used to learn the states and transition probabilities of an \acrshort{acr:mdp}.
+A potential state-space of an \acrshort{acr:mdp} that might be learned from this dataset is shown in \autoref{fig:dummy-map-3}.
+Then, assigning a reward to a state that covers the goal area should give us a policy that leads the robot from any initial state to the goal state as depicted in \autoref{fig:dummy-map-4}.
+
+The performance of a learned \acrshort{acr:mdp} can then be assessed as described in \autoref{sec:performance-measure} through the computed value function and performing simulations for the various tasks the robot should be able to execute.
+Comparing the performance that was assessed for multiple \acrshort{acr:mdp} through the framework on convergence leads to an \acrshort{acr:mdp} that reflects the real world and generalizes over multiple tasks quite well.
+
+
+
+
+%% OLD %%
 
 %\textbf{Note:} These bullet-points have not been completely updated yet although most are still relevant. Outline should be such that we first discuss the framework for model learning and optimization without considering incomplete data or doing cost-sensitive optimization, which are discussed next ('why and how').
 %Probably describing the framework should be separated from the application to mobile robot navigation and how it is implemented, which should be described afterwards.
