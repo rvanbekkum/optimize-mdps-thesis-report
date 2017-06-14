@@ -41,6 +41,21 @@ First of all, this might be due to the parameters of the learning algorithm not 
 Another possibility is that the gathered data is incomplete and so does not accurately describe the dynamics of the system.
 In this case, one could choose to augment the data for those areas for which the training data is inadequate, although one should be aware that this is accompanied by a more cost-expensive model-learning process.
 Therefore, in order to learn accurate probabilistic models, we are in need of a way of assessing the performance of a model accompanied by a method for identifying inadequacies due to incomplete data, while taking into account the corresponding cost of learning and evaluating these system models.
+This yields the following research questions for our thesis:
+
+\vspace{12pt}
+\textbf{Main question:}
+
+\begin{itemize}
+	\item[] ``How can an \acrlong{acr:mdp} be obtained that maximizes the yielded performance of executing plans that are derived from it, given a dataset about the system under consideration?''
+\end{itemize}
+
+\textbf{Research Questions:}
+\begin{itemize}
+	\item Which methods exist for learning (probabilistic) models from data of a system that involves uncertainty?
+	\item How should a performance measure be defined that can be used to fairly compare the value of different \acrshortpl{acr:mdp}?
+	\item How can the hierarchy of different abstraction levels be exploited to find a performance-maximizing \acrshort{acr:mdp} more cost-effective?
+\end{itemize}
 
 \section{Contribution}
 \label{sec:contribution}
