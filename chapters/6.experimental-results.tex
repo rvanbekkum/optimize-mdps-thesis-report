@@ -10,48 +10,55 @@ The framework aims to achieve this by posing the adjustment of the parameters of
 The domain of mobile robot navigation, where the problem statement is to navigate a robot between locations as fast as possible, was identified as a potentially suitable application.
 This chapter discusses the experiments that were conducted to evaluate the framework for this application and the results that were obtained accordingly.
 First of all, \autoref{sec:setup} elaborates upon the setup for the experiments, discussing the relevant details on the implementation of the framework for this application and the software and other resources used.
-Then
+Subsequently, \autoref{sec:scenarios} discusses the different configurations that shall be used to test the framework.
+This for instance involves various combinations of learning algorithms and different settings of the discount factor $\gamma$ and weight parameter $\beta$ on different environments.
+In, \autoref{sec:results} the results obtained for these different configurations are presented, inspected and compared to one another, after which the most notable conclusions that can be drawn are discussed.
 
 \section{Setup}
 \label{sec:setup}
 
-
-%\begin{itemize}
-%	\item Software used for the implementation:
-%	\begin{itemize}
-%		\item Simulator: \textit{Morse}
-%		\item Programming Language: \textit{Python (2.7)} together with \texttt{scikit-learn}, \texttt{pymdptoolbox}, \texttt{bayesian-optimization} packages + explain what each of them are used for
-%		\item Control movements of robot in simulator through \textit{ROS}
-%	\end{itemize}
-%	\item Scitos-A5 robot, mobile service robot (plus \textit{short} discussion of what this robot has been used for in the real world)
-%	\item Details on the implementation; how the framework/routine is implemented for this application
-%	\begin{itemize}
-%		\item 
-%	\end{itemize}
-%	\item Discuss the different configurations that are to be compared
-%	\begin{itemize}
-%		\item Fixed values for $\beta$-parameter vs. gradually decreasing from $1$ to $0$
-%		\item Multiple environments: small (\texttt{tum\_kitchen}); large (\texttt{uol\_bl})
-%		\item Model-learning algorithms: direct clustering vs. trajectory clustering; $k$-means vs. GMM
-%		\item Data-sets of different sizes
-%	\end{itemize}
-%\end{itemize}
+For our experiments we made an implementation of the framework in the form of a module that can be used to learn an optimal \acrshort{acr:mdp} for the navigation of a mobile robot.
+This implementation allows the control of a mobile robot in simulations by an \acrshort{acr:mdp} and a corresponding policy.
+The model values assessed from these simulations are used to find a globally maximizing parameter-settings of the learning algorithm used.
+In this section we will describe the implementation in detail and how it is used in our experiments to find performance-maximizing \acrshortpl{acr:mdp} for a mobile robot in an office environment.
 
 \subsection{Software}
 \label{sec:software}
 
-Software used for the implementation:
-\begin{itemize}
-	\item Programming Language: \textit{Python (2.7)} together with \texttt{scikit-learn}, \texttt{pymdptoolbox}, \texttt{bayesian-optimization} packages + explain what each of them are used for
-	\item Simulator: \textit{Morse}
-	\item Scitos-A5 robot, mobile service robot (plus \textit{short} discussion of what this robot has been used for in the real world)
-	\item Control movements of robot in simulator through \textit{ROS}
-\end{itemize}
+\begin{table}[pt]
+\caption{Software packages used for the implementation of the model learning framework for mobile robot navigation.}
+\label{tab:software-packages}\centering
+\begin{tabular}{lll}
+	\hline%
+	\textbf{Package Name} & \textbf{Version} & \textbf{Purpose} \\
+	\hline
+	\texttt{bayesian-optimization} & 0.4.0 & Bayesian optimization \\
+	\texttt{matplotlib} & 1.3.1 & Plotting and visualizing robot actions \\
+	\texttt{numpy} & 1.12.1 & Array data storage and manipulation\\ 
+	\texttt{pymdptoolbox} & 4.0\_b3 & \acrshort{acr:mdp} planning algorithms \\
+	\texttt{ros-indigo-strands-desktop} & 0.0.14 & Simulation environments\\
+	\texttt{scikit-learn} & 0.18.1 & Machine learning algorithms \\ \hline
+\end{tabular}
+\end{table}
+
+The module has been implemented in Python 2.7, due to its easily usable libraries for machine learning and plotting and other widely available packages, but also because of its convenient capability of interacting with the simulation software used.
+For performing simulations the \textit{MORSE} simulator \cite{morse_simpar_2012}, has been used in combination with the \textit{ROS} middleware to control the robot in the environment.
+
+\vspace{12pt}
+\noindent\fbox{\textbf{TODO:} Not completely finished yet.}
+
+%Software used for the implementation:
+%\begin{itemize}
+%	\item Programming Language: \textit{Python (2.7)} together with \texttt{scikit-learn}, \texttt{pymdptoolbox}, \texttt{bayesian-optimization} packages + explain what each of them are used for
+%	\item Simulator: \textit{Morse}
+%	\item Scitos-A5 robot, mobile service robot (plus \textit{short} discussion of what this robot has been used for in the real world)
+%	\item Control movements of robot in simulator through \textit{ROS}
+%\end{itemize}
 
 \subsection{Implementation}
 \label{sec:implementation}
 
-Details on the implementation; how the framework/routine is implemented for this application
+Details on the implementation; how the framework/routine is implemented for this application. Discuss how the following aspects are taken care of in the implementation:
 \begin{itemize}
 	\item Environments
 	\item Exploration / Data Gathering
@@ -62,13 +69,30 @@ Details on the implementation; how the framework/routine is implemented for this
 \section{Scenarios}
 \label{sec:scenarios}
 
-Discuss the different configurations that are to be compared
+%Discuss the different configurations that are to be compared
+%\begin{itemize}
+%	\item Fixed values for $\beta$-parameter vs. gradually decreasing from $1$ to $0$
+%	\item Multiple environments: small (\texttt{tum\_kitchen}); large (\texttt{uol\_bl})
+%	\item Model-learning algorithms: direct clustering vs. trajectory clustering; $k$-means vs. GMM
+%	\item Data-sets of different sizes
+%\end{itemize}
+
+\noindent Configurations for the basic optimization framework (only based on simulations):
 \begin{itemize}
-	\item Fixed values for $\beta$-parameter vs. gradually decreasing from $1$ to $0$
-	\item Multiple environments: small (\texttt{tum\_kitchen}); large (\texttt{uol\_bl})
-	\item Model-learning algorithms: direct clustering vs. trajectory clustering; $k$-means vs. GMM
-	\item Data-sets of different sizes
+	\item Fixed value for $\beta$ (i.e., which weighs $V_\mathit{DTP}$): $0$, $0.25$ and $0.5$
+	\item Acquisition functions: \acrshort{acr:gp-ucb}, \acrshort{acr:mei}
+	\item GMM vs. $k$-Means (vs. trajectory clustering if time available)
+	\item All available data, 75\% and 50\%
+	\item Discount factor: $\gamma = 0.95$, $0.9$ and $0.8$
+	\item Small environment: \texttt{tum\_kitchen}; and large environment: \texttt{uol\_bl}
 \end{itemize}
+We need to record: number of iterations, total time passed, optimum found ($\theta_\textnormal{max}$ and $V_{\mathcal{M},\textnormal{max}}$)
+
+\vspace{12pt}
+\noindent For the cost-incremental extension we could try to observe what happens when we decrease $\beta$ gradually over time.
+
+\vspace{12pt}
+\noindent Do we want to do something with `variable resolution' as post-processing step in the experiments?
 
 \vspace{12pt}
 \noindent\fbox{\textbf{TODO:} Table to be added describing the configurations/scenarios for the experiments.}
@@ -77,7 +101,7 @@ Discuss the different configurations that are to be compared
 \label{sec:results}
 
 \begin{itemize}
-	\item First show results of optimization only based on simulation outcomes (that is: $\beta = 1.0$)
+	\item First show results of optimization only based on simulation outcomes
 	\item Then show results for the cost-incremental extension of the framework
 \end{itemize}
 
