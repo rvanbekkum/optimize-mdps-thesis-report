@@ -239,7 +239,7 @@ This means, we either fix the $\beta$ parameter to a value in $[0, 1)$, or alter
 The last phase starts when the parameter space has been narrowed down sufficiently or the parameter search has converged to an optimum.
 In this phase, the goal is to further improve learned models by checking whether the transition probabilities are likely to match reality.
 The identification of discrepancies in these probabilities happens by executing actions in those areas of the state-space that are visited most often and in which the agent tends to get stuck (according to the transition probabilities) and seeing if the observed transitions yield comparable probabilities.
-For those areas and their corresponding states for which mismatches are identified, higher resolution is provided to better reflect the system's true stochastics.
+For those areas and their corresponding states for which mismatches are identified, higher resolution is provided to better reflect the system's dynamics in the real world.
 \fbox{\textbf{TODO:} Enough detail for this section?}
 
 %Third phase: Starts when the parameter-space has sufficiently been narrowed down. To further improve learned models we would like to see if the opportunity exists of having higher resolution in some areas of the state space to better reflect the data-set.
@@ -298,12 +298,14 @@ This problem domain is particularly suited as the robots oft to operate under si
 Although there are other potential applications as we described in \autoref{ch:introduction}, this particular application can be used to illustrate the complete procedure of learning \acrshort{acr:mdp} from data and obtaining plans accordingly quite well.
 
 For example, let us consider the scenario in which the robot needs to operate in an environment as depicted in \autoref{fig:dummy-map-1}.
-Then, before our model learning framework is applied to learn \acrshortpl{acr:mdp} for the system, the data about the environment could have been obtained in the form of execution traces that consist of logs of the robot's location and the (next) action its about to take.
+Then, before our model learning framework is applied to learn \acrshortpl{acr:mdp} for the system, the data about the environment could have been obtained in the form of execution traces that consist of logs of the robot's location and the (next) action it's about to take.
 This could then give a set of data-points, as depicted in \autoref{fig:dummy-map-2}, which can be used to learn the states and transition probabilities of an \acrshort{acr:mdp}.
 A potential state-space of an \acrshort{acr:mdp} that might be learned from this dataset is shown in \autoref{fig:dummy-map-3}.
 Then, assigning a reward to a state that covers the goal area should give us a policy that leads the robot from any initial state to the goal state as depicted in \autoref{fig:dummy-map-4}.
 
-The performance of a learned \acrshort{acr:mdp} can then be assessed as described in \autoref{sec:performance-measure} through the computed value function and performing simulations for the various tasks the robot should be able to execute.
+\newpage
+
+In this application the performance of a learned \acrshort{acr:mdp} can be assessed as described in \autoref{sec:performance-measure} through the computed value function and performing simulations for the various tasks the robot should be able to execute.
 Comparing the performance that was assessed for multiple \acrshort{acr:mdp} through the framework on convergence leads to an \acrshort{acr:mdp} that reflects the real world and generalizes over multiple tasks quite well.
 
 

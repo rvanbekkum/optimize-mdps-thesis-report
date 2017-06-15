@@ -1,50 +1,74 @@
 \chapter{Experimental Setup and Results}
 \label{ch:experimental-results}
 
-\begin{itemize}
-	\item Introduction about application and high-level explanation of what we'll be looking into
-\end{itemize}
+%\begin{itemize}
+%	\item Introduction about application and high-level explanation of what we'll be looking into
+%\end{itemize}
+
+In \autoref{ch:methodology} a framework was proposed for finding an optimal \acrshort{acr:mdp} for planning problems that involve uncertainty given a dataset describing the dynamics of the system under consideration.
+The framework aims to achieve this by posing the adjustment of the parameters of model learning algorithms as an optimization task in which the yielded performance is to be maximized.
+The domain of mobile robot navigation, where the problem statement is to navigate a robot between locations as fast as possible, was identified as a potentially suitable application.
+This chapter discusses the experiments that were conducted to evaluate the framework for this application and the results that were obtained accordingly.
+First of all, \autoref{sec:setup} elaborates upon the setup for the experiments, discussing the relevant details on the implementation of the framework for this application and the software and other resources used.
+Then
 
 \section{Setup}
 \label{sec:setup}
 
-Lorem
 
-\begin{itemize}
-	\item Software used for the implementation:
-	\begin{itemize}
-		\item Simulator: \textit{Morse}
-		\item Programming Language: \textit{Python (2.7)} together with \texttt{scikit-learn}, \texttt{pymdptoolbox}, \texttt{bayesian-optimization} packages + explain what each of them are used for
-		\item Control movements of robot in simulator through \textit{ROS}
-	\end{itemize}
-	\item Scitos-A5 robot, mobile service robot (plus \textit{short} discussion of what this robot has been used for in the real world)
-	\item Details on the implementation; how the framework/routine is implemented for this application
-	\begin{itemize}
-		\item 
-	\end{itemize}
-	\item Discuss the different configurations that are to be compared
-	\begin{itemize}
-		\item Fixed values for $\beta$-parameter vs. gradually decreasing from $1$ to $0$
-		\item Multiple environments: small (\texttt{tum\_kitchen}); large (\texttt{uol\_bl})
-		\item Model-learning algorithms: direct clustering vs. trajectory clustering; $k$-means vs. GMM
-		\item Data-sets of different sizes
-	\end{itemize}
-\end{itemize}
+%\begin{itemize}
+%	\item Software used for the implementation:
+%	\begin{itemize}
+%		\item Simulator: \textit{Morse}
+%		\item Programming Language: \textit{Python (2.7)} together with \texttt{scikit-learn}, \texttt{pymdptoolbox}, \texttt{bayesian-optimization} packages + explain what each of them are used for
+%		\item Control movements of robot in simulator through \textit{ROS}
+%	\end{itemize}
+%	\item Scitos-A5 robot, mobile service robot (plus \textit{short} discussion of what this robot has been used for in the real world)
+%	\item Details on the implementation; how the framework/routine is implemented for this application
+%	\begin{itemize}
+%		\item 
+%	\end{itemize}
+%	\item Discuss the different configurations that are to be compared
+%	\begin{itemize}
+%		\item Fixed values for $\beta$-parameter vs. gradually decreasing from $1$ to $0$
+%		\item Multiple environments: small (\texttt{tum\_kitchen}); large (\texttt{uol\_bl})
+%		\item Model-learning algorithms: direct clustering vs. trajectory clustering; $k$-means vs. GMM
+%		\item Data-sets of different sizes
+%	\end{itemize}
+%\end{itemize}
 
 \subsection{Software}
 \label{sec:software}
 
-Lorem
+Software used for the implementation:
+\begin{itemize}
+	\item Programming Language: \textit{Python (2.7)} together with \texttt{scikit-learn}, \texttt{pymdptoolbox}, \texttt{bayesian-optimization} packages + explain what each of them are used for
+	\item Simulator: \textit{Morse}
+	\item Scitos-A5 robot, mobile service robot (plus \textit{short} discussion of what this robot has been used for in the real world)
+	\item Control movements of robot in simulator through \textit{ROS}
+\end{itemize}
 
 \subsection{Implementation}
 \label{sec:implementation}
 
-Lorem
+Details on the implementation; how the framework/routine is implemented for this application
+\begin{itemize}
+	\item Environments
+	\item Exploration / Data Gathering
+	\item Optimization
+	\item Simulations of following policy
+\end{itemize}
 
-\subsection{Scenarios}
+\section{Scenarios}
 \label{sec:scenarios}
 
-Lorem
+Discuss the different configurations that are to be compared
+\begin{itemize}
+	\item Fixed values for $\beta$-parameter vs. gradually decreasing from $1$ to $0$
+	\item Multiple environments: small (\texttt{tum\_kitchen}); large (\texttt{uol\_bl})
+	\item Model-learning algorithms: direct clustering vs. trajectory clustering; $k$-means vs. GMM
+	\item Data-sets of different sizes
+\end{itemize}
 
 \vspace{12pt}
 \noindent\fbox{\textbf{TODO:} Table to be added describing the configurations/scenarios for the experiments.}

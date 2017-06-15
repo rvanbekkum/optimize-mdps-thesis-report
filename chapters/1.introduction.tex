@@ -8,7 +8,7 @@
 
 There are several practical applications in which the (sequential) actions of systems are coordinated by decision makers or \textit{agents} to achieve long-term goals.
 In particular these agents need to take into account the uncertainty in these systems that may be present in the form of action failures (e.g., a robot slipping), exogenous events (e.g., moving obstacles) and noisy observations.
-To devise optimal plans for those systems whose dynamics are stochastic, \acrlong{acr:dtp} aims to account for uncertainty by exploiting the considerable structure these systems pose through the development of probabilistic models which reflect this uncertainty.
+To devise optimal plans for those systems whose dynamics are stochastic, \acrfull{acr:dtp} aims to account for uncertainty by exploiting the considerable structure these systems pose through the development of probabilistic models which reflect this uncertainty.
 These probabilistic models serve as a system representation which describe a system's state and its evolution over time after a sequence of actions has been executed.
 The advantage of having such (accurate) probabilistic models at one's disposal is that agents can act according to different policies derived from one and the same model to perform multiple tasks.
 
@@ -41,21 +41,48 @@ First of all, this might be due to the parameters of the learning algorithm not 
 Another possibility is that the gathered data is incomplete and so does not accurately describe the dynamics of the system.
 In this case, one could choose to augment the data for those areas for which the training data is inadequate, although one should be aware that this is accompanied by a more cost-expensive model-learning process.
 Therefore, in order to learn accurate probabilistic models, we are in need of a way of assessing the performance of a model accompanied by a method for identifying inadequacies due to incomplete data, while taking into account the corresponding cost of learning and evaluating these system models.
-This yields the following research questions for our thesis:
+
+\noindent This yields the following main research question for this thesis:
 
 \vspace{12pt}
-\textbf{Main question:}
+\noindent\textbf{Main Research Question.} How can the task of obtaining a \acrfull{acr:mdp} that maximizes the yielded performance of executing plans that are derived from it, given a dataset about the system under consideration, be automated?
+\vspace{12pt}
 
-\begin{itemize}
-	\item[] ``How can an \acrlong{acr:mdp} be obtained that maximizes the yielded performance of executing plans that are derived from it, given a dataset about the system under consideration?''
-\end{itemize}
+To answer this main research question, three research questions have been identified which are presented below.
+The relevance of each of these research questions is discussed accordingly in the next paragraphs.
 
-\textbf{Research Questions:}
-\begin{itemize}
-	\item Which methods exist for learning (probabilistic) models from data of a system that involves uncertainty?
-	\item How should a performance measure be defined that can be used to fairly compare the value of different \acrshortpl{acr:mdp}?
-	\item How can the hierarchy of different abstraction levels be exploited to find a performance-maximizing \acrshort{acr:mdp} more cost-effective?
-\end{itemize}
+\vspace{12pt}
+\noindent\textbf{Research Question 1.} Which learning algorithms exist that can be employed for learning \acrshortpl{acr:mdp} from data for systems involving uncertainty that require plans for automated control?
+\vspace{0pt}
+
+First off, to facilitate the formulation of plans for a system involving uncertainty, we need to obtain an \acrshort{acr:mdp} from the provided dataset.
+Therefore, we should know what learning algorithms exist that can be employed to learn the parameters of an \acrshort{acr:mdp}.
+Accordingly, we should identify the applications for which each of these algorithms are suited, but also what the shortcomings or vulnerabilities of each of these algorithms are.
+
+\vspace{12pt}
+\noindent\textbf{Research Question 2.} How should a performance measure be defined which can be used to fairly compare the value of different \acrshortpl{acr:mdp}?
+\vspace{12pt}
+
+As various \acrshortpl{acr:mdp} can be obtained for different parameter settings of the model learning algorithms, the need for a measure of performance for different \acrshortpl{acr:mdp} emerges.
+That is, to establish which parameter settings yield an \acrshort{acr:mdp} that best reflects the underlying system for the tasks to be executed, we require a way to express and fairly compare the value of the learned \acrshortpl{acr:mdp}.
+
+\vspace{12pt}
+\noindent\textbf{Research Question 3.} How can the hierarchy of different abstraction levels be exploited to find a performance-maximizing \acrshort{acr:mdp} in a more cost-effective way?
+\vspace{12pt}
+
+Assessments of performance can be made at different levels of abstraction of the underlying system.
+That is, we could examine how well an agent would perform a task only from the perspective of the \acrshort{acr:mdp} model, but also
+from simulations or even the real world.
+At the one hand abstracting from the real world typically yields a less accurate representation of the reality, although on the other hand assessing the performance from a more abstract level is accompanied by smaller computational costs.
+Therefore it might be value to investigate how this could be exploited to achieve a more cost-effective optimization of the performance.
+
+%\vspace{12pt}
+%\noindent\textbf{Research Questions:}
+%\begin{enumerate}[label=\textbf{\arabic*})]
+%	\item Which methods exist for learning (probabilistic) models from data for a system involving uncertainty that requires plans for automated control?
+%	\item How should a performance measure be defined that can be used to fairly compare the value of different \acrshortpl{acr:mdp}?
+%	\item How can the hierarchy of different abstraction levels be exploited to find a performance-maximizing \acrshort{acr:mdp} in a more cost-effective way?
+%\end{enumerate}
 
 \section{Contribution}
 \label{sec:contribution}
@@ -63,7 +90,7 @@ This yields the following research questions for our thesis:
 We propose a framework for automating the development of probabilistic models in the form of \acrshortpl{acr:mdp} by applying learning algorithms on data describing the stochastics of the system under consideration.
 The data about the environment that is used by these learning algorithms is gathered prior to the model learning process in an exploration phase.
 In order to obtain accurate probabilistic models for the system under consideration, the parameters of the learning algorithm should be tweaked in such way to optimize the performance in the execution of its tasks.
-To achieve this we pose the adjustment of the learning algorithm parameters as an optimization task to maximize the performance that follows from executing plans derived from learned \acrshort{acr:mdp} models.
+To achieve this we pose the adjustment of the learning algorithm parameters as an optimization task to maximize the performance that follows from executing plans derived from learned \acrshortpl{acr:mdp}.
 The optimization is then done by applying a technique known as Bayesian Optimization, so that we define a probability distribution over functions to model the performance measure and iteratively sample parameter-settings towards a global maximizer of the performance.
 
 %TODO Update this part?
@@ -99,6 +126,8 @@ For our implementation we choose to collect data about the robot's poses from in
 
 % POMDPs: Restricted to MDPs, but could possible be extended to deal where the states are cannot be directly observed and should be inferred from observations.
 % Field of application: We will discuss how the proposed method could be applied to other domains, although we will focus on the domain of mobile robot navigation to evaluate and test our method.
+
+\newpage
 
 \section{Overview}
 \label{sec:introduction-overview}
