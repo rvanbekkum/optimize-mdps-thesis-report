@@ -42,13 +42,15 @@ Another possibility is that the gathered data is incomplete and so does not accu
 In this case, one could choose to augment the data for those areas for which the training data is inadequate, although one should be aware that this is accompanied by a more cost-expensive model-learning process.
 Therefore, in order to learn accurate probabilistic models, we are in need of a way of assessing the performance of a model accompanied by a method for identifying inadequacies due to incomplete data, while taking into account the corresponding cost of learning and evaluating these system models.
 
-\noindent This yields the following main research question for this thesis:
+\section{Research Questions}
+\label{sec:research-questions}
+The problem statement as presented in the previous section yields the following main research question for this thesis:
 
 \vspace{12pt}
 \noindent\textbf{Main Research Question.} How can the task of obtaining a \acrfull{acr:mdp} that maximizes the yielded performance of executing plans that are derived from it, given a dataset about the system under consideration, be automated?
 \vspace{12pt}
 
-To answer this main research question, three research questions have been identified which are presented below.
+To answer this main research question, four research questions have been identified which are presented below.
 The relevance of each of these research questions is discussed accordingly in the next paragraphs.
 
 \vspace{12pt}
@@ -67,14 +69,23 @@ As various \acrshortpl{acr:mdp} can be obtained for different parameter settings
 That is, to establish which parameter settings yield an \acrshort{acr:mdp} that best reflects the underlying system for the tasks to be executed, we require a way to express and fairly compare the value of the learned \acrshortpl{acr:mdp}.
 
 \vspace{12pt}
-\noindent\textbf{Research Question 3.} How can the hierarchy of different abstraction levels be exploited to find a performance-maximizing \acrshort{acr:mdp} in a more cost-effective way?
+\noindent\textbf{Research Question 3.} How can the parameter space of model learning algorithms cost-effectively be explored towards a global maximizer with only limited knowledge about the system under consideration?
+\vspace{12pt}
+
+A model learning algorithm may yield different \acrshortpl{acr:mdp} depending on the selected parameter settings.
+To establish the most appropriate \acrshort{acr:mdp} for the system under consideration, the performance yielded by multiple \acrshortpl{acr:mdp} should be compared.
+As evaluating all possible parameter-settings would be cost-expensive, we need to investigate other ways of exploring the parameter space more cost-effectively.
+This is under the assumption that we only have limited to no belief over which parameter-settings might work well for the system under consideration.
+
+\vspace{12pt}
+\noindent\textbf{Research Question 4.} How can the hierarchy of different abstraction levels be exploited to find a performance-maximizing \acrshort{acr:mdp} in a more cost-effective way?
 \vspace{12pt}
 
 Assessments of performance can be made at different levels of abstraction of the underlying system.
 That is, we could examine how well an agent would perform a task only from the perspective of the \acrshort{acr:mdp} model, but also
 from simulations or even the real world.
 At the one hand abstracting from the real world typically yields a less accurate representation of the reality, although on the other hand assessing the performance from a more abstract level is accompanied by smaller computational costs.
-Therefore it might be value to investigate how this could be exploited to achieve a more cost-effective optimization of the performance.
+Therefore it might be valuable to investigate how this could be exploited to achieve a more cost-effective optimization of the performance.
 
 %\vspace{12pt}
 %\noindent\textbf{Research Questions:}
@@ -87,16 +98,23 @@ Therefore it might be value to investigate how this could be exploited to achiev
 \section{Contribution}
 \label{sec:contribution}
 
-We propose a framework for automating the development of probabilistic models in the form of \acrshortpl{acr:mdp} by applying learning algorithms on data describing the stochastics of the system under consideration.
+We propose a framework for automating the development of probabilistic models in the form of \acrshortpl{acr:mdp} by applying learning algorithms on data describing the dynamics of the system under consideration.
 The data about the environment that is used by these learning algorithms is gathered prior to the model learning process in an exploration phase.
-In order to obtain accurate probabilistic models for the system under consideration, the parameters of the learning algorithm should be tweaked in such way to optimize the performance in the execution of its tasks.
+In order to obtain accurate probabilistic models for the system under consideration, the parameters of the used learning algorithm should be tweaked in such way to optimize the performance in the execution of its tasks.
+%In order to obtain accurate probabilistic models for the system under consideration, the parameter-settings of the used model learning algorithm are iteratively tweaked towards a setting that maximizes the performance in the execution of the tasks expected to be performed.
 To achieve this we pose the adjustment of the learning algorithm parameters as an optimization task to maximize the performance that follows from executing plans derived from learned \acrshortpl{acr:mdp}.
-The optimization is then done by applying a technique known as Bayesian Optimization, so that we define a probability distribution over functions to model the performance measure and iteratively sample parameter-settings towards a global maximizer of the performance.
+The optimization is performed by applying a technique known as Bayesian Optimization, so that we define a probability distribution over functions to model the performance measure and iteratively sample parameter-settings towards a global maximizer of the performance.
 
-%TODO Update this part?
-To address model inadequacies that are due to incomplete data, we propose to incorporate the identification of insufficient exploration for the transitions from those states that are visited in the execution of obtained plans.
-That is, for those learned models for which the data was observed to be incomplete, the observations of the performance for the corresponding parameter-settings are modeled as noisy or uncertain.
-This serves the purpose of more cautious exploitation of those areas of the parameter space which mostly produce noisy observations of the performance measure.
+%To address model inadequacies that are due to incomplete data, we propose to incorporate the identification of insufficient exploration for the transitions from those states that are visited in the execution of obtained plans.
+%That is, for those learned models for which the data was observed to be incomplete, the observations of the performance for the corresponding parameter-settings are modeled as noisy or uncertain.
+%This serves the purpose of more cautious exploitation of those areas of the parameter space which mostly produce noisy observations of the performance measure.
+
+To achieve a more cost-effective optimization, the parameter search space is first narrowed down by a pre-processing step.
+In this step assessments of the model value are made on a more abstract level (i.e., based on the computed value function for an \acrshort{acr:mdp}).
+The posterior that follows from this step is then used to define a prior over the true model value used for the following step.
+
+In attempt to further improve the learned models, a post-processing step is performed that aims to identify and fix discrepancies between the model and the real-world.
+This post-processing step increases the resolution for those areas of the state-space when it identifies the outcomes of actions in simulations do not match the learned transition probabilities.
 
 The framework is applied, tested and evaluated for the domain of mobile robot navigation, as the robots in this domain oft to operate under significant uncertainty in their actions.
 A solution in this context is a policy which maps discretized robot poses into fine-grained navigation actions so to move a mobile robot to a certain goal location.
@@ -117,17 +135,17 @@ First of all, we restrict ourselves to learning fully observable \acrshortpl{acr
 However, this framework could possibly be extended to deal with applications where the states cannot be directly observed and should be inferred from observations.
 
 Secondly, we note that all experiments and corresponding results are based on data that is solely obtained from simulations of a mobile robot.
-Reasons for this are that we make the assumption that the environment is fully observable, which is typically not the case for real-world applications, and not having a real robot at hand, which would be too expensive and comes with its own technical challenges that are outside of our scope.
+Reasons for this are that we make the assumption that the environment is fully observable, which is typically not the case for real-world applications.
+However, we should also note that the framework is not solely intended for the domain of mobile robot navigation.% and not having a real robot at hand, which would be too expensive and comes with its own technical challenges that are outside of our scope.
 
-Finally, we will discuss how the proposed framework could be applied to other domains, although we will focus on the domain of mobile robot navigation to evaluate and test our approach.
-One of the important aspects to consider, is which data should be collected to describe the stochastics of the system to learn models from this data.
+Finally, we focus on the domain of mobile robot navigation to evaluate and test our approach.
+One of the important aspects to consider, is which data should be collected to describe the dynamics of the system to learn models from this data.
 For our implementation we choose to collect data about the robot's poses from internal odometry, but for other applications we might not be able to describe the states and transitions of the system through a geometric model and may need other learning algorithms than the clustering algorithms we use for our application.
-% TODO
+An example of such applications might be that of learning \acrshortpl{acr:mdp} for traffic light control \cite{wiering2004intelligent, delgado2011efficient}, in which, for instance, lane-turn probabilities could be learned from a data-set.
+As a side note, this application seems particularly appropriate to be approached in combination with \acrshort{acr:rl} techniques, as it could adapt to the changes that occur over time.
 
 % POMDPs: Restricted to MDPs, but could possible be extended to deal where the states are cannot be directly observed and should be inferred from observations.
 % Field of application: We will discuss how the proposed method could be applied to other domains, although we will focus on the domain of mobile robot navigation to evaluate and test our method.
-
-\newpage
 
 \section{Overview}
 \label{sec:introduction-overview}
@@ -136,15 +154,13 @@ The framework that we propose is aimed at automating the development of probabil
 In the learning routine the plans are obtained through techniques founded in \acrlong{acr:dtp} in which probabilistic models are employed to achieve this.
 In \autoref{ch:background} we make the type of problems that are faced in \acrshort{acr:dtp} concrete and review how specialized probabilistic models can be used by existing algorithms to acquire plans.
 For the optimization of the parameters of learning algorithms we use a method known as Bayesian Optimization. In \autoref{ch:bayesian-optimization} we formally describe how this method works and how it is relevant to sequential decision making, supported by a number of successful applications for learning and planning.
-In \autoref{ch:problem-related-work} the problem we aim to solve is defined in more detail and explore the existing model learning algorithms as described in related work.
-The proposed solution to this problem is explained in \autoref{ch:methodology}, in which we put the theory and algorithms discussed in the earlier chapters together into an optimization routine.
+In \autoref{ch:problem-related-work} we explore other existing techniques for the development of \acrshort{acr:mdp} models for systems involving uncertainty.
+A solution to the problem we described, is proposed in \autoref{ch:methodology}, in which we put the theory and algorithms discussed in the earlier chapters together into an optimization routine.
 To test and evaluate our solution we choose to make an implementation for the optimization of probabilistic models for the path planning of a mobile robot.
 In \autoref{ch:experimental-results} we discuss the results obtained from testing the proposed solution with our implementation for mobile robot navigation.
 Finally, in \autoref{ch:conclusions} we summarize and evaluate the proposed solution.
 
 %
-\vspace{12pt}
-\noindent\fbox{\textbf{TODO:} Needs small updates, in Contributions and the chapter overview}
-%
-
-%TODO Update this overview (e.g., Chapter 4 only presents related work; other chapters may change and we should describe (really) short the contents)
+%\vspace{12pt}
+%\noindent\fbox{\textbf{TODO:} Needs small updates, in Contributions and the chapter overview}
+%%
