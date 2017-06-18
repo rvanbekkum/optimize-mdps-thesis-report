@@ -24,7 +24,7 @@ The learning and optimization routine described in this section, depicted in \au
 
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=\textwidth]{learning-cycle-complete-v2}
+	\includegraphics[width=\textwidth]{learning-cycle-complete-v22}
 	\caption{Diagram of the model learning and optimization routine.}
 	\label{fig:learning-routine-complete}
 \end{figure}
@@ -216,6 +216,8 @@ Therefore, this first phase is relatively cost-cheap, and although it abstracts 
 Hence, the goal of this first phase is to narrow down the search space to a subspace of learning parameters more likely to yield high performance.
 In practice this could be done by setting a threshold, say, $\eta \in [0, 1]$, that specifies the allowed deviation from the observed maximum in the evidence set $\mathcal{D}$, i.e. $\max_\mathcal{(x_i, y_i) \in D} y_i$, which can be used to define parameter bounds based on the posterior mean.
 
+\fbox{\textbf{TODO:} Update threshold to prior.}
+
 %First phase: Performance assessment solely based on $V_\mathit{DTP}$ (i.e., initially $\beta = 1$). No simulations. $\gamma$ parameter starts off low and increases over time. This means this first phase is relatively cost-cheap, but might give us a global idea of the interesting area of the parameter-space so that we could narrow this space down.
 
 %\blindtext
@@ -240,7 +242,7 @@ The last phase starts when the parameter space has been narrowed down sufficient
 In this phase, the goal is to further improve learned models by checking whether the transition probabilities are likely to match reality.
 The identification of discrepancies in these probabilities happens by executing actions in those areas of the state-space that are visited most often and in which the agent tends to get stuck (according to the transition probabilities) and seeing if the observed transitions yield comparable probabilities.
 For those areas and their corresponding states for which mismatches are identified, higher resolution is provided to better reflect the system's dynamics in the real world.
-\fbox{\textbf{TODO:} Enough detail for this section?}
+\fbox{\textbf{TODO:} Enough detail for this section? Add illustrating figures.}
 
 %Third phase: Starts when the parameter-space has sufficiently been narrowed down. To further improve learned models we would like to see if the opportunity exists of having higher resolution in some areas of the state space to better reflect the data-set.
 
@@ -263,7 +265,7 @@ For those areas and their corresponding states for which mismatches are identifi
 \end{subfigure}\hfill
 \begin{subfigure}{.5\textwidth}
 	\centering
-	\includegraphics[width=.8\linewidth]{dummy-map-2-2}
+	\includegraphics[width=.8\linewidth]{dummy-map-2-2v2}
 	\caption{Data-points of execution traces from exploration depicted.}
 	\label{fig:dummy-map-2}
 \end{subfigure}
