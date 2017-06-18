@@ -36,16 +36,35 @@ In this section we will describe the implementation in detail and how it is used
 	\texttt{matplotlib} & 1.3.1 & Plotting and visualizing robot actions \\
 	\texttt{numpy} & 1.12.1 & Array data storage and manipulation\\ 
 	\texttt{pymdptoolbox} & 4.0\_b3 & \acrshort{acr:mdp} planning algorithms \\
-	\texttt{ros-indigo-strands-desktop} & 0.0.14 & Simulation environments\\
+	\texttt{ros-indigo-strands-desktop} & 0.0.14 & Simulation software and environments\\
 	\texttt{scikit-learn} & 0.18.1 & Machine learning algorithms \\ \hline
 \end{tabular}
 \end{table}
 
+\subsubsection{Python Libraries}
+\label{sec:software-packages}
 The module has been implemented in Python 2.7, due to its easily usable libraries for machine learning and plotting and other widely available packages, but also because of its convenient capability of interacting with the simulation software used.
-For performing simulations the \textit{MORSE} simulator \cite{morse_simpar_2012}, has been used in combination with the \textit{ROS} middleware to control the robot in the environment.
 
-\vspace{12pt}
-\noindent\fbox{\textbf{TODO:} Not completely finished yet.}
+\subsubsection{Simulator and Mobile Robot}
+\label{sec:simulator}
+
+% Make figure with two subfigures
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=0.1\textwidth]{scitosa5_1_model}
+	\caption{SCITOS-A5, mobile service robot by Metralabs GmbH \cite{Metralabs}}
+	\label{fig:scitosa5}
+\end{figure}
+
+For performing simulations the \textit{MORSE} simulator \cite{morse_simpar_2012}, a generic simulator for academic robots, has been used in combination with the \textit{ROS} middleware to control the robot in the environment.
+The simulations are performed with the Metralabs GmbH \textit{SCITOS-A5} \cite{Metralabs}, an industry-standard mobile service robot designed specifically for interacting with humans and guiding them to products or exhibits, depicted in \autoref{fig:scitosa5}.
+This robot is equipped with several sensors which can be used for navigation and \acrfull{acr:hri}, such as an omnidirectional camera, 24 ultrasonic sensors, a collision sensor and a SICK laser range finder \cite{gross2008shopbot}.
+As described in \autoref{sec:implementation} we are particularly interested in the odometric capabilities of the robot for the implementation that has been used in our experiments.
+The \texttt{strands-desktop} meta-package was used to obtain all required simulation software mentioned above with ease, in which the environments used in the simulations of our experiments are contained as well.
+
+%
+%\vspace{12pt}
+%\noindent\fbox{\textbf{TODO:} Not completely finished yet.}
 
 %Software used for the implementation:
 %\begin{itemize}
@@ -54,6 +73,12 @@ For performing simulations the \textit{MORSE} simulator \cite{morse_simpar_2012}
 %	\item Scitos-A5 robot, mobile service robot (plus \textit{short} discussion of what this robot has been used for in the real world)
 %	\item Control movements of robot in simulator through \textit{ROS}
 %\end{itemize}
+
+\subsection{Datasets}
+\label{sec:datasets}
+
+Explain how the data-sets are obtained. 
+- For multiple environments - What is obtained. - How the data is obtained.
 
 \subsection{Implementation}
 \label{sec:implementation}
@@ -65,6 +90,8 @@ Details on the implementation; how the framework/routine is implemented for this
 	\item Optimization
 	\item Simulations of following policy
 \end{itemize}
+
+\subsubsection{title}
 
 \section{Scenarios}
 \label{sec:scenarios}
