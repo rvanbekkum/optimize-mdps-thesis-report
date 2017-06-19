@@ -25,6 +25,10 @@ In this section we will describe the implementation in detail and how it is used
 \subsection{Software}
 \label{sec:software}
 
+In this section we discuss the software that is used in the implementation of our optimization module. 
+An overview of the main packages used for this implementation is presented in \autoref{tab:software-packages}.
+In the remainder of this section, we briefly explain for what part of the implementation each of these packages are used, and support the choices made where necessary.
+
 \begin{table}[pt]
 \caption{Software packages used for the implementation of the model learning framework for mobile robot navigation.}
 \label{tab:software-packages}\centering
@@ -45,22 +49,46 @@ In this section we will describe the implementation in detail and how it is used
 \label{sec:software-packages}
 The module has been implemented in Python 2.7, due to its easily usable libraries for machine learning and plotting and other widely available packages, but also because of its convenient capability of interacting with the simulation software used.
 
+For \acrshort{acr:mdp} planning, the \texttt{pymdptoolbox} library \cite{cordwellpymdptoolbox}, is used, which implements various planning algorithms for discrete-time \acrshortpl{acr:mdp}. 
+To solve for optimal policies in learned \acrshortpl{acr:mdp} we rely on this library and apply the \acrshort{acr:vi} algorithm with a discount factor of $\gamma = 0.95$.
+%Given the matrices with the transition probabilities and rewards and algorithm-parameters like a discount factor $\gamma$, these planning algorithms can produce a policy vector and a corresponding value function.
+
+For the machine learning algorithms used, we employ the \texttt{scikit-learn} library. These algorithms include $k$-Means clustering and \acrfull{acr:gmm}.
+
+For \acrlong{acr:bo} the \texttt{bayesian-optimization} library \cite{nogueirabayesianoptimization} has been employed. This library offers an implementation of the \acrshort{acr:bo} procedure based on a \acrshort{acr:gp} prior including the implementation of the most-used acquisition functions such as \acrshort{acr:mpi}, \acrshort{acr:mei} and \acrshort{acr:gp-ucb}.
+
+The further Python packages used, have been listed in \autoref{tab:software-packages} and include \texttt{numpy} for the manipulation of arrays and matrices used in the implementation and \texttt{matplotlib} for creating the various plots shown in this chapter.
+
 \subsubsection{Simulator and Mobile Robot}
 \label{sec:simulator}
 
 % Make figure with two subfigures
 \begin{figure}[t]
+\centering
+\begin{minipage}{0.4\textwidth}
 	\centering
-	\includegraphics[width=0.1\textwidth]{scitosa5_1_model}
-	\caption{SCITOS-A5, mobile service robot by Metralabs GmbH \cite{Metralabs}}
+	\includegraphics[width=0.3\linewidth]{scitosa5_1_model}
+	\captionof{figure}{The SCITOS-A5, mobile service robot by Metralabs GmbH \cite{Metralabs}}
 	\label{fig:scitosa5}
+\end{minipage}
+\qquad
+\begin{minipage}{0.4\textwidth}
+	\centering
+	\vspace{23pt}
+	\includegraphics[width=1.1\linewidth]{scitosa5_2_TIM}
+	\vspace{-10pt}
+	\captionof{figure}{The SCITOS-A5 in one of its application environments. Shown here is robot \textit{TIM}, used for leading visitors of the German Technical Museum in Berlin through the exhibits \cite{Metralabs}.}
+	\label{fig:scitosa5_2}
+\end{minipage}
 \end{figure}
 
 For performing simulations the \textit{MORSE} simulator \cite{morse_simpar_2012}, a generic simulator for academic robots, has been used in combination with the \textit{ROS} middleware to control the robot in the environment.
-The simulations are performed with the Metralabs GmbH \textit{SCITOS-A5} \cite{Metralabs}, an industry-standard mobile service robot designed specifically for interacting with humans and guiding them to products or exhibits, depicted in \autoref{fig:scitosa5}.
-This robot is equipped with several sensors which can be used for navigation and \acrfull{acr:hri}, such as an omnidirectional camera, 24 ultrasonic sensors, a collision sensor and a SICK laser range finder \cite{gross2008shopbot}.
+The simulations are performed with the Metralabs GmbH \textit{SCITOS-A5} \cite{Metralabs}, depicted in \autoref{fig:scitosa5}, an industry-standard mobile service robot designed specifically for interacting with humans and guiding them to products or exhibits (e.g., see \autoref{fig:scitosa5_2}).
+This robot is equipped with several sensors which can be used for navigation and \acrfull{acr:hri}, such as an omni-directional camera, 24 ultrasonic sensors, a collision sensor and a SICK laser range finder \cite{gross2008shopbot}.
 As described in \autoref{sec:implementation} we are particularly interested in the odometric capabilities of the robot for the implementation that has been used in our experiments.
-The \texttt{strands-desktop} meta-package was used to obtain all required simulation software mentioned above with ease, in which the environments used in the simulations of our experiments are contained as well.
+The \texttt{strands-desktop} meta-package (developed as part of the \textit{STRANDS} project \cite{hawes2016strands}) was used to obtain all required simulation software mentioned above with ease, in which the environments used in the simulations of our experiments are contained as well.
+
+
 
 %
 %\vspace{12pt}
@@ -77,8 +105,27 @@ The \texttt{strands-desktop} meta-package was used to obtain all required simula
 \subsection{Datasets}
 \label{sec:datasets}
 
-Explain how the data-sets are obtained. 
-- For multiple environments - What is obtained. - How the data is obtained.
+\begin{table}[pt]
+	\caption{Metadata about the execution traces obtained}
+	\label{tab:datasets-environments}\centering
+	\begin{tabular}{|l|l|l|}
+	\hline
+	\textbf{Environment} & \textbf{Area} & \textbf{Number of entries in dataset} \\
+	\hline
+	\texttt{tum\_kitchen}&               &                                       \\
+	\hline
+	\texttt{uol\_bl}&               &            						\\ \hline          
+	\end{tabular}
+\end{table}
+
+In order to be able to learn \acrshortpl{acr:mdp} from data and establish the optimization, we should obtain a dataset that  describes the environment the robot will operate in.
+This dataset should describe possible robot poses and to what other poses the execution of the possible actions may lead to, in order to properly describe the dynamics of the system.
+
+For our implementation and the experiments that have been carried out, execution traces have been obtained by letting the robot follow a random action policy during which subsequent poses and actions are logged to a file.
+This exploration is performed inside the simulator both for a relatively small environment (i.e., \texttt{tum\_kitchen}) and  large environment (i.e., \texttt{uol\_bl}) obtained from a repository of the \textit{STRANDS} project.
+
+%Explain how the data-sets are obtained. 
+%- For multiple environments - What is obtained. - How the data is obtained.
 
 \subsection{Implementation}
 \label{sec:implementation}

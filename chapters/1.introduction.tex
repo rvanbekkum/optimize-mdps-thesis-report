@@ -113,7 +113,7 @@ The data about the environment that is used by these learning algorithms is gath
 In order to obtain accurate probabilistic models for the system under consideration, the parameters of the used learning algorithm should be tweaked in such way to optimize the performance in the execution of its tasks.
 %In order to obtain accurate probabilistic models for the system under consideration, the parameter-settings of the used model learning algorithm are iteratively tweaked towards a setting that maximizes the performance in the execution of the tasks expected to be performed.
 To achieve this we pose the adjustment of the learning algorithm parameters as an optimization task to maximize the performance that follows from executing plans derived from learned \acrshortpl{acr:mdp}.
-The optimization is performed by applying a technique known as Bayesian Optimization, so that we define a probability distribution over functions to model the performance measure and iteratively sample parameter-settings towards a global maximizer of the performance.
+The optimization is performed by applying a technique known as \acrlong{acr:bo}, so that we define a probability distribution over functions to model the performance measure and iteratively sample parameter-settings towards a global maximizer of the performance.
 
 %To address model inadequacies that are due to incomplete data, we propose to incorporate the identification of insufficient exploration for the transitions from those states that are visited in the execution of obtained plans.
 %That is, for those learned models for which the data was observed to be incomplete, the observations of the performance for the corresponding parameter-settings are modeled as noisy or uncertain.
@@ -165,7 +165,7 @@ As a side note, this application seems particularly appropriate to be approached
 The framework that we propose is aimed at automating the development of probabilistic models for the purpose of automated control by agents through planning under uncertainty.
 In the learning routine the plans are obtained through techniques founded in \acrlong{acr:dtp} in which probabilistic models are employed to achieve this.
 In \autoref{ch:background} we make the type of problems that are faced in \acrshort{acr:dtp} concrete and review how specialized probabilistic models can be used by existing algorithms to acquire plans.
-For the optimization of the parameters of learning algorithms we use a method known as Bayesian Optimization. In \autoref{ch:bayesian-optimization} we formally describe how this method works and how it is relevant to sequential decision making, supported by a number of successful applications for learning and planning.
+For the optimization of the parameters of learning algorithms we use a method known as \acrlong{acr:bo}. In \autoref{ch:bayesian-optimization} we formally describe how this method works and how it is relevant to sequential decision making, supported by a number of successful applications for learning and planning.
 In \autoref{ch:problem-related-work} we explore other existing techniques for the development of \acrshort{acr:mdp} models for systems involving uncertainty.
 A solution to the problem we described, is proposed in \autoref{ch:methodology}, in which we put the theory and algorithms discussed in the earlier chapters together into an optimization routine.
 To test and evaluate our solution we choose to make an implementation for the optimization of probabilistic models for the path planning of a mobile robot.

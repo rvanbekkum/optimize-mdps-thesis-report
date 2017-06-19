@@ -64,7 +64,7 @@ Together with the value $V_{\mathcal{M}}$ of the corresponding model obtained in
 The objective function $f: \Theta \mapsto \mathbb{R}$ is then defined such that it maps parameter-settings $\theta \in \Theta$ to real-valued performance yielded by \acrshortpl{acr:mdp}.
 
 As discussed earlier in  \autoref{sec:bayesian-optimization-problem}, the objective functions for the class of \acrshort{acr:sdm} problems tend to be expensive to evaluate as proper estimations can only be made through expensive simulations.
-Therefore, Bayesian optimization emerges as an attractive method to find a global maximizer $\theta^\ast \in \Theta$ for our objective function.
+Therefore, \acrlong{acr:bo} emerges as an attractive method to find a global maximizer $\theta^\ast \in \Theta$ for our objective function.
 After each iteration the evidence set $\mathcal{D}$ is augmented with a new observation, based on which the posterior $p(f\vert \mathcal{D})$ of the objective function $f$ is updated accordingly.
 A new parameter-setting for the next learning step is then sampled, corresponding to maximal utility in the selected acquisition function.
 
