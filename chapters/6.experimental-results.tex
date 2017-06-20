@@ -57,7 +57,7 @@ For the machine learning algorithms used, we employ the \texttt{scikit-learn} li
 
 For \acrlong{acr:bo} the \texttt{bayesian-optimization} library \cite{nogueirabayesianoptimization} has been employed. This library offers an implementation of the \acrshort{acr:bo} procedure based on a \acrshort{acr:gp} prior including the implementation of the most-used acquisition functions such as \acrshort{acr:mpi}, \acrshort{acr:mei} and \acrshort{acr:gp-ucb}.
 
-The further Python packages used, have been listed in \autoref{tab:software-packages} and include \texttt{numpy} for the manipulation of arrays and matrices used in the implementation and \texttt{matplotlib} for creating the various plots shown in this chapter.
+The further main Python packages used, have been listed in \autoref{tab:software-packages} and include \texttt{numpy} for the storage and manipulation of arrays and matrices used in the implementation and \texttt{matplotlib} for creating the various plots shown in this chapter.
 
 \subsubsection{Simulator and Mobile Robot}
 \label{sec:simulator}
@@ -106,15 +106,15 @@ The \texttt{strands-desktop} meta-package (developed as part of the \textit{STRA
 \label{sec:datasets}
 
 \begin{table}[pt]
-	\caption{Metadata about the execution traces obtained}
+	\caption{Details about the gathered datasets which consist of execution traces of the SCITOS-A5 robot in various Morse simulation environments.}
 	\label{tab:datasets-environments}\centering
-	\begin{tabular}{|l|l|l|}
+	\begin{tabular}{|l|r|r|}
 	\hline
-	\textbf{Environment} & \textbf{Area} & \textbf{Number of entries in dataset} \\
+	\textbf{Environment Name} & \textbf{Area} & \textbf{Number of Entries in Dataset} \\
 	\hline
-	\texttt{tum\_kitchen}&               &                                       \\
+	\texttt{tum\_kitchen}& $7 \times 10 = \SI{70}{\metre\squared}$              &   $4370$                                    \\
 	\hline
-	\texttt{uol\_bl}&               &            						\\ \hline          
+	\texttt{uol\_bl}& $36 \times 26 = \SI{936}{\metre\squared}$               & $10007$           						\\ \hline          
 	\end{tabular}
 \end{table}
 
@@ -122,7 +122,7 @@ In order to be able to learn \acrshortpl{acr:mdp} from data and establish the op
 This dataset should describe possible robot poses and to what other poses the execution of the possible actions may lead to, in order to properly describe the dynamics of the system.
 
 For our implementation and the experiments that have been carried out, execution traces have been obtained by letting the robot follow a random action policy during which subsequent poses and actions are logged to a file.
-This exploration is performed inside the simulator both for a relatively small environment (i.e., \texttt{tum\_kitchen}) and  large environment (i.e., \texttt{uol\_bl}) obtained from a repository of the \textit{STRANDS} project.
+This exploration is performed inside the simulator both for a relatively small environment (i.e., \texttt{tum\_kitchen}, based on a university kitchen of the Technical University of M\"unchen) and  large environment (i.e., \texttt{uol\_bl}) obtained from a repository of the \textit{STRANDS} project.
 
 %Explain how the data-sets are obtained. 
 %- For multiple environments - What is obtained. - How the data is obtained.
@@ -142,6 +142,48 @@ Details on the implementation; how the framework/routine is implemented for this
 
 \section{Scenarios}
 \label{sec:scenarios}
+
+\begin{table}
+	\caption{Details on the different configurations used for the experiments.}
+	\label{tab:configurations}\centering
+	\begin{tabular}{|l|l|r|l|l|r|}
+		\hline
+		\textbf{ID} & \textbf{Environment} & \textbf{Weight Factor $\beta$} & \textbf{Acquisition Function} & \textbf{Algorithm} & \textbf{Dataset Used} \\
+		\hline 
+		1 & \texttt{tum\_kitchen} & 0.0 & \acrshort{acr:mei} & $k$-Means & 100\% \\
+		\hline
+		2 & \texttt{tum\_kitchen} & 0.0 & \acrshort{acr:mei} & $k$-Means & 75\%  \\
+		\hline
+		3 & \texttt{tum\_kitchen} & 0.0 & \acrshort{acr:mei} & $k$-Means & 50\% \\
+		\hline
+		4 & \texttt{tum\_kitchen} & 0.0 & \acrshort{acr:mei} & \acrshort{acr:gmm} & 100\% \\
+		\hline
+		5 & \texttt{tum\_kitchen} & 0.0 & \acrshort{acr:gp-ucb} & $k$-Means & 100\% \\
+		\hline
+		6 & \texttt{tum\_kitchen} & 0.0 & \acrshort{acr:gp-ucb} & \acrshort{acr:gmm} & 100\% \\
+		\hline
+		7 & \texttt{tum\_kitchen} & 0.25 & \acrshort{acr:mei} & $k$-Means & 100\% \\
+		\hline
+		8 & \texttt{tum\_kitchen} & 0.50 & \acrshort{acr:mei} & $k$-Means & 100\% \\
+		\hline
+		9 & \texttt{uol\_bl} & 0.0 & \acrshort{acr:mei} & $k$-Means & 100\% \\
+		\hline
+		10 & \texttt{uol\_bl} & 0.0 & \acrshort{acr:mei} & $k$-Means & 75\%  \\
+		\hline
+		11 & \texttt{uol\_bl} & 0.0 & \acrshort{acr:mei} & $k$-Means & 50\% \\
+		\hline
+		12 & \texttt{uol\_bl} & 0.0 & \acrshort{acr:mei} & \acrshort{acr:gmm} & 100\% \\
+		\hline
+		13 & \texttt{uol\_bl} & 0.0 & \acrshort{acr:gp-ucb} & $k$-Means & 100\% \\
+		\hline
+		14 & \texttt{uol\_bl} & 0.0 & \acrshort{acr:gp-ucb} & \acrshort{acr:gmm} & 100\% \\
+		\hline
+		15 & \texttt{uol\_bl} & 0.25 & \acrshort{acr:mei} & $k$-Means & 100\% \\
+		\hline
+		16 & \texttt{uol\_bl} & 0.50 & \acrshort{acr:mei} & $k$-Means & 100\% \\
+		\hline
+	\end{tabular}
+\end{table}
 
 %Discuss the different configurations that are to be compared
 %\begin{itemize}
