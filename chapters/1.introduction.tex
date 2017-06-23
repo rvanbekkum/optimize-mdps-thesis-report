@@ -28,14 +28,22 @@ Considering the expediency of \acrshortpl{acr:mdp} for automated control, it see
 The problem this thesis is concerned with is the development of probabilistic models, which are used for obtaining plans for automated control of systems whose dynamics are stochastic.
 Setting up such models is an important, though difficult and time-costly process for a human designer that might not always have (enough) expertise to craft a suitable, well-generalizing model that can be used to plan for the execution of different tasks.
 In practice, this problem is tackled by domain experts by iteratively tweaking the model parameters until the desired performance is achieved.
-The typical procedure is depicted in \autoref{fig:high-level-model-development} in which is seen that the model parameters are updated until satisfactory performance is observed.
+%The typical procedure is depicted in \autoref{fig:high-level-model-development} in which is seen that the model parameters are updated until satisfactory performance is observed.
+
+\autoref{fig:high-level-model-development} shows a typical procedure followed in the design of a probabilistic model.
+In this procedure, the human designer is presented a problem description and handcrafts an initial model for the system.
+The model is then evaluated by performing tasks following the plans that are derived from the model in simulations or even in the real world.
+The assessed performance steers the designer towards what model parameters appear to work well.
+The designer uses the obtained knowledge to iteratively refine the model parameters until ultimately satisfactory performance is yielded in the execution of the derived plans.
 
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=\textwidth]{high-level-planning-diagram}
-	\caption{Typical procedure followed in the development of probabilistic models for planning under uncertainty.}
+	\caption{Diagram showing a typical iterative procedure followed in the development of probabilistic models for planning under uncertainty. Given a problem description for the real-world system under consideration, a designer refines the model until satisfactory performance is observed.}
 	\label{fig:high-level-model-development}
 \end{figure}
+
+\newpage
 
 An alternative that one ought to consider, is that of applying \acrshort{acr:rl} techniques rather than planning algorithms.
 However, although ideas from planning and \acrshort{acr:rl} are interchangeable, these techniques typically demand direct interaction with the environment which is something that cannot always be readily offered.
@@ -55,31 +63,37 @@ Therefore, in order to learn accurate probabilistic models, we are in need of a 
 The problem statement as presented in the previous section yields the following main research question for this thesis:
 
 \vspace{12pt}
-\noindent\textbf{Main Research Question.} How can the task of obtaining a \acrfull{acr:mdp} that maximizes the yielded performance of executing plans that are derived from it, given a dataset about the system under consideration, be automated?
+\noindent%\fbox{\parbox{\textwidth}{ %Uncomment this for boxes
+\textbf{Main Research Question.} How can the task of obtaining a \acrfull{acr:mdp} that maximizes the yielded performance of executing plans that are derived from it, given a dataset about the system under consideration, be automated?
+%}}
 \vspace{12pt}
 
 To answer this main research question, four research questions have been identified which are presented below.
 The relevance of each of these research questions is discussed accordingly in the next paragraphs.
 
-\vspace{12pt}
-\noindent\textbf{Research Question 1.} Which learning algorithms exist that can be employed for learning \acrshortpl{acr:mdp} from data for systems involving uncertainty that require plans for automated control?
+\vspace{16pt}
+\noindent%\fbox{\parbox{\textwidth}{
+\textbf{Research Question 1.} Which learning algorithms exist that can be employed for learning \acrshortpl{acr:mdp} from data for systems involving uncertainty that require plans for automated control?
+%}}
 \vspace{0pt}
 
 First off, to facilitate the formulation of plans for a system involving uncertainty, we need to obtain an \acrshort{acr:mdp} from the provided dataset.
 Therefore, we should know what learning algorithms exist that can be employed to learn the parameters of an \acrshort{acr:mdp}.
 Accordingly, we should identify the applications for which each of these algorithms are suited, but also what the shortcomings or vulnerabilities of each of these algorithms are.
 
-\newpage
-
-\vspace{12pt}
-\noindent\textbf{Research Question 2.} How should a performance measure be defined which can be used to fairly compare the value of different \acrshortpl{acr:mdp}?
+\vspace{16pt}
+\noindent%\fbox{\parbox{\textwidth}{
+\textbf{Research Question 2.} How should a performance measure be defined which can be used to fairly compare the value of different \acrshortpl{acr:mdp}?
+%}}
 \vspace{12pt}
 
 As various \acrshortpl{acr:mdp} can be obtained for different parameter settings of the model learning algorithms, the need for a measure of performance for different \acrshortpl{acr:mdp} emerges.
 That is, to establish which parameter settings yield an \acrshort{acr:mdp} that best reflects the underlying system for the tasks to be executed, we require a way to express and fairly compare the value of the learned \acrshortpl{acr:mdp}.
 
-\vspace{12pt}
-\noindent\textbf{Research Question 3.} How can the parameter space of model learning algorithms cost-effectively be explored towards a global maximizer with only limited knowledge about the system under consideration?
+\vspace{16pt}
+\noindent%\fbox{\parbox{\textwidth}{
+\textbf{Research Question 3.} How can the parameter space of model learning algorithms cost-effectively be explored towards a global maximizer with only limited knowledge about the system under consideration?
+%}}
 \vspace{12pt}
 
 A model learning algorithm may yield different \acrshortpl{acr:mdp} depending on the selected parameter settings.
@@ -87,8 +101,10 @@ To establish the most appropriate \acrshort{acr:mdp} for the system under consid
 As evaluating all possible parameter-settings would be cost-expensive, we need to investigate other ways of exploring the parameter space more cost-effectively.
 This is under the assumption that we only have limited to no belief over which parameter-settings might work well for the system under consideration.
 
-\vspace{12pt}
-\noindent\textbf{Research Question 4.} How can the hierarchy of different abstraction levels be exploited to find a performance-maximizing \acrshort{acr:mdp} in a more cost-effective way?
+\vspace{16pt}
+\noindent%\fbox{\parbox{\textwidth}{
+\textbf{Research Question 4.} How can the hierarchy of different abstraction levels be exploited to find a performance-maximizing \acrshort{acr:mdp} in a more cost-effective way?
+%}}
 \vspace{12pt}
 
 Assessments of performance can be made at different levels of abstraction of the underlying system.
@@ -126,8 +142,6 @@ The posterior that follows from this step is then used to define a prior over th
 In attempt to further improve the learned models, a post-processing step is performed that aims to identify and fix discrepancies between the model and the real-world.
 This post-processing step increases the resolution for those areas of the state-space when it identifies the outcomes of actions in simulations do not match the learned transition probabilities.
 
-\newpage
-
 The framework is applied, tested and evaluated for the domain of mobile robot navigation, as the robots in this domain oft to operate under significant uncertainty in their actions.
 A solution in this context is a policy which maps discretized robot poses into fine-grained navigation actions so to move a mobile robot to a certain goal location.
 Probabilistic models are acquired by applying unsupervised machine learning algorithms on execution traces (consisting of odometry data describing robot poses) obtained in an exploration phase.
@@ -148,7 +162,7 @@ However, this framework could possibly be extended to deal with applications whe
 
 Secondly, we note that all experiments and corresponding results are based on data that is solely obtained from simulations of a mobile robot.
 Reasons for this are that we make the assumption that the environment is fully observable, which is typically not the case for real-world applications.
-However, we should also note that the framework is not solely intended for the domain of mobile robot navigation.% and not having a real robot at hand, which would be too expensive and comes with its own technical challenges that are outside of our scope.
+Another motivation of this is that the framework is not solely intended for the domain of mobile robot navigation and data from simulations is therefore deemed adequate for our experiments. % and not having a real robot at hand, which would be too expensive and comes with its own technical challenges that are outside of our scope.
 
 Finally, we focus on the domain of mobile robot navigation to evaluate and test our approach.
 One of the important aspects to consider, is which data should be collected to describe the dynamics of the system to learn models from this data.
@@ -159,17 +173,26 @@ As a side note, this application seems particularly appropriate to be approached
 % POMDPs: Restricted to MDPs, but could possible be extended to deal where the states are cannot be directly observed and should be inferred from observations.
 % Field of application: We will discuss how the proposed method could be applied to other domains, although we will focus on the domain of mobile robot navigation to evaluate and test our method.
 
-\section{Overview}
-\label{sec:introduction-overview}
+\section{Outline}
+\label{sec:introduction-outline}
 
-The framework that we propose is aimed at automating the development of probabilistic models for the purpose of automated control by agents through planning under uncertainty.
-In the learning routine the plans are obtained through techniques founded in \acrlong{acr:dtp} in which probabilistic models are employed to achieve this.
-In \autoref{ch:background} we make the type of problems that are faced in \acrshort{acr:dtp} concrete and review how specialized probabilistic models can be used by existing algorithms to acquire plans.
+In this chapter we presented our motivations and defined the problem this thesis is concerned with.
+To approach this problem we propose a framework that is aimed at automating the development of probabilistic models for the purpose of automated control by agents through planning under uncertainty.
+This section describes the topics of the remaining chapters and how they relate to our problem statement and research questions presented earlier. % TODO Update
+
+In \autoref{ch:background} we make the type of problems that are faced in \acrshort{acr:dtp} concrete. 
+This chapter discusses the background on how dedicated probabilistic models can be used to reflect uncertainty in the systems under consideration.
+It presents how these probabilistic models can be used by existing planning algorithms and how this relates to and differs from  \acrlong{acr:rl}.
+
 For the optimization of the parameters of learning algorithms we use a method known as \acrlong{acr:bo}. In \autoref{ch:bayesian-optimization} we formally describe how this method works and how it is relevant to sequential decision making, supported by a number of successful applications for learning and planning.
+
 In \autoref{ch:problem-related-work} we explore other existing techniques for the development of \acrshort{acr:mdp} models for systems involving uncertainty.
+
 A solution to the problem we described, is proposed in \autoref{ch:methodology}, in which we put the theory and algorithms discussed in the earlier chapters together into an optimization routine.
+
 To test and evaluate our solution we choose to make an implementation for the optimization of probabilistic models for the path planning of a mobile robot.
 In \autoref{ch:experimental-results} we discuss the results obtained from testing the proposed solution with our implementation for mobile robot navigation.
+
 Finally, in \autoref{ch:conclusions} we summarize and evaluate the proposed solution.
 
 %
