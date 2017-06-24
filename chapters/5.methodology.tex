@@ -225,7 +225,7 @@ This section defines the phases of the extension, of which each subsequent phase
 	\begin{figure}[t!]
 		\centering
 		\includegraphics[width=1.0\textwidth]{phase-3.pdf}
-		\caption{An illustration of the goal of the third phase in the context of mobile robot navigation. In the navigation towards the goal state $s_8$, the robot might get in state $s_2$ stuck following the optimal policy. Therefore higher resolution is needed in this area of the state space.}
+		\caption{An illustration of the goal of the third phase in the context of mobile robot navigation. In the navigation towards the goal state $s_8$, the robot might get stuck in state $s_2$ following the optimal policy. Therefore higher resolution is needed in this area of the state space.}
 		\label{fig:phase-3}
 	\end{figure}
 	\clearpage
@@ -261,9 +261,17 @@ At the end of the first phase, the resulting posterior \acrshort{acr:gp} distrib
 \subsection{Phase 2: Simulation-Based Optimization}
 \label{sec:phase-2}
 
-The second phase limits the optimization to the narrowed down parameter space that follows from the first phase.
+The second phase exploits the knowledge gathered in the first phase by using it as a \acrshort{acr:gp} prior in a new optimization process such that it starts off in the part of the parameter space most likely to yield high value.
 In this phase the performance assessment becomes more cost-expensive, but is also made more accurate by performing simulations and weighing the observed $V_\mathit{SIM}$ in the performance measure.
 This means, we either fix the $\beta$ parameter to a value in $[0, 1)$, or alternatively, gradually decrease it over time so that $V_\mathit{SIM}$ plays a more significant role the more iterations have passed.
+
+The block diagram of \autoref{fig:phase-2} depicts the main steps of this second phase.
+The same execution traces from the exploration are again passed to model learning algorithms to obtain \acrshortpl{acr:mdp} given parameter-settings $\theta$.
+What is first of all different is that the acquisition of new samples is steered by the prior obtained from the first phase.
+Secondly, the value is now determined by simulations in which the policies emerging from a learned model $\mathcal{M}$ are followed for the tasks that the agent is expected to perform.
+This value $V_\mathcal{M}$ is thus computed as in \autoref{eq:vm} with a weight factor $\beta > 0$.
+The optimization process continues until a stop condition, which could be either reaching a fixed number of iterations, a fixed time or a stopping criterion (e.g., when potential improvement becomes negligible).
+At this point we can obtain an \acrshort{acr:mdp} most likely to yield high performance for the problem under consideration.
 
 %Second phase: $\beta$ decreases over time, which means $V_\mathit{SIM}$ starts to play a role, and assessment becomes more accurate, but also more cost-expensive.
 
@@ -276,7 +284,12 @@ The last phase starts when the parameter space has been narrowed down sufficient
 In this phase, the goal is to further improve learned models by checking whether the transition probabilities are likely to match reality.
 The identification of discrepancies in these probabilities happens by executing actions in those areas of the state-space that are visited most often and in which the agent tends to get stuck (according to the transition probabilities) and seeing if the observed transitions yield comparable probabilities.
 For those areas and their corresponding states for which mismatches are identified, higher resolution is provided to better reflect the system's dynamics in the real world.
-\fbox{\textbf{TODO:} Enough detail for this section? Add illustrating figures.}
+
+The illustration of \autoref{fig:phase-3} aims to clarify the goal of this third phase by means of an example for the context of mobile robot navigation.
+Although the model obtained in the previous phase, might yield high performance for most of the tasks used to assess model value, a situation as illustrated in this figure might occur.
+That is, in the figure the robot, depicted in blue, needs to move from its current position to the goal, indicated by the yellow shaded area.
+For the state space depicted on the left-side however, the robot might get stuck following the optimal policy from which the need for higher resolution in this area emerges.
+% To identify these discrepancies we could check if the transition probabilities of the model match observed outcomes of actions from the different states of the model.
 
 %Third phase: Starts when the parameter-space has sufficiently been narrowed down. To further improve learned models we would like to see if the opportunity exists of having higher resolution in some areas of the state space to better reflect the data-set.
 
@@ -340,7 +353,7 @@ A potential state-space of an \acrshort{acr:mdp} that might be learned from this
 Then, assigning a reward to a state that covers the goal area should give us a policy that leads the robot from any initial state to the goal state as depicted in \autoref{fig:dummy-map-4}.
 
 In this application the performance of a learned \acrshort{acr:mdp} can be assessed as described in \autoref{sec:performance-measure} through the computed value function and performing simulations for the various tasks the robot should be able to execute.
-Comparing the performance that was assessed for multiple \acrshort{acr:mdp} through the framework on convergence leads to an \acrshort{acr:mdp} that reflects the real world and generalizes over multiple tasks quite well.
+Comparing the performance that was assessed for multiple \acrshortpl{acr:mdp} through the framework on convergence leads to an \acrshort{acr:mdp} that reflects the real world and generalizes over multiple tasks quite well.
 
 
 

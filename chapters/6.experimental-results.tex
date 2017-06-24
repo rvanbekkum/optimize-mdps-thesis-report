@@ -118,11 +118,36 @@ The \texttt{strands-desktop} meta-package (developed as part of the \textit{STRA
 	\end{tabular}
 \end{table}
 
+\begin{table}[pt]
+	\caption{An excerpt of one of the execution traces datasets showing the format of the entries. Each entry stores the pose (\texttt{x}, \texttt{y} and \texttt{yaw}) of the robot based on odometry readings, and the action executed from this pose.}
+	\label{tab:datasets-excerpt}\centering
+	{\ttfamily
+	\begin{tabular}{r|r|r|r}
+		x & y & action\_id & yaw \\
+		\hline
+		2.243550300598145 & 3.1634166240692 & 1 & 0.7840424207077832 \\
+		2.890618801116943 & 3.8128550052643 & 7 & -0.8159573629295891 \\
+		3.541900634765625 & 3.1447956562042 & 6 & -1.6159579833378268 \\
+		3.544688224792481 & 2.1472022533417 & 0 & -0.0326251734671011 \\
+		4.264401435852051 & 2.0662682056427 & 6 & -1.6326265827467716 \\
+		... & ... & ... & ...
+	\end{tabular}
+	}
+\end{table}
+
 In order to be able to learn \acrshortpl{acr:mdp} from data and establish the optimization, we should obtain a dataset that  describes the environment the robot will operate in.
 This dataset should describe possible robot poses and to what other poses the execution of the possible actions may lead to, in order to properly describe the dynamics of the system.
 
 For our implementation and the experiments that have been carried out, execution traces have been obtained by letting the robot follow a random action policy during which subsequent poses and actions are logged to a file.
 This exploration is performed inside the simulator both for a relatively small environment (i.e., \texttt{tum\_kitchen}, based on a university kitchen of the Technical University of M\"unchen) and  large environment (i.e., \texttt{uol\_bl}) obtained from a repository of the \textit{STRANDS} project.
+
+In the exploration a new entry is recorded in a file after each time step of $T = \SI{1.0}{\second}$, which each contain the robot's pose based on odometric readings with its location as $x$ and $y$ position and its orientation described by the $yaw$.
+Apart from that each entry also stores the action that is executed next from the current pose.
+Thus, accordingly the next entry tells us the robot's pose after the action in the previous entry has been executed.
+
+In \autoref{tab:datasets-excerpt} an excerpt of one of the datasets is shown, which might give a clearer picture of the data that has been gathered and the format in which it has been stored.
+The possible actions of the robot correspond to a discrete set of robot movements in $8$ different directions, being \textit{south}, \textit{south-east}, \textit{east}, \textit{north-east}, \textit{north}, \textit{north-west}, \textit{west} and \textit{south-west}.
+For example, the first two entries describes the transformation of the robot's pose after trying to make a \textit{south-east} movement (N.B., positive difference in $x$ corresponds to moving south, while positive difference in $y$ corresponds to moving east).
 
 %Explain how the data-sets are obtained. 
 %- For multiple environments - What is obtained. - How the data is obtained.
