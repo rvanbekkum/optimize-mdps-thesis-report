@@ -102,7 +102,7 @@ The \texttt{strands-desktop} meta-package (developed as part of the \textit{STRA
 %	\item Control movements of robot in simulator through \textit{ROS}
 %\end{itemize}
 
-\subsection{Datasets}
+\subsection{Dataset Acquisition}
 \label{sec:datasets}
 
 \begin{table}[pt]
@@ -152,18 +152,47 @@ For example, the first two entries describes the transformation of the robot's p
 %Explain how the data-sets are obtained. 
 %- For multiple environments - What is obtained. - How the data is obtained.
 
-\subsection{Implementation}
+\subsection{Framework Implementation}
 \label{sec:implementation}
 
-Details on the implementation; how the framework/routine is implemented for this application. Discuss how the following aspects are taken care of in the implementation:
-\begin{itemize}
-	\item Environments
-	\item Exploration / Data Gathering
-	\item Optimization
-	\item Simulations of following policy
-\end{itemize}
+For the implementation of the framework for this domain we make use of the \acrshort{acr:bo} framework for optimization.
 
-\subsubsection{title}
+\subsection{Learning Step}
+\label{sec:learning-step-robot}
+
+\blindtext
+
+%% IMPLEMENTATION LEARNING STEP
+% Learning algorithm
+	% Clustering algorithm
+	% Maximum likelihood
+% Objective: 
+	% Learn MDP for given theta
+	% Tasks (initial and goal locations)
+	% Turned into reward function -> apply solver (VI) -> obtain value function and policy to use
+	% Simulation:
+		% Steps
+		% Time-outs (1) stuck (2) goal state to reach goal (3) task
+	% Output: Model value, time
+% Logging
+
+\subsection{Optimization Step}
+\label{sec:optimization-step-robot}
+
+\blindtext
+
+%% OPTIMIZATION STEP
+% Initial points (random points)
+% Stopping criterions
+
+
+%Details on the implementation; how the framework/routine is implemented for this application. Discuss how the following aspects are taken care of in the implementation:
+%\begin{itemize}
+%	\item Environments
+%	\item Exploration / Data Gathering
+%	\item Optimization
+%	\item Simulations of following policy
+%\end{itemize}
 
 \section{Scenarios}
 \label{sec:scenarios}
