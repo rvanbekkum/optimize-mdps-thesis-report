@@ -150,7 +150,7 @@ Then accordingly we can define $T = \mathcal{S_0} \times R_G$ as the set of task
 \noindent Putting this all together, the performance of an \acrshort{acr:mdp} $\mathcal{M}$ can in this way be expressed as:
 \begin{equation}
 \label{eq:vm}
-	V_{\mathcal{M}} = \frac{\sum_{\forall t \in T} \beta \cdot V_{\mathit{DTP}, t} + (1 - \beta) \cdot V_{\mathit{SIM}, t}}{|T|}
+	V_{\mathcal{M}} = \frac{\sum_{t \in T} \beta \cdot V_{\mathit{DTP}, t} + (1 - \beta) \cdot V_{\mathit{SIM}, t}}{|T|}
 \end{equation}
 where $T$ is the set consisting of the pairs of initial states and reward functions of the tasks over which the performance is assessed.
 
@@ -207,6 +207,30 @@ This section defines the phases of the extension, of which each subsequent phase
 %	\item Three 'phases':
 %\end{itemize}
 
+\afterpage{
+	\begin{figure}[t]
+		\centering
+		\includegraphics[width=1.0\textwidth]{phase-1.pdf}
+		\caption{Block diagram showing the steps of the first phase of the cost-incremental optimization framework. This phase develops a distribution which reflects the interesting area of the parameter space solely based on the value functions of \acrshortpl{acr:mdp}.}
+		\label{fig:phase-1}
+	\end{figure}
+	
+	\begin{figure}[t]
+		\centering
+		\includegraphics[width=1.0\textwidth]{phase-2.pdf}
+		\caption{Block diagram showing the steps of the second phase of the cost-incremental optimization framework. This phase uses the distribution learned in the first phase as a prior and optimizes for an \acrshort{acr:mdp} which maximizes performance in simulations.}
+		\label{fig:phase-2}
+	\end{figure}
+	
+	\begin{figure}[t!]
+		\centering
+		\includegraphics[width=1.0\textwidth]{phase-3.pdf}
+		\caption{An illustration of the goal of the third phase in the context of mobile robot navigation. In the navigation towards the goal state $s_8$, the robot might get in state $s_2$ stuck following the optimal policy. Therefore higher resolution is needed in this area of the state space.}
+		\label{fig:phase-3}
+	\end{figure}
+	\clearpage
+}
+
 \subsection{Phase 1: Value Function Pre-Processing}
 \label{sec:phase-1}
 
@@ -214,27 +238,25 @@ In the first phase the performance is assessed solely based on the value functio
 This means the $\beta$ parameter is set to $\beta = 1$ such that the performance $V_{\mathcal{M}}$ of \acrshort{acr:mdp} $\mathcal{M}$ is expressed only in terms of $V_\mathit{DTP}$ and so no simulations are performed in this phase.
 Therefore, this first phase is relatively cost-cheap, and although it abstracts from the real-world the most, it may be used to identify the interesting area of the parameter space.
 Hence, the goal of this first phase is to narrow down the search space to a subspace of learning parameters more likely to yield high performance.
-In practice this could be done by setting a threshold, say, $\eta \in [0, 1]$, that specifies the allowed deviation from the observed maximum in the evidence set $\mathcal{D}$, i.e. $\max_\mathcal{(x_i, y_i) \in D} y_i$, which can be used to define parameter bounds based on the posterior mean.
 
-\fbox{\textbf{TODO:} Update threshold to prior.}
+The block diagram in \autoref{fig:phase-1} depicts the main steps of this first phase. The execution traces from the exploration are used to obtain \acrshortpl{acr:mdp} by applying the learning algorithms given a parameter-setting $\theta$.
+The value of a learned model $\mathcal{M}$ is then only based on the value functions $V$ for a set of tasks $T$ the system is expected to perform.
+The value of model $\mathcal{M}$ is thus computed as:
+\begin{equation} 
+V_{\mathcal{M}} = \frac{\sum_{t \in T} V_{\mathit{DTP}, t}}{|T|}
+\end{equation}
+where each task $t \in T$ is defined in terms of an initial state and reward function.
+Based on the gathered evidence new parameter-settings $\theta$ are sampled iteratively, which are those settings for which the utility is the highest in the acquisition function used for \acrshort{acr:bo}.
+This continues until a stopping condition has been met, where in this first phase stopping after a fixed number of iterations should be acceptable, as the goal is only to narrow down the search space.
+At the end of the first phase, the resulting posterior \acrshort{acr:gp} distribution is taken and used as a prior for the next optimization phase.
+
+%In practice this could be done by setting a threshold, say, $\eta \in [0, 1]$, that specifies the allowed deviation from the observed maximum in the evidence set $\mathcal{D}$, i.e. $\max_\mathcal{(x_i, y_i) \in D} y_i$, which can be used to define parameter bounds based on the posterior mean.
+
+%\fbox{\textbf{TODO:} Update threshold to prior.}
 
 %First phase: Performance assessment solely based on $V_\mathit{DTP}$ (i.e., initially $\beta = 1$). No simulations. $\gamma$ parameter starts off low and increases over time. This means this first phase is relatively cost-cheap, but might give us a global idea of the interesting area of the parameter-space so that we could narrow this space down.
 
 %\blindtext
-
-%\begin{figure}[t]
-%	\centering
-%	\includegraphics[width=1.0\textwidth]{learning-cycle-simplified-phase-1.pdf}
-%	\caption{Phase 1.}
-%	\label{fig:phase1}
-%\end{figure}
-%
-%\begin{figure}[t]
-%	\centering
-%	\includegraphics[width=1.0\textwidth]{learning-cycle-simplified-phase-2.pdf}
-%	\caption{Phase 2.}
-%	\label{fig:phase2}
-%\end{figure}
 
 \subsection{Phase 2: Simulation-Based Optimization}
 \label{sec:phase-2}
@@ -246,8 +268,6 @@ This means, we either fix the $\beta$ parameter to a value in $[0, 1)$, or alter
 %Second phase: $\beta$ decreases over time, which means $V_\mathit{SIM}$ starts to play a role, and assessment becomes more accurate, but also more cost-expensive.
 
 %\blindtext
-
-\newpage
 
 \subsection{Phase 3: Resolution Post-Processing}
 \label{sec:phase-3}
@@ -318,8 +338,6 @@ Then, before our model learning framework is applied to learn \acrshortpl{acr:md
 This could then give a set of data-points, as depicted in \autoref{fig:dummy-map-2}, which can be used to learn the states and transition probabilities of an \acrshort{acr:mdp}.
 A potential state-space of an \acrshort{acr:mdp} that might be learned from this dataset is shown in \autoref{fig:dummy-map-3}.
 Then, assigning a reward to a state that covers the goal area should give us a policy that leads the robot from any initial state to the goal state as depicted in \autoref{fig:dummy-map-4}.
-
-\newpage
 
 In this application the performance of a learned \acrshort{acr:mdp} can be assessed as described in \autoref{sec:performance-measure} through the computed value function and performing simulations for the various tasks the robot should be able to execute.
 Comparing the performance that was assessed for multiple \acrshort{acr:mdp} through the framework on convergence leads to an \acrshort{acr:mdp} that reflects the real world and generalizes over multiple tasks quite well.
