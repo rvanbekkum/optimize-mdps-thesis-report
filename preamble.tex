@@ -1,6 +1,7 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{blindtext}	% TODO Remove
 \usepackage{changes}
 \usepackage[nameinlink,capitalise]{cleveref}
@@ -11,6 +12,7 @@
 \usepackage[acronym]{glossaries} % toc does not work properly
 \usepackage{siunitx}
 \usepackage{subcaption} 
+\usepackage{thmtools}
 \usepackage{tikz}
 
 \usetikzlibrary{automata,arrows,shapes}
@@ -33,6 +35,11 @@
 \def\sectionautorefname{Section}
 \def\chapterautorefname{Chapter}
 \def\algorithmautorefname{Algorithm}
+
+%\declaretheoremstyle[bodyfont=\normalfont]{normalbody}
+%\declaretheorem[style=normalbody,name=Definition]{definition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
 
 %% Pseudocode settings %%
 \newcommand*\Let[2]{\State #1 $\gets$ #2}

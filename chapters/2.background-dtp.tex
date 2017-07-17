@@ -124,7 +124,12 @@ Similarly, the initial state probabilities can be recorded in an $n \times 1$ in
 \pi_i = p(q_1 = s_i)
 \end{equation} 
 denoting the probability of state $s_i$ being the initial state of the model.
-Putting these components all together, a discrete stationary first-order Markov Chain can be defined as a 3-tuple $\mathcal{M} = (\mathcal{S}, \mat{A}, \arr{\pi})$ with $\mathcal{S}$ as state space, $\mat{A}$ as transition matrix and $\arr{\pi}$ as initial state vector.
+Putting these components together yields \autoref{def:markov-chain} below.
+
+\begin{definition}
+	\label{def:markov-chain}
+	A discrete stationary first-order \textit{Markov Chain} is a 3-tuple $(\mathcal{S}, \mat{A}, \arr{\pi})$ where $\mathcal{S}$ is a finite set of states, $\mat{A}$ the transition (probability) matrix and $\arr{\pi}$ the initial state (probability) vector.
+\end{definition}
 
 \newpage
 
@@ -138,8 +143,15 @@ Putting these components all together, a discrete stationary first-order Markov 
 The Markov Chain model discussed in \autoref{subsec:markov-chains} requires the modeled system or stochastic process to be fully observable, meaning that each of its states correspond directly to an observation.
 However, it is not unusual to encounter real-world systems in which the states are assumed to be unobservable, though are correlated with observable events produced by the system.
 These systems can be modeled by a \acrfull{acr:hmm} in which the states, typically referred to as \textit{hidden} or \textit{latent} variables $h_{1:T}$, are unknown.
-Additionally this model consists of observations, typically referred to as \textit{observed} or \textit{visible} variables $v_{1:T}$, which are dependent on the hidden variables through an emission $p(o_t\vert h_t)$ graphically depicted in \autoref{fig:hmm}. All together, a stationary \acrshort{acr:hmm} consists of the following parts:
+Additionally this model consists of observations, typically referred to as \textit{observed} or \textit{visible} variables $v_{1:T}$, which are dependent on the hidden variables through an emission $p(o_t\vert h_t)$ graphically depicted in \autoref{fig:hmm}. From all of this follows \autoref{def:hmm} below, formally describing a stationary \acrshort{acr:hmm}.
 
+
+%Putting all of these components together, a stationary \acrshort{acr:hmm} can be defined as a 5-tuple $\mathcal{M} = (\mathcal{S}, \mathcal{V}, \arr{\pi}, \mat{A}, \mat{B})$ with $\mathcal{S}$ as state space, $\mathcal{V}$ as observation space, $\arr{\pi}$ as initial state vector, $\mat{A}$ as transition matrix and $\mat{B}$ as emission matrix.
+
+\begin{definition}
+	\label{def:hmm}
+	A (discrete-state) stationary \textit{\acrfull{acr:hmm}} is a 5-tuple $(\mathcal{S}, \mathcal{V}, \arr{\pi}, \mat{A}, \mat{B})$ consisting of the following parts:
+	
 \begin{itemize}
 	\item a discrete set of $n$ attainable states $\mathcal{S} = \{s_1, \ldots, s_n\}$, i.e. the underlying \textit{state space}
 	\item a set of $m$ possible observations, $\mathcal{V} = \{v_1, \ldots, v_m\}$, i.e. the \textit{observation space}
@@ -147,7 +159,7 @@ Additionally this model consists of observations, typically referred to as \text
 	\item an $m \times n$ emission matrix $\mat{B} = [b_{ij}]$ defining the models' \textit{emission distribution} in which $b_{ij} = p(o_t = v_i \vert h_t = s_j)$ the probability of observing $v_i$ from state $s_j$ ($v_i \in \mathcal{V}$, $s_j \in \mathcal{S}$)
 	\item an $n \times 1$ initial state array $\arr{\pi} = [\pi_i]$ in which $\pi_i = p(h_1 = s_i)$ is the probability of having $s_i$ as the initial state ($s_i \in \mathcal{S}$)
 \end{itemize}
-Putting all of these components together, a stationary \acrshort{acr:hmm} can be defined as a 5-tuple $\mathcal{M} = (\mathcal{S}, \mathcal{V}, \arr{\pi}, \mat{A}, \mat{B})$ with $\mathcal{S}$ as state space, $\mathcal{V}$ as observation space, $\arr{\pi}$ as initial state vector, $\mat{A}$ as transition matrix and $\mat{B}$ as emission matrix.
+\end{definition}
 
 \begin{figure}[t!]
 	\centering
@@ -222,12 +234,17 @@ This uncertainty is captured by defining a probabilistic transition function $\d
 As the agent of an \acrshort{acr:mdp} aims to fulfill certain goals through the selection of actions, it requires some means of assessing which action is the best to pick.
 The value measure used in \acrshortpl{acr:mdp} is defined by a mapping $R: \mathcal{S} \times A \times \mathcal{S} \mapsto \mathbb{R}$ from states and actions to real-valued \textit{rewards} (in case of added value) and/or \textit{costs} (in case of lost value).
 Due to the uncertainty in the modeled system, typically the agent uses the \acrshort{acr:mdp}'s transition distribution (defined by transition function $\delta$) to compute expected values, and accordingly selects actions that maximize this quantity.
+Putting these components together results in \autoref{def:mdp} below.
 
 % Formal definition
-Putting all of these components together, an \acrshort{acr:mdp} can be defined as a 5-tuple, $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$ with $\mathcal{S}$ as state space, $s_0 \in \mathcal{S}$ as the initial state, $A$ as finite set of possible actions, $\delta$ as probabilistic transition function and $R$ as reward function.
+%Putting all of these components together, an \acrshort{acr:mdp} can be defined as a 5-tuple, $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$ with $\mathcal{S}$ as state space, $s_0 \in \mathcal{S}$ as the initial state, $A$ as finite set of possible actions, $\delta$ as probabilistic transition function and $R$ as reward function.
+\begin{definition}
+	\label{def:mdp}
+	A \textit{\acrfull{acr:mdp}} is a 5-tuple $(\mathcal{S}, s_0, A, \delta, R)$, where $\mathcal{S}$ is a state space, $s_0 \in \mathcal{S}$ an initial state, $A = \{a_1, \ldots, a_m\}$ a finite set of actions to choose from, $\delta: \mathcal{S} \times A \times \mathcal{S} \mapsto [0, 1]$ a probabilistic transition function and $R: \mathcal{S} \times A \times \mathcal{S} \mapsto \mathbb{R}$ a reward function.
+\end{definition}
 
 % Policies
-In the context of \acrshort{acr:dtp}, \acrshortpl{acr:mdp} are used to find an optimal course of action, often referred to as a plan or \textit{policy}.
+In the context of \acrshort{acr:dtp}, \acrshortpl{acr:mdp} are used to find an optimal course of action, often referred to as a plan or \textit{policy} $\pi: \mathcal{S} \mapsto A$.
 For an \acrshort{acr:mdp} the optimal policy typically means the policy that when applied by an agent, maximizes the expected value.
 However, one can also choose to express goals in alternative ways which do not require the specification of a reward function.
 An example of this can be seen in \cite{bhatia2010sampling, lacerda2015optimal}, which replace the reward function of the classic \acrshort{acr:mdp}-framework by a (co-safe) Linear Temporal Logic (LTL) formula to be satisfied.
@@ -241,10 +258,16 @@ An example of this can be seen in \cite{bhatia2010sampling, lacerda2015optimal},
 An extension of the traditional \acrshort{acr:mdp} models, are the \acrfull{acr:pomdp} models which account for uncertainty in the observations that are made by agents.
 That is, while an \acrshort{acr:mdp} is used to model systems that are fully observable, in a \acrshort{acr:pomdp} the states are not observable and can only be inferred from the observations that are perceived.
 In other words, we can intuitively view a \acrshort{acr:pomdp} as the combination of a \acrshort{acr:hmm} and an \acrshort{acr:mdp}.
+As such a \acrshort{acr:pomdp} can be defined as in \autoref{def:pomdp} below.
 
-As such, a \acrshort{acr:pomdp} can be defined as a 7-tuple $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, \mathcal{O}, \Omega, R)$ with $\mathcal{S}$ as state space, $s_0 \in \mathcal{S}$ as the initial state, $A$ as finite set of possible actions, $\delta$ the transition function, $\mathcal{O}$ the observation space, $\Omega$ an emission or observation probability function and $R$ as reward function.
+\begin{definition}
+	\label{def:pomdp}
+	A \textit{\acrfull{acr:pomdp}} is a 7-tuple $(\mathcal{S}, s_0, A, \delta, \mathcal{O}, \Omega, R)$ where $\mathcal{S}$ is a state space, $s_0 \in \mathcal{S}$ an initial state, $A = \{a_1, \ldots, a_m\}$ a finite set of actions to choose from, $\delta: \mathcal{S} \times A \times \mathcal{S} \mapsto [0, 1]$ a probabilistic transition function, $\mathcal{O}$ an observation space, $\Omega: \mathcal{S}\times A \mapsto \mathcal{O}$ an emission or observation probability function and $R: \mathcal{S} \times A \times \mathcal{S} \mapsto \mathbb{R}$ a reward function.
+\end{definition}
+
+%As such, a \acrshort{acr:pomdp} can be defined as a 7-tuple $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, \mathcal{O}, \Omega, R)$ with $\mathcal{S}$ as state space, $s_0 \in \mathcal{S}$ as the initial state, $A$ as finite set of possible actions, $\delta$ the transition function, $\mathcal{O}$ the observation space, $\Omega$ an emission or observation probability function and $R$ as reward function.
 As the true state of a \acrshort{acr:pomdp} is unknown, the transition function $\delta$ is defined over beliefs of states, and accordingly a policy $\pi$ maps beliefs to actions.
-The observation function $\Omega: \mathcal{S}\times A \mapsto \mathcal{O}$ defines the probability of observations from state-action pairs in the \acrshort{acr:pomdp} and is used to iteratively update the belief-state of an agent.
+The observation function $\Omega$ defines the probability of observations from state-action pairs in the \acrshort{acr:pomdp} and is used to iteratively update the belief-state of an agent.
 
 \subsubsection{Other Markov Models and Related State-Space Models}
 \label{subsec:other-markov-models}
