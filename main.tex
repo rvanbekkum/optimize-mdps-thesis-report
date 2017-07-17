@@ -25,12 +25,13 @@
 \mainmatter
 
 \input{chapters/1.introduction}
-\input{chapters/2.decision-theoretic-planning}
-\input{chapters/3.bayesian-optimization}
-\input{chapters/4.problem-related-work}
-\input{chapters/5.methodology}
-\input{chapters/6.experimental-results}
-\input{chapters/7.conclusions}
+\input{chapters/2.background}
+%\input{chapters/2.decision-theoretic-planning}
+%\input{chapters/3.bayesian-optimization}
+\input{chapters/3.problem-related-work}
+\input{chapters/4.methodology}
+\input{chapters/5.experimental-results}
+\input{chapters/6.conclusions}
 
 %% Use letters for the chapter numbers of the appendices.
 \appendix
@@ -38,7 +39,7 @@
 %\input{appendix-a}
 
 % Acronyms and Glossary
-\printglossary[type=\acronymtype]
+\printglossary[type=\acronymtype] % makeindex main.acn -s main.ist -t main.alg -o main.acr
 \addcontentsline{toc}{chapter}{Acronyms} % toc gives different font
 %\printglossary
 

@@ -1,5 +1,10 @@
 \chapter{Model-Learning Framework}
-\label{ch:methodology} %TODO Update chapter title? e.g., The Model-Learning Framework
+\label{ch:methodology}
+%TODO State clearly again our problem, what we are going to do and why we want to do it (but in little more detail where necessary than in the introduction). See the *-TODO
+%TODO Explain how we would like to see the exploration/data acquisition to be performed. Dataset should appropriately ('of sufficient quality') reflect the dynamics of the system so that an accurate representation in the form of an MDP can be learned from it.
+%TODO Use the mobile robot navigation domain as a **running example** application rather than putting it in the last section of the chapter
+%TODO Explain the components that we learn/derive (state space and transition function and accordingly reward functions) and which components are fixed (actions)
+%TODO Devote a paragraph clearly on how the reward function is defined; multiply the reward with the discrepancy factor rather than the value 
 
 Our interest in this thesis lies in the development of probabilistic models for systems whose dynamics are stochastic.
 The objective is to use a dataset of execution traces of a system to attain an accurate system representation, which can be used to obtain plans for optimal automated control of the system under consideration.
@@ -12,6 +17,7 @@ Finally, in \autoref{sec:application-mobile-robot} a possible application (i.e.,
 \section{Model Learning and Optimization Routine}
 \label{sec:model-learning-routine}
 
+%TODO * See comment at the top; Expand on these paragraphs
 As the development of probabilistic models oft to be a difficult an time-costly process for a human designer, an appealing idea is to automate the model development process by applying learning algorithms on a dataset of execution traces of the system under consideration.
 However, to achieve effective planning in a real-world environment, the models that are learned should accurately reflect the dynamics of the system.
 
@@ -30,7 +36,7 @@ The learning and optimization routine described in this section, depicted in \au
 \end{figure}
 
 \subsection{Learning Step}
-\label{sec:routine-description}
+\label{sec:learning-step}
 
 The routine can be viewed as consisting of two subsequent steps which are repeated until an \acrshort{acr:mdp} model that yields satisfactory performance is obtained.
 The first of these two main steps will be referred to as the \textit{learning step}, in which an \acrshort{acr:mdp} model is acquired.

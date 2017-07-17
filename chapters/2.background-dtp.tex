@@ -1,14 +1,16 @@
-\chapter{Decision-Theoretic Planning}
-\label{ch:background}
+\section{Decision-Theoretic Planning}
+\label{sec:decision-theoretic-planning}
+
 % Introduction on what is Decision-Theoretic Planning
 Automated \acrfull{acr:sdm} comprises the central problem of planning under uncertainty. 
 \acrfull{acr:dtp} is concerned with the design of plans or \textit{policies} for settings in which uncertainty exists about the effects of actions, where the decision maker or \textit{agent} has incomplete information about the environment and its initial conditions, and where trade-offs need to be made between potentially conflicting objectives to determine an optimal course of action.
-This chapter gives an introduction to the type of problems faced in \acrshort{acr:dtp} and explains how specialized probabilistic models can be used to solve these problems efficiently.
-First of all, in \autoref{sec:problem-formulation} the goal of \acrshort{acr:dtp} and how the problems that are considered are generally approached is discussed.
+This section gives an introduction to the type of problems faced in \acrshort{acr:dtp} and explains how specialized probabilistic models can be used to solve these problems efficiently.
+First of all, in \autoref{sec:problem-formulation} the goal of \acrshort{acr:dtp} and how the problems that are considered are generally approached are discussed.
 Subsequently, \autoref{sec:system-representation} gives an overview of the probabilistic models that are used to make the structure of problems in \acrshort{acr:dtp} explicit.
+Then, \autoref{sec:learning-markov-models} discusses the algorithms that enable us to learn these models from a dataset describing the dynamics of the system under consideration.
 Finally, in \autoref{sec:planning} some of the most common algorithmic planning techniques are discussed, which either learn a plan directly or through interaction.
 
-\section{General Problem Formulation}
+\subsection{General Problem Formulation}
 \label{sec:problem-formulation}
 % Formulation of what kind of planning problems are considered in Decision-Theoretic Planning
 
@@ -25,7 +27,7 @@ This probabilistic model comprises a system representation which defines the sta
 Overall \acrshort{acr:dtp} aims to devise planning algorithms for planning under uncertainty, a problem that is addressed in numerous different fields of research such as AI planning and control theory.
 In particular difficulties arise when planning techniques are applied to determine courses of action for real-world settings, such as motion or path planning in robotics which both involve the possibility of action failures and disturbances caused by exogenous events.
 
-\section{System Representations: Markov Models}
+\subsection{System Representations: Markov Models}
 \label{sec:system-representation}
 % Definitions of Markov Models relevant as probabilistic models for planning under uncertainty
 
@@ -35,11 +37,17 @@ Typically the uncertainty is modeled by establishing a \textit{state space} for 
 The most common types of stochastic models that are used in \acrshort{acr:dtp} are called \textit{Markov Models} (sometimes also referred to as \textit{Markovian Models}), which has been motivated by their success in other fields such as speech recognition \cite{baker1992large, gales2008application, rabiner1989tutorial} and \acrfull{acr:rl} techniques \cite{Brafman2002}.
 A Markov Model is a stochastic model in which the future states only depend on a limited number of prior observations. In fact, mostly processes or systems are modeled by Markov Models that satisfy the \textit{Markov Property}, which means that the state transitions are independent of any previous states or agent actions.
 
-In the remainder of this section the most common types of discrete-state Markov Models are discussed one by one, starting from the fundamental models known as \textit{Markov Chains} in \autoref{subsec:markov-chains}, followed by their extension of \textit{\acrfullpl{acr:hmm}} in \autoref{subsec:hidden-markov-models}.
-This again is followed by a discussion of the discrete-state Markov Models most relevant in \acrshort{acr:dtp}, being \textit{\acrfullpl{acr:mdp}} in \autoref{subsec:mdps} and their extension of \textit{\acrfullpl{acr:pomdp}} in \autoref{subsec:pomdps}.
-Finally in \autoref{subsec:other-markov-models} other related state space models are briefly discussed.
+In the remainder of this section the most common types of discrete-state Markov Models are discussed, starting from the fundamental models known as \textit{Markov Chains} and their extension known as \textit{\acrfullpl{acr:hmm}}.
+These fundamental models however only describe the evolution of a system and do not allow for stochastic control.
+Therefore, this is followed by a discussion of the discrete-state Markov Models known as \textit{\acrfullpl{acr:mdp}} and their extension known as \textit{\acrfullpl{acr:pomdp}}, which add the possibility of influencing the behavior of the system through sequential decisions.
 
-\subsection{Markov Chains}
+%In the remainder of this section the most common types of discrete-state Markov Models are discussed one by one, starting from the fundamental models known as \textit{Markov Chains} in \autoref{subsec:markov-chains}, followed by their extension of \textit{\acrfullpl{acr:hmm}} in \autoref{subsec:hidden-markov-models}.
+%This again is followed by a discussion of the discrete-state Markov Models most relevant in \acrshort{acr:dtp}, being \textit{\acrfullpl{acr:mdp}} in \autoref{subsec:mdps} and their extension of \textit{\acrfullpl{acr:pomdp}} in \autoref{subsec:pomdps}.
+%Finally in \autoref{subsec:other-markov-models} other related state space models are briefly discussed.
+
+\newpage
+
+\subsubsection{Markov Chains}
 \label{subsec:markov-chains}
 % Markov Chains: States and Transitions
 
@@ -51,7 +59,7 @@ On the basis of the class of Markov Models lies the simplifying assumption that 
 Under this assumption a \textit{Markov Chain} (or \textit{Markov Process}) can be defined as a model of a series $q_{1:T}$ of transitions between states $q_i$ drawn from a state space $\mathcal{S} = \{s_1,\ldots,s_n\}$. The initial state $q_1$ of a Markov Chain typically is either fixed or drawn from $\mathcal{S}$ using a probability distribution over initial states.
 For the states or variables of a Markov Chain, the earlier mentioned assumption implies the following conditional independence to hold:
 \begin{equation}
-	p(q_t \vert q_1,\ldots,q_{t-1}) = p(q_t \vert q_{t - L}, \ldots, q_{t-1})
+p(q_t \vert q_1,\ldots,q_{t-1}) = p(q_t \vert q_{t - L}, \ldots, q_{t-1})
 \end{equation}
 where $L$ is the so-called \textit{order} of the Markov Chain.
 % See summary barberBRML2012
@@ -74,7 +82,7 @@ where $L$ is the so-called \textit{order} of the Markov Chain.
 		\draw [->, dashed, shorten >=0pt] (s3) to[right] node[auto] {} ++(1.3,0)
 		;
 		\end{tikzpicture}} \quad
-		\subcaptionbox{Second-order Markov Chain.\label{fig:markov-chains-second-order}}{\begin{tikzpicture}[->,>=stealth',auto,node distance=2cm]
+	\subcaptionbox{Second-order Markov Chain.\label{fig:markov-chains-second-order}}{\begin{tikzpicture}[->,>=stealth',auto,node distance=2cm]
 		\tikzstyle{every state}=[fill=white,draw=black,text=black,scale=1,double]	% thick
 		\node[state] (s1) {$q_1$};
 		\node[state] (s2) [right of=s1] {$q_2$};
@@ -108,34 +116,19 @@ Some concrete examples of practical applications include assessing the reliabili
 
 In these chains the state transition probabilities can be stored in an $n \times n$ transition matrix $\mat{A} = [a_{ij}]$ with each entry
 \begin{equation}
-	a_{ij} = p(q_{t+1} = s_i\vert q_t = s_j)
+a_{ij} = p(q_{t+1} = s_i\vert q_t = s_j)
 \end{equation}
 denoting the probability of state $s_i$ following state $s_j$.
 Similarly, the initial state probabilities can be recorded in an $n \times 1$ initial state vector $\arr{\pi} = [\pi_i]$ with each entry
 \begin{equation}
-	\pi_i = p(q_1 = s_i)
+\pi_i = p(q_1 = s_i)
 \end{equation} 
 denoting the probability of state $s_i$ being the initial state of the model.
 Putting these components all together, a discrete stationary first-order Markov Chain can be defined as a 3-tuple $\mathcal{M} = (\mathcal{S}, \mat{A}, \arr{\pi})$ with $\mathcal{S}$ as state space, $\mat{A}$ as transition matrix and $\arr{\pi}$ as initial state vector.
 
-\subsubsection*{Fitting Markov Chains}
-There exist efficient methods for fitting a discrete stationary first-order Markov Chain provided a collected dataset describing the evolution of a stochastic process either by applying likelihood maximization (e.g., see \cite{bacciu2015probabilistic, barberBRML2012, lee1968maximum, teodorescu2009maximum}) or Bayesian inference (e.g., see \cite{barberBRML2012, lee1968maximum, minka2003bayesian}).
-These methods estimate the transition distribution to fit a Markov Chain on a collected sequence of time-ordered states. 
+\newpage
 
-The first-mentioned approach of likelihood maximization, works by estimating the transition probabilities by counting the observed transitions in the state sequence.
-That is, if we let $n_{ij}$ denote the number of observed transitions from state $s_j$ to state $s_i$, then the maximum-likelihood estimation of the corresponding transition probability is
-\begin{equation}
-	p(q_{t+1} = s_i\vert q_t = s_j) = \frac{n_{ij}}{\sum_j n_{ij}}
-\end{equation}
-
-The second-mentioned approach of Bayesian inference is more suitable for many real-life problems, for which state sequences are incomplete, i.e. states are recorded only for certain stages, meaning there might be gaps in-between.
-This type of approach aims to make an estimation of the transition probabilities by adopting a prior for the transition matrix $\mat{A}$, a convenient choice being a factorized prior from the product of $n$ independent \textit{Dirichlet} distributions, one for each row $\mat{A}_j$ such that:
-\begin{equation}
-	p(\mat{A}) = \prod_{j} \text{Dir}(\mat{A}_j \vert \alpha_j)
-\end{equation}
-parametrized by a vector $\arr{\alpha}$ with $\alpha_j > 0$ \cite{pasanisi2012estimating,barberBRML2012}.
-
-\subsection{Hidden Markov Models}
+\subsubsection{Hidden Markov Models}
 \label{subsec:hidden-markov-models}
 % Hidden Markov Models: Observations (partially observable) 
 % also called latent
@@ -145,8 +138,7 @@ parametrized by a vector $\arr{\alpha}$ with $\alpha_j > 0$ \cite{pasanisi2012es
 The Markov Chain model discussed in \autoref{subsec:markov-chains} requires the modeled system or stochastic process to be fully observable, meaning that each of its states correspond directly to an observation.
 However, it is not unusual to encounter real-world systems in which the states are assumed to be unobservable, though are correlated with observable events produced by the system.
 These systems can be modeled by a \acrfull{acr:hmm} in which the states, typically referred to as \textit{hidden} or \textit{latent} variables $h_{1:T}$, are unknown.
-Additionally this model consists of observations, typically referred to as \textit{observed} or \textit{visible} variables $v_{1:T}$, which are dependent on the hidden variables through an emission $p(o_t\vert h_t)$ graphically depicted in \autoref{fig:hmm}. All by all a stationary \acrshort{acr:hmm}
-consists of the following parts:
+Additionally this model consists of observations, typically referred to as \textit{observed} or \textit{visible} variables $v_{1:T}$, which are dependent on the hidden variables through an emission $p(o_t\vert h_t)$ graphically depicted in \autoref{fig:hmm}. All together, a stationary \acrshort{acr:hmm} consists of the following parts:
 
 \begin{itemize}
 	\item a discrete set of $n$ attainable states $\mathcal{S} = \{s_1, \ldots, s_n\}$, i.e. the underlying \textit{state space}
@@ -198,17 +190,17 @@ In practice \acrshortpl{acr:hmm} have a wide range of applications. One example 
 % Input figure showing graphical representation of an HMM
 % Input subsubsection* about inference problems (see the three in thesis-plan, but also mention the other two)
 
-\subsubsection*{Inference Problems}
-The most notable inference problems for \acrshortpl{acr:hmm} are the following: %TODO Little introduction to this section?
+%\paragraph*{Inference Problems}
+%The most notable inference problems for \acrshortpl{acr:hmm} are the following: %TODO Little introduction to this section?
+%
+%\begin{description}
+%	\item[Evaluation] The \textit{Evaluation} or \textit{Likelihood Problem} is, given an \acrshort{acr:hmm} model $\mathcal{M}$ and an observation sequence $O = (o_1,\ldots,o_T)$ of length $T$, to determine $p(O\vert \mathcal{M})$, which is the likelihood of the observation sequence $O$ being produced by $\mathcal{M}$.
+%	\item[Optimal States] The \textit{Optimal State Sequence Problem} or \textit{Most Likely Hidden Path Problem} is, given an \acrshort{acr:hmm} model $\mathcal{M}$ and an observation sequence $O = (o_1,\ldots,o_T)$ of length $T$, to determine $H^\ast = \argmax_H p(H \vert O)$, i.e., finding the best state sequence $H^\ast = (h_1^\ast, \ldots, h_T^\ast)$ of length $T$ for the underlying Markov Chain.
+%	\item[Learning] The \textit{Learning Problem} is, given a set $\mathcal{O} = \{O_1, \ldots, O_k\}$ of independently and identically distributed observation sequences each of length $T$, to find an \acrshort{acr:hmm} $\mathcal{M}^\ast = \argmax_\mathcal{M} p(\mathcal{O}\vert \mathcal{M})$, i.e., maximizing the probability of the model having produced the observation sequences.
+%\end{description}
+%Other closely related inference problems are that of \textit{filtering} (inferring the present: $p(h_t\vert o_{1:t})$), \textit{prediction} (inferring the future: $p(h_t \vert o_{1:s})$ with $t > s$) and \textit{smoothing} (inferring the past: $p(h_t \vert o_{1:u})$ with $t < u$).
 
-\begin{description}
-	\item[Evaluation] The \textit{Evaluation} or \textit{Likelihood Problem} is, given an \acrshort{acr:hmm} model $\mathcal{M}$ and an observation sequence $O = (o_1,\ldots,o_T)$ of length $T$, to determine $p(O\vert \mathcal{M})$, which is the likelihood of the observation sequence $O$ being produced by $\mathcal{M}$.
-	\item[Optimal States] The \textit{Optimal State Sequence Problem} or \textit{Most Likely Hidden Path Problem} is, given an \acrshort{acr:hmm} model $\mathcal{M}$ and an observation sequence $O = (o_1,\ldots,o_T)$ of length $T$, to determine $H^\ast = \argmax_H p(H \vert O)$, i.e., finding the best state sequence $H^\ast = (h_1^\ast, \ldots, h_T^\ast)$ of length $T$ for the underlying Markov Chain.
-	\item[Learning] The \textit{Learning Problem} is, given a set $\mathcal{O} = \{O_1, \ldots, O_k\}$ of independently and identically distributed observation sequences each of length $T$, to find an \acrshort{acr:hmm} $\mathcal{M}^\ast = \argmax_\mathcal{M} p(\mathcal{O}\vert \mathcal{M})$, i.e., maximizing the probability of the model having produced the observation sequences.
-\end{description}
-Other closely related inference problems are that of \textit{filtering} (inferring the present: $p(h_t\vert o_{1:t})$), \textit{prediction} (inferring the future: $p(h_t \vert o_{1:s})$ with $t > s$) and \textit{smoothing} (inferring the past: $p(h_t \vert o_{1:u})$ with $t < u$).
-
-\subsection{Markov Decision Processes}
+\subsubsection{Markov Decision Processes}
 \label{subsec:mdps}
 
 % MDPs: Actions --> Is a probabilistic model			% Driven by the actions of an agent
@@ -224,6 +216,8 @@ Upon the agent choosing to perform an action $a \in A$, a state transition occur
 However, due to the uncertainty in the system, the actual transition that occurs might differ from the transition intended by the chosen action.
 This uncertainty is captured by defining a probabilistic transition function $\delta: \mathcal{S} \times A \times \mathcal{S} \mapsto [0,1]$ which maps the combination of a current state and action to a probability of ending up in a certain next state.
 
+\newpage
+
 % Reward structure
 As the agent of an \acrshort{acr:mdp} aims to fulfill certain goals through the selection of actions, it requires some means of assessing which action is the best to pick.
 The value measure used in \acrshortpl{acr:mdp} is defined by a mapping $R: \mathcal{S} \times A \times \mathcal{S} \mapsto \mathbb{R}$ from states and actions to real-valued \textit{rewards} (in case of added value) and/or \textit{costs} (in case of lost value).
@@ -235,10 +229,10 @@ Putting all of these components together, an \acrshort{acr:mdp} can be defined a
 % Policies
 In the context of \acrshort{acr:dtp}, \acrshortpl{acr:mdp} are used to find an optimal course of action, often referred to as a plan or \textit{policy}.
 For an \acrshort{acr:mdp} the optimal policy typically means the policy that when applied by an agent, maximizes the expected value.
-Although, one can also choose to express goals in alternative ways that does not require the specification of a reward function.
-An example of this can be seen in \cite{bhatia2010sampling, lacerda2015optimal}, which replaces the reward function of the classic MDP-framework by a (co-safe) Linear Temporal Logic (LTL) formula to be satisfied.
+However, one can also choose to express goals in alternative ways which do not require the specification of a reward function.
+An example of this can be seen in \cite{bhatia2010sampling, lacerda2015optimal}, which replace the reward function of the classic \acrshort{acr:mdp}-framework by a (co-safe) Linear Temporal Logic (LTL) formula to be satisfied.
 
-\subsection{Partially Observable MDPs}
+\subsubsection{Partially Observable MDPs}
 \label{subsec:pomdps}
 
 % Observations: .. POMDP
@@ -252,7 +246,7 @@ As such, a \acrshort{acr:pomdp} can be defined as a 7-tuple $\mathcal{M} = (\mat
 As the true state of a \acrshort{acr:pomdp} is unknown, the transition function $\delta$ is defined over beliefs of states, and accordingly a policy $\pi$ maps beliefs to actions.
 The observation function $\Omega: \mathcal{S}\times A \mapsto \mathcal{O}$ defines the probability of observations from state-action pairs in the \acrshort{acr:pomdp} and is used to iteratively update the belief-state of an agent.
 
-\subsection{Other Markov Models and Related State-Space Models}
+\subsubsection{Other Markov Models and Related State-Space Models}
 \label{subsec:other-markov-models}
 Apart from the discrete-state Markov Models that were discussed in this section, there exist numerous other types of Markov Models and closely related State-Space Models (SMMs), including among others the following:%, including continuous-state Markov Models (e.g., Linear Dynamical Systems with a Gaussian state-space \cite{Minka1999,barberBRML2012}) and other specialized variations. 
 
@@ -266,17 +260,47 @@ Apart from the discrete-state Markov Models that were discussed in this section,
 
 As the remaining chapters only consider systems and processes that are modeled using discrete-state Markov Models, these variations will not be further discussed in more detail.
 
-\section{Learning Optimal Policies}
+\subsection{Learning Markov Models}
+\label{sec:learning-markov-models}
+
+%\paragraph*{Fitting Markov Chains}
+There exist efficient methods for fitting a discrete stationary first-order Markov Chain provided a dataset describing the evolution of a stochastic process either by applying likelihood maximization (e.g., see \cite{bacciu2015probabilistic, barberBRML2012, lee1968maximum, teodorescu2009maximum}) or Bayesian inference (e.g., see \cite{barberBRML2012, lee1968maximum, minka2003bayesian}).
+These methods estimate the transition distribution to fit a Markov Chain on a collected sequence of time-ordered states.
+One may obtain such a sequence by applying clustering algorithms such as $k$-means on the dataset and accordingly make predictions for each of the entries.
+
+The first-mentioned approach of likelihood maximization, works by estimating the transition probabilities by counting the observed transitions in the state sequence.
+That is, if we let $n_{ij}$ denote the number of observed transitions from state $s_j$ to state $s_i$, then the maximum-likelihood estimation of the corresponding transition probability is
+\begin{equation}
+p(q_{t+1} = s_i\vert q_t = s_j) = \frac{n_{ij}}{\sum_j n_{ij}}
+\end{equation}
+
+The second-mentioned approach of Bayesian inference is more suitable for many real-life problems for which state sequences are incomplete, i.e. states are recorded only for certain stages, meaning there might be gaps in-between.
+This type of approach aims to make an estimation of the transition probabilities by adopting a prior for the transition matrix $\mat{A}$, a convenient choice being a factorized prior from the product of $n$ independent \textit{Dirichlet} distributions, one for each row $\mat{A}_j$ such that:
+\begin{equation}
+p(\mat{A}) = \prod_{j} \text{Dir}(\mat{A}_j \vert \alpha_j)
+\end{equation}
+parametrized by a vector $\arr{\alpha}$ with $\alpha_j > 0$ \cite{pasanisi2012estimating,barberBRML2012}.
+
+Due to the close nature of \acrshortpl{acr:mdp} these approaches can be applied almost directly to learn transition probabilities of discrete-state \acrshort{acr:mdp}, although more data will be required due to the addition of actions.
+To learn partially observable models, on the other hand, one requires algorithms that work with a set of observations and estimate emission probabilities.
+For this thesis, however, we limit ourselves to learning fully observable \acrshortpl{acr:mdp}, but review these algorithms for learning \acrshortpl{acr:hmm} and \acrshortpl{acr:pomdp} in \autoref{sec:learning-probabilistic-models}.
+
+\subsection{Learning Optimal Policies}
 \label{sec:planning}
 
-In \acrshort{acr:sdm} problems typically the aim is to determine a policy that maximizes the total expected value obtained.
+In \acrshort{acr:sdm} problems typically the aim is to determine a policy that maximizes the total expected value.
 In algorithmic planning techniques a probabilistic model of the environment, which includes estimates of the transition probabilities and rewards, is used to obtain an optimal policy by exploring its state-space towards a goal.
 On the other hand, in \acrfull{acr:rl} the optimal policy is learned while interacting with the environment and it is applied when one does not know the transition probabilities and rewards for its states upfront.
 Both techniques have in common that they iteratively update estimations of a value function to derive a policy.
 The main difference though is that in planning this progress is carried out based on simulated experience from a model, while in learning techniques this is based on real experience from executing agents in an environment \cite{sutton1998reinforcement}.
-So, even when considering the differences, various solutions can be exchanged between planning and \acrshort{acr:rl} techniques.
+All by all, planning and \acrshort{acr:rl} are closely related and various ideas can be exchanged between the two.
 
-In this section the various approaches for finding optimal policies are discussed, where the planning techniques are discussed in \autoref{subsec:model-based-planning}, and \acrshort{acr:rl} techniques are discussed in \autoref{subsec:reinforcement-learning}.
+In this section, various solutions that utilize the \acrshort{acr:mdp} framework for obtaining optimal policies are discussed.
+First off, the most common \acrshort{acr:dtp} algorithms for (discrete) \acrshortpl{acr:mdp} are shown and explained.
+This is followed by a discussion of the most used algorithms in \acrshort{acr:rl}.
+%So, even when considering the differences, various solutions can be exchanged between planning and \acrshort{acr:rl} techniques.
+
+%In this section the various approaches for finding optimal policies are discussed, where the planning techniques are discussed in \autoref{subsec:model-based-planning}, and \acrshort{acr:rl} techniques are discussed in \autoref{subsec:reinforcement-learning}.
 
 % Sutton and Barto (1998/2012) describe two approaches for rl solutions when the transition and reward functions are not known	(Learning the Structure of Factored Markov Decision Processes inReinforcement Learning Problems)
 % See chapter 8.2, show an adapted version of the figure and explain advantages and disadvantages
@@ -284,28 +308,31 @@ In this section the various approaches for finding optimal policies are discusse
 
 \begin{figure}[t!]
 	\centering
-	\includegraphics[width=\textwidth]{mdp-planning-diagram-v3}
+	\includegraphics[width=\textwidth]{mdp-planning-diagram-v3-cropped2}
 	\caption{Block diagram of the generic routine employed in model-based MDP planning techniques.}
 	\label{fig:model-based-routine}
 \end{figure}
 
-\subsection{Model-Based Planning Techniques}	% Also referred to as Indirect approaches
+\subsubsection{Model-Based Planning Techniques}	% Also referred to as Indirect approaches
 \label{subsec:model-based-planning}
 
 In \acrshort{acr:dtp} the algorithms compute their plans or policies based on a probabilistic model of the environment.
 Most common is to prepare an \acrshort{acr:mdp} and apply exact dynamic programming solutions to compute an optimal policy for that model.
-The routine that is typically followed in MDP planning is depicted in \autoref{fig:model-based-routine}.
+The routine that is typically followed in \acrshort{acr:mdp} planning is depicted in \autoref{fig:model-based-routine}.
 The state space, transition function and action space are usually handcrafted, based on expertise or trial and error.
-The goal that should be fulfilled is translated into a reward model, mapping positive highly-valued rewards to desirable states and low rewards or costs to states that are not desirable or should even be avoided.
-These parts together form the \acrshort{acr:mdp} which is fed to a planning algorithm which in this case is referred to as \textit{\acrshort{acr:mdp} solver}.
-From this solver, a policy $\pi$ is obtained, which is usually evaluated by applying it in one or more simulations, rather than using it in a real-world environment.
-Another option is to make use of automated model checking tools which can verify whether the policy will satisfy the set goals. % TODO Add citation to book about model checking from APS and Bruno
-After evaluating the current policy, one may choose to stick with the current policy or adjust the settings of the solver or \acrshort{acr:mdp} model and obtain a new policy.
+The goal that should be fulfilled is translated into a reward model, mapping positive highly-valued rewards to desirable states and low rewards/costs to states that are not desirable or need to be avoided.
+These parts together form the \acrshort{acr:mdp} which is fed to a planning algorithm which is often referred to as \textit{\acrshort{acr:mdp} solver}.
+From this solver, a policy $\pi$ is obtained, which is usually evaluated through simulations or automated model checking tools to check if the policy will satisfy the set of goals.%usually evaluated by applying it in one or more simulations, rather than using it in a real-world environment.
+%Another option is to make use of automated model checking tools which can verify whether the policy will satisfy the set goals. %TODO Add citation to book about model checking from APS and Bruno?
+After evaluating the current policy, one may choose to stick with the current policy or adjust the parameter settings of the solver or \acrshort{acr:mdp} model and obtain a new policy.
 
-There are several options for the \acrshort{acr:mdp} solver, which compute an optimal policy by maximization of the expected value to be obtained.
-In the remainder of this section various of these planning algorithms for \acrshortpl{acr:mdp} are discussed and evaluated.
+%There are several options for the \acrshort{acr:mdp} solver, which compute an optimal policy by maximization of the expected value to be obtained.
+%In the remainder of this section various of these planning algorithms for \acrshortpl{acr:mdp} are discussed and evaluated.
 
-\begin{algorithm}[]
+\paragraph{Value Iteration}
+\label{sec:value-iteration}
+
+\begin{algorithm}[!t]
 	\caption{Value iteration}
 	\label{alg:vi}
 	\begin{algorithmic}[1]
@@ -326,13 +353,10 @@ In the remainder of this section various of these planning algorithms for \acrsh
 	\end{algorithmic}
 \end{algorithm}
 
-\subsubsection*{Value Iteration}
-\label{sec:value-iteration}
-
 The most well-known algorithm for obtaining optimal policies from \acrshortpl{acr:mdp} is \textit{\acrfull{acr:vi}}, which is a synchronous dynamic programming solution which iteratively updates a value function $V: \mathcal{S} \mapsto \mathbb{R}$ until convergence given an MDP model $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$.
 The updates are performed through so-called \textit{Bellman backups} based on the following Bellman equation:
 \begin{align}
-	V^*(s) &= max_{a \in A} \left[\sum_{s' \in \mathcal{S}} P(s' \vert s, a) \cdot \left[R(s, a, s') + \gamma \cdot V^*_{t}(s')\right]\right]	&\forall s \in \mathcal{S}
+V^*(s) &= max_{a \in A} \left[\sum_{s' \in \mathcal{S}} P(s' \vert s, a) \cdot \left[R(s, a, s') + \gamma \cdot V^*_{t}(s')\right]\right]	&\forall s \in \mathcal{S}
 \end{align}
 where $\gamma \in (0,1)$ is a discount factor which expresses the magnitude of preference of short-term solutions over long-term solutions. That is, the smaller the factor $\gamma$, the more important it is that goals are reached in as few steps as possible.
 
@@ -347,9 +371,9 @@ All by all, the algorithm works well when the state space is relatively small, b
 
 Note that an alternative formulation of the \acrshort{acr:vi} algorithm can be given that makes use of a $Q$-table instead of a value-function $V$.
 In this formulation the entries $Q(s, a)$ are updated in each iteration for each state-action pair.
-The optimal policy can then be obtained directly by selecting the action with the maximum value in the $Q$-table for each action, though it requires more storage compared to a value function.\newpage
+The optimal policy can then be obtained directly by selecting the action with the maximum value in the $Q$-table for each action, though it requires more storage compared to a value function.
 
-\subsubsection{Asynchronous Value Iteration}
+\paragraph{Asynchronous Value Iteration}
 \label{sec:gs-value-iteration}
 
 An adaptation of the traditional \acrshort{acr:vi} algorithm is \textit{asynchronous \acrshort{acr:vi}}, which is an asynchronous dynamic programming solution.
@@ -362,7 +386,10 @@ Opposed to traditional \acrshort{acr:vi}, where solving \acrshortpl{acr:mdp} wit
 
 % TODO POMDP Adaptation of Value Iteration See AI: A Modern Approach + Probabilistic Robotics
 
-\begin{algorithm}[]
+\paragraph{Policy Iteration}
+\label{sec:policy-iteration}
+
+\begin{algorithm}[!t]
 	\caption{Policy iteration}
 	\label{alg:pi}
 	\begin{algorithmic}[1]
@@ -381,9 +408,6 @@ Opposed to traditional \acrshort{acr:vi}, where solving \acrshortpl{acr:mdp} wit
 	\end{algorithmic}
 \end{algorithm}
 
-\subsubsection{Policy Iteration}
-\label{sec:policy-iteration}
-
 Another algorithm that is widely applied for obtaining policies from \acrshortpl{acr:mdp} is known as \textit{\acrfull{acr:pi}}. As shown in \autoref{alg:pi} \acrshort{acr:pi} starts off with an initial policy vector $\arr{\pi}_0$ which may be arbitrarily initialized, but preferably by an approximation of an optimal policy for the input MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$ to achieve faster convergence.
 Then in each iteration, first the value for each state is computed based on the latest policy $\arr{\pi}_t$, which comes down to solving a set of linear equations.
 Solving this set of linear equations can be done by linear programming in (at most) $O(\lvert\mathcal{S}\rvert^3)$ time \cite{littman1995complexity}. 
@@ -392,9 +416,12 @@ This step which is known as \textit{policy evaluation} is followed by a \textit{
 This process is repeated until no improvements are possible and the policy stops changing.
 
 Compared to \acrshort{acr:vi} the algorithm always converges in a finite number of iterations. However, solving the set of linear equations in each iteration is a more time-costly operation, especially for large state spaces.
-That is, in \acrshort{acr:vi} each iteration takes $O(\lvert\mathcal{S}\rvert^2\cdot\lvert A\rvert)$ time, although one must note that the number of iterations is not finite, while \acrshort{acr:pi} finds an optimum in a finite number.\newpage
+That is, in \acrshort{acr:vi} each iteration takes $O(\lvert\mathcal{S}\rvert^2\cdot\lvert A\rvert)$ time, although one must note that the number of iterations is not finite, while \acrshort{acr:pi} finds an optimum in a finite number.
 
-\begin{algorithm}
+\paragraph{Backwards Induction}
+\label{sec:backwards-induction}
+
+\begin{algorithm}[!t]
 	\caption{Backwards induction}
 	\label{alg:backwards-induction}
 	\begin{algorithmic}[1]
@@ -415,14 +442,11 @@ That is, in \acrshort{acr:vi} each iteration takes $O(\lvert\mathcal{S}\rvert^2\
 	\end{algorithmic}
 \end{algorithm}
 
-\subsubsection{Backwards Induction}
-\label{sec:backwards-induction}
-
 In the special case of a finite horizon \acrshort{acr:mdp} it is possible to obtain an optimal policy by applying \textit{backwards induction} \cite{chamie2015finite} shown in \autoref{alg:backwards-induction}.
 As the name suggests the algorithm works backwards, starting from the last step $h$ and recursively using the value function of step $t + 1$ to compute that of step $t$.
 Even though the algorithm works well when dealing with finite horizons, typically real world scenarios more often deal with infinite horizons for planning under uncertainty.
 
-\subsubsection{Linear Programming}
+\paragraph{Linear Programming}
 \label{sec:linear-programming}
 
 A less frequently applied approach is that of formulating the \acrshort{acr:mdp} as a \acrfull{acr:lp} and solving it using so-called \textit{simplex} methods.
@@ -442,16 +466,16 @@ where $\mu_0: \mathcal{S} \mapsto [0,1]$ is a probability distribution over the 
 From the solution $V^*$ of this \acrshort{acr:lp} formulation, a policy $\arr{\pi}^*$ can be obtained by letting $\arr{\pi}^*(s) = \argmax_{a \in A} \sum_{s' \in \mathcal{S}} \delta(s, a, s') \left[R(s,a,s') + \gamma\cdot V(s')\right]$ for each state $s \in \mathcal{S}$. This primal formulation optimizes a value function $V$, but alternatively the policy can be optimized directly by considering the dual formulation (see \cite{littman1995complexity}).
 Comparing \acrshort{acr:lp} solutions to the specialized \acrshort{acr:vi} and \acrshort{acr:pi} solutions, the latter typically hold more promise for efficient solutions than general-purpose \acrshort{acr:lp} algorithms, although the \acrshort{acr:lp} scale better to larger \acrshort{acr:mdp} planning problems.
 
-\subsection{Reinforcement Learning Techniques}
+\newpage
+
+\subsubsection{Reinforcement Learning Techniques}
 \label{subsec:reinforcement-learning}
 
 \acrfull{acr:rl} techniques work on real experience based on which they update the behavior of the agent that is defined by an action-selection policy. To do this they require direct interaction with the environment to obtain experience and update value function estimations accordingly during execution.
 Although most planning algorithms cannot be used for learning problems, learning algorithms can be used for planning problems as they can make use of simulated experience.
 There are several techniques that exist, of which the most common ones are discussed in the remainder of this section.
 
-\newpage
-
-\subsubsection{Q-Learning}
+\paragraph{Q-Learning}
 \label{sec:q-learning}
 
 Q-Learning is a model-free reinforcement learning technique which discovers an action-selection policy by learning estimates of the optimal Q-values of an \acrshort{acr:mdp}.
@@ -470,7 +494,10 @@ A near-optimal policy can then be constructed by selecting the action with the h
 % 
 % Also note that it can be used for planning
 
-\begin{algorithm}
+\paragraph{SARSA}
+\label{sec:sarsa}
+
+\begin{algorithm}[!t]
 	\caption{SARSA}
 	\label{alg:sarsa}
 	\begin{algorithmic}[1]
@@ -492,9 +519,6 @@ A near-optimal policy can then be constructed by selecting the action with the h
 		\State\Return $\arr{\pi}^*$
 	\end{algorithmic}
 \end{algorithm}
-
-\subsubsection{SARSA}
-\label{sec:sarsa}
 
 SARSA is another model-free \acrshort{acr:rl} algorithm which is similar to Q-Learning.
 While Q-Learning is an off-policy method which learns the value of the optimal policy, SARSA is an on-policy method which learns the value of the policy it currently follows in order to iteratively improve this policy.

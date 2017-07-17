@@ -1,0 +1,21 @@
+\chapter{Background}
+\label{ch:background}
+
+In this chapter the background on both the planning and optimization aspect of this thesis is presented.
+The concepts and techniques discussed in this chapter are employed in the framework we propose in \autoref{ch:methodology} with the aim of optimizing for a probabilistic model that can be used to obtain plans which maximize the performance of the system that is in need of automated control.
+
+First of all, in \autoref{sec:decision-theoretic-planning}, the chapter discusses how \acrfull{acr:dtp} deals with the central problem of planning under uncertainty using probabilistic models of a system under consideration.
+In this thesis we put our attention to modeling \acrshort{acr:dtp} problems as \acrfullpl{acr:mdp} and accordingly discuss the existing algorithmic techniques for obtaining plans for automated \acrfull{acr:sdm}.
+We employ these ideas in the framework we propose in \autoref{ch:methodology} to compute optimal plans from the \acrshort{acr:mdp} models learned from data, to assess the value of different models.
+
+Then, in \autoref{sec:bayesian-optimization}, the chapter elaborates upon a method known as \acrfull{acr:bo}, which is used to automate the process of optimizing the parameters of an unknown objective while minimizing the number of function evaluations.
+This method is particularly suited for the optimization task dealt with in the framework proposed in \autoref{ch:methodology}, where the parameters of model learning algorithms are adjusted so to yield maximum performance in a system's execution.
+That is, in our framework we assess the value of different \acrshort{acr:mdp} models by performing expensive simulations, which is why we would like to minimize the number of these simulations.
+Therefore, in this section we describe how the \acrshort{acr:bo} framework achieves this and present some of its applications to related \acrshort{acr:sdm} problems.
+
+
+\input{chapters/2.background-dtp}
+
+\newpage
+
+\input{chapters/2.background-bo}
