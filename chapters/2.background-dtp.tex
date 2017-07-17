@@ -103,7 +103,7 @@ where $L$ is the so-called \textit{order} of the Markov Chain.
 		\draw [->, dashed, shorten >=0pt] (s4) to[right] node[auto] {} ++(1.3,0)
 		;
 		\end{tikzpicture}}
-	\caption{Graphical representation of different types of Markov Chains.}
+	\caption{Graphical representation of Markov Chains of different order.}
 	\label{fig:markov-chains}
 \end{figure}
 
@@ -124,11 +124,11 @@ Similarly, the initial state probabilities can be recorded in an $n \times 1$ in
 \pi_i = p(q_1 = s_i)
 \end{equation} 
 denoting the probability of state $s_i$ being the initial state of the model.
-Putting these components together yields \autoref{def:markov-chain} below.
+Putting these components together yields \autoref{def:markov-chain} below, which formally defines a (discrete-time) stationary first-order Markov Chain.
 
 \begin{definition}
 	\label{def:markov-chain}
-	A discrete stationary first-order \textit{Markov Chain} is a 3-tuple $(\mathcal{S}, \mat{A}, \arr{\pi})$ where $\mathcal{S}$ is a finite set of states, $\mat{A}$ the transition (probability) matrix and $\arr{\pi}$ the initial state (probability) vector.
+	A stationary first-order \textit{Markov Chain} is a 3-tuple $(\mathcal{S}, \mat{A}, \arr{\pi})$ where $\mathcal{S} = \{s_1, \ldots, s_n\}$ is a finite set of states, $\mat{A}$ a transition (probability) matrix and $\arr{\pi}$ an initial state (probability) vector.
 \end{definition}
 
 \newpage

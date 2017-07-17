@@ -10,21 +10,31 @@ Our interest in this thesis lies in the development of probabilistic models for 
 The objective is to use a dataset of execution traces of a system to attain an accurate system representation, which can be used to obtain plans for optimal automated control of the system under consideration.
 In this chapter we describe our proposed framework that applies learning algorithms to obtain probabilistic models in the form of \acrshortpl{acr:mdp} and optimizes for a performance-maximizing model by sampling multiple hyper-parameter settings for these learning algorithms.
 
-In \autoref{sec:model-learning-routine} a detailed explanation is provided of the learning and optimization routine which forms the basis of our framework.
-Then in \autoref{sec:cost-effective-optimization} the framework is extended such that it consists of three cost-incremental phases.
-Finally, in \autoref{sec:application-mobile-robot} a possible application (i.e., mobile robot navigation) of the framework is discussed, which is also used for evaluating the approach through the experiments that have been carried out and which are described in \autoref{ch:experimental-results}.
+First off, in \autoref{sec:problem-statement} we define the problem at hand that the proposed framework aims to deal with.
+Then, in \autoref{sec:application-mobile-robot}, the application of mobile robot navigation is introduced, which is one of the possible applications of the framework and is used as a running example in this chapter.
+We also use this application for evaluating our framework through the experiments that were carried out and are documented in \autoref{ch:experimental-results}.
+Subsequently, in \autoref{sec:model-learning-routine}, a detailed description of the learning and optimization routine is provided which forms our \textit{base framework} for learning optimal \acrshortpl{acr:mdp}.
+Finally, in \autoref{sec:cost-effective-optimization}, we define our extension of this base framework in the form of a \textit{multi-phase framework} consisting of three cost-incremental phases whose aim is to further improve on the effectiveness of the framework.
+%In \autoref{sec:model-learning-routine} a detailed explanation is provided of the learning and optimization routine which forms the basis of our framework.
+%Then in \autoref{sec:cost-effective-optimization} the framework is extended such that it consists of three cost-incremental phases.
+%Finally, in \autoref{sec:application-mobile-robot} a possible application (i.e., mobile robot navigation) of the framework is discussed, which is also used for evaluating the approach through the experiments that have been carried out and which are described in \autoref{ch:experimental-results}.
 
 \section{Problem Statement}
 \label{sec:problem-statement}
 
 %TODO * See comment at the top; Expand on these paragraphs
-As the development of probabilistic models oft to be a difficult and time-costly process for a human designer, an appealing idea is to automate the model development process by applying learning algorithms on a dataset of execution traces of the system under consideration.
+As mentioned in \autoref{ch:introduction}, the problem this thesis is concerned with is the development of probabilistic models, which are used for obtaining plans for automated control of systems whose dynamics are stochastic.
+As the development of such probabilistic models oft to be a difficult and time-costly process for a human designer, an appealing idea is to automate the model development process by applying learning algorithms on a dataset of execution traces of the system that is in need of automated control.
 However, to achieve effective planning in a real-world environment, the models that are learned should accurately reflect the dynamics of the system.
 
 There are two major reasons for a learned model to not yield good performance.
 First of all, the learned model may be too complicated for the amount of available data, which leads to model over-fitting.
 On the other hand, one could acquire a model that is too simple to explain the available data and so does not accurately reflect the underlying system in that situation.
 Therefore, the parameters of the learning algorithm should be properly adjusted in order to obtain accurate probabilistic models.
+
+All by all, the problem we deal with is that of automating the task of learning a performance-maximizing \acrshort{acr:mdp} for a system that involves uncertainty that generalizes well over multiple tasks.
+This involves the need for a proper way of expressing the value of a learned \acrshort{acr:mdp} offering a fair comparison of different \acrshortpl{acr:mdp}.
+Most importantly, a solution to this problem should take into account the costs of learning and evaluating these system models.
 
 \newpage
 
@@ -77,23 +87,32 @@ Therefore, the parameters of the learning algorithm should be properly adjusted 
 An example application for which the model learning framework described in this chapter could be used is that of mobile robot navigation.
 The problem statement is that an agent has control over a mobile robot that should be able to navigate from one location to another in an open world, say, an office environment, as fast as possible.
 This problem domain is particularly suited as the robots oft to operate under significant uncertainty in their actions (e.g., slipping) and observations (e.g., sensor noise).
-Although there are other potential applications as we described in \autoref{ch:introduction}, this particular application can be used to illustrate the complete procedure of learning \acrshort{acr:mdp} from data and obtaining plans accordingly quite well.
+Although there are other potential applications as described in \autoref{ch:introduction}, this particular application can be used to illustrate the complete procedure of learning \acrshortpl{acr:mdp} from data and obtaining plans accordingly quite well.
 
 For example, let us consider the scenario in which the robot needs to operate in an environment as depicted in \autoref{fig:dummy-map-1}.
-Then, before our model learning framework is applied to learn \acrshortpl{acr:mdp} for the system, the data about the environment could have been obtained in the form of execution traces that consist of logs of the robot's location and the (next) action it's about to take.
+Then, before our model learning framework is applied to learn \acrshortpl{acr:mdp} for the system, the data about the environment could have been obtained in the form of execution traces that consist of logs of the robot's location and the (next) action it is about to take.
 This could then give a set of data-points, as depicted in \autoref{fig:dummy-map-2}, which can be used to learn the states and transition probabilities of an \acrshort{acr:mdp}.
 A potential state-space of an \acrshort{acr:mdp} that might be learned from this dataset is shown in \autoref{fig:dummy-map-3}.
 Then, assigning a reward to a state that covers the goal area should give us a policy that leads the robot from any initial state to the goal state as depicted in \autoref{fig:dummy-map-4}.
 
-In this application the performance of a learned \acrshort{acr:mdp} can be assessed as described in \autoref{sec:performance-measure} through the computed value function and performing simulations for the various tasks the robot should be able to execute.
-Comparing the performance that was assessed for multiple \acrshortpl{acr:mdp} through the framework on convergence leads to an \acrshort{acr:mdp} that reflects the real world and generalizes over multiple tasks quite well.
+In this application the value of a learned \acrshort{acr:mdp} needs to depend on how fast the robot would reach its goal location for the various tasks it is expected to perform.
+One should note that a proper assessment of model value should be made based on the performance in simulations due to discrepancies that may exist between the model and real world.
+In the following section we discuss how the proposed framework takes these aspects into account so that on convergence an \acrshort{acr:mdp} is obtained that reflects the real world and generalizes over multiple tasks quite well.
+
+%In this application the performance of a learned \acrshort{acr:mdp} can be assessed as described in \autoref{sec:performance-measure} through the computed value function and performing simulations for the various tasks the robot should be able to execute.
+%Comparing the performance that was assessed for multiple \acrshortpl{acr:mdp} through the framework on convergence leads to an \acrshort{acr:mdp} that reflects the real world and generalizes over multiple tasks quite well.
 
 \newpage
 
 \section{Model Learning and Optimization Routine}
 \label{sec:model-learning-routine}
 
-The learning and optimization routine described in this section, depicted in \autoref{fig:learning-routine-complete}, aims to achieve this by posing the adjustment of these parameters as an optimization task, with the objective of obtaining an \acrshort{acr:mdp} model that maximizes the performance of executing the plans that are derived from it.
+The learning and optimization routine described in this section forms the \textit{base framework} for the problem dealt with.
+This routine, depicted in \autoref{fig:learning-routine-complete}, aims to properly adjust the hyper-parameters $\theta$ of the employed model learning algorithm by posing it as an optimization task.
+The objective is then to obtain an \acrshort{acr:mdp} that maximizes the performance of executing the plans that are derived from it.
+In the remainder of this section we explain the working of this routine.
+
+%The learning and optimization routine described in this section, depicted in \autoref{fig:learning-routine-complete}, aims to achieve this by posing the adjustment of these parameters as an optimization task, with the objective of obtaining an \acrshort{acr:mdp} model that maximizes the performance of executing the plans that are derived from it.
 
 \begin{figure}[t]
 	\centering
