@@ -142,7 +142,7 @@ The posterior that follows from this step is then used to define a prior over th
 In attempt to further improve the learned models, a post-processing step is performed that aims to identify and fix discrepancies between the model and the real-world.
 This post-processing step increases the resolution for those areas of the state-space when it identifies the outcomes of actions in simulations do not match the learned transition probabilities.
 
-The framework is applied, tested and evaluated for the domain of mobile robot navigation, as the robots in this domain oft to operate under significant uncertainty in their actions.
+The framework is applied, tested and evaluated for the domain of mobile robot navigation, as the robots in this domain tend to operate under significant uncertainty in their actions.
 A solution in this context is a policy which maps discretized robot poses into fine-grained navigation actions so to move a mobile robot to a certain goal location.
 Probabilistic models are acquired by applying unsupervised machine learning algorithms on execution traces (consisting of odometry data describing robot poses) obtained in an exploration phase.
 The optimization of the model is based on the performance of acquired models in simulations, which is expressed in terms of the time that has passed to reach multiple goal locations.
