@@ -1,20 +1,29 @@
 \chapter{Introduction}
 \label{ch:introduction}
 
-% 
+In numerous real-world settings, such as traffic light control, mobile robot navigation or decision-making in medical treatment, it is quite common to be faced with uncertainty about the effect of an action (possibly selected based on incomplete or faulty).
+Therefore, when plans are provided to impose a course of action for such settings, they need to be more sophisticated, anticipating for the observations that might be made and being able to act accordingly.
+That is, a proper trade-off should be made between the different possible outcomes and the costs of executing a plan.
+
+A general approach for \textit{planning under uncertainty} is to model the dynamics of the system in need of automated control, defining transition probabilities for moving between attainable states through the selection of actions.
+Typically such models are handcrafted by a human designer, although this is often a daunting and time-costly process.
+Therefore, an appealing alternative is to employ learning algorithms to obtain these models from a dataset describing the dynamics of the system.
+The state of the art does however lack a method of properly tuning the hyper-parameters of these learning algorithms so to maximize the performance yielded by executing the plans derived from learned models.
+To address this problem, this thesis proposes a framework that effectively optimizes for a performance-maximizing model for a system in need of automated control.
 
 \section{Motivation}
 \label{sec:motivation}
 
-There are several practical applications in which the (sequential) actions of systems are coordinated by decision makers or \textit{agents} to achieve long-term goals.
-In particular these agents need to take into account the uncertainty in these systems that may be present in the form of action failures (e.g., a robot slipping), exogenous events (e.g., moving obstacles) and noisy observations.
+There exist several practical applications in which the (sequential) actions of systems are coordinated by decision makers or \textit{agents} to achieve long-term goals.
+In particular these agents need to take into account the uncertainty in these systems that may be present in the form of action failures, exogenous events and noisy observations.
+%An example application in which the system faces such uncertainty is that of mobile robot navigation, in which the system is in need of automated control taking into account the possibility of the robot slipping, running into obstacles and producing noisy sensor readings.
 To devise optimal plans for those systems whose dynamics are stochastic, \acrfull{acr:dtp} aims to account for uncertainty by exploiting the considerable structure these systems pose through the development of probabilistic models which reflect this uncertainty.
 These probabilistic models serve as a system representation which describe a system's state and its evolution over time after a sequence of actions has been executed.
 The advantage of having such (accurate) probabilistic models at one's disposal is that agents can act according to different policies derived from one and the same model to perform multiple tasks.
 
-In recent years particularly \acrfullpl{acr:mdp} \cite{Boutilier1999} have become a significant popular formalism for modeling \acrshort{acr:dtp} problems. 
-That is, first of all, due to their firm foundation in decision theory and successes of Markovian approaches in speech recognition and the closely-related field of \acrfull{acr:rl}.
-Furthermore, over the years various computationally efficient solution techniques have been devised for obtaining optimal plans for \acrshort{acr:mdp} models which maximize expected value.
+In recent years particularly \acrfullpl{acr:mdp} have become a significant popular formalism for modeling \acrshort{acr:dtp} problems \cite{Boutilier1999}. 
+That is, first of all, due to their firm foundation in decision theory and successes of Markovian approaches in speech recognition \cite{baker1992large, gales2008application, rabiner1989tutorial} and the closely-related field of \acrfull{acr:rl} \cite{kaelbling1996reinforcement, Brafman2002}.
+Furthermore, over the years various computationally efficient solution techniques have been devised for obtaining optimal plans for \acrshort{acr:mdp} models which maximize expected value (e.g.,  \cite{puterman2014markov, howard1960dynamic}).
 Considering the expediency of \acrshortpl{acr:mdp} for automated control, it seems worthwhile to investigate methods of developing accurate probabilistic models for the purpose of planning under uncertainty.
 
 % New paragraph here
@@ -22,8 +31,17 @@ Considering the expediency of \acrshortpl{acr:mdp} for automated control, it see
 % Mainly applied approach in automated control involves hand-crafting a mathematical model as a system representation that can be used to represent the system's state and its evolution over time after a sequence of actions has been executed.
 % Setting up such models is an important, difficult and time-costly process for human designer that might not always have (enough) expertise to craft a suitable model that can be used to plan for the execution of tasks.
 
-\section{Problem Description}
+%\newpage
+
+\section{Problem Statement}
 \label{sec:problem-description}
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=\textwidth]{high-level-planning-diagram-cropped}
+	\caption{Diagram showing a typical iterative procedure followed in the development of probabilistic models for planning under uncertainty. Given a problem description for the real-world system under consideration, a designer refines the model until satisfactory performance is observed.}
+	\label{fig:high-level-model-development}
+\end{figure}
 
 The problem this thesis is concerned with is the development of probabilistic models, which are used for obtaining plans for automated control of systems whose dynamics are stochastic.
 Setting up such models is an important, though difficult and time-costly process for a human designer that might not always have (enough) expertise to craft a suitable, well-generalizing model that can be used to plan for the execution of different tasks.
@@ -36,19 +54,10 @@ The model is then evaluated by performing tasks following the plans that are der
 The assessed performance steers the designer towards what model parameters appear to work well.
 The designer uses the obtained knowledge to iteratively refine the model parameters until ultimately satisfactory performance is yielded in the execution of the derived plans.
 
-\begin{figure}[t]
-	\centering
-	\includegraphics[width=\textwidth]{high-level-planning-diagram}
-	\caption{Diagram showing a typical iterative procedure followed in the development of probabilistic models for planning under uncertainty. Given a problem description for the real-world system under consideration, a designer refines the model until satisfactory performance is observed.}
-	\label{fig:high-level-model-development}
-\end{figure}
-
-\newpage
-
 An alternative that one ought to consider, is that of applying \acrshort{acr:rl} techniques rather than planning algorithms.
 However, although ideas from planning and \acrshort{acr:rl} are interchangeable, these techniques typically demand direct interaction with the environment which is something that cannot always be readily offered.
 That is, \acrshort{acr:rl} techniques turn out as time-consuming and sometimes even riskful or dangerous when applied in real-world environments.
-Those domains for which plans need to be formulated offline, demand the acquisition of probabilistic models which accurately define what constitutes the state of the system, reflect uncertainty through transition probabilities and some manner of specifying goals.%TODO Rewrite 'some manner of specifying goals'?
+Those domains for which plans need to be formulated offline, demand the acquisition of probabilistic models which accurately define what constitutes the state of the system, reflect uncertainty through transition probabilities and specify its goals in some manner.%TODO Rewrite 'some manner of specifying goals'?
 
 An attractive approach of bypassing the daunting and error-prone task of handcrafting probabilistic models, is that of automatizing the model development process by applying learning algorithms on data that describes the dynamics of the system.
 For this approach the data is typically presented in the form of execution traces of the system operating in a real-world environment, which is collected in an exploration phase prior to the actual planning.
@@ -121,7 +130,7 @@ Therefore it might be valuable to investigate how this could be exploited to ach
 %	\item How can the hierarchy of different abstraction levels be exploited to find a performance-maximizing \acrshort{acr:mdp} in a more cost-effective way?
 %\end{enumerate}
 
-\section{Contribution}
+\section{Contributions}
 \label{sec:contribution}
 
 We propose a framework for automating the development of probabilistic models in the form of \acrshortpl{acr:mdp} by applying learning algorithms on data describing the dynamics of the system under consideration.

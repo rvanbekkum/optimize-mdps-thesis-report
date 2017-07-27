@@ -1,8 +1,6 @@
 \chapter{Model-Learning Framework}
 \label{ch:methodology}
 %TODO State clearly again our problem, what we are going to do and why we want to do it (but in little more detail where necessary than in the introduction). See the *-TODO
-%TODO Explain how we would like to see the exploration/data acquisition to be performed. Dataset should appropriately ('of sufficient quality') reflect the dynamics of the system so that an accurate representation in the form of an MDP can be learned from it.
-%TODO Use the mobile robot navigation domain as a **running example** application rather than putting it in the last section of the chapter
 %TODO Explain the components that we learn/derive (state space and transition function and accordingly reward functions) and which components are fixed (actions)
 %TODO Devote a paragraph clearly on how the reward function is defined; multiply the reward with the discrepancy factor rather than the value 
 
@@ -23,7 +21,8 @@ Finally, in \autoref{sec:cost-effective-optimization}, we define our extension o
 \label{sec:problem-statement}
 
 %TODO * See comment at the top; Expand on these paragraphs
-As mentioned in \autoref{ch:introduction}, the problem this thesis is concerned with is the development of probabilistic models, which are used for obtaining plans for automated control of systems whose dynamics are stochastic.
+%TODO Formalize the problem
+As mentioned in \autoref{ch:introduction}, the problem this thesis is concerned with is the development of probabilistic models in the form of \acrshortpl{acr:mdp} which are used for obtaining plans for automated control of systems whose dynamics are stochastic.
 As the development of such probabilistic models tend to be a difficult and time-costly process for a human designer, an appealing idea is to automate the model development process by applying learning algorithms on a dataset of execution traces of the system that is in need of automated control.
 However, to achieve effective planning in a real-world environment, the models that are learned should accurately reflect the dynamics of the system.
 
@@ -40,6 +39,7 @@ Most importantly, a solution to this problem should take into account the costs 
 
 \section{Application to Mobile Robot Navigation}
 \label{sec:application-mobile-robot}
+% Use the mobile robot navigation domain as a **running example** application rather than putting it in the last section of the chapter
 
 \begin{figure}[t]
 	\centering
@@ -106,6 +106,7 @@ In the following section we discuss how the proposed framework takes these aspec
 
 \section{Dataset Prerequisites}
 \label{sec:dataset-prerequisites}
+% Explain how we would like to see the exploration/data acquisition to be performed. Dataset should appropriately ('of sufficient quality') reflect the dynamics of the system so that an accurate representation in the form of an MDP can be learned from it.
 
 % Type of content
 Prior to describing the proposed framework for the problem as specified in \autoref{sec:problem-statement}, we are obliged to specify the expected format of the datasets to learn \acrshortpl{acr:mdp} from.
