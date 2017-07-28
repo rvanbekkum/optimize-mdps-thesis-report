@@ -46,7 +46,7 @@ This posterior can be viewed as an estimation of the objective function $f$, som
 % It does so by applying Bayes' Theorem, which states that the posterior probability $P(M \vert E)$ of a model $M$ given evidence $E$ is proportional to the likelihood $P(E \vert M)$ of $E$ given $M$
 
 % Acquisition function
-To decide on which $x \in \mathcal{X}$ to sample and gather a new observation $f(x)$ from next, a so-called \textit{acquisition function} $u: \mathcal{X} \mapsto \mathbb{R}$ is used, which assigns a certain utility to evaluating $f$ at some particular $x \in \mathcal{X}$ given the evidence set $\mathcal{D}$ at that time.
+To decide on which $x \in \mathcal{X}$ to sample and gather a new observation $f(x)$ from next, a so-called \textit{acquisition function} $a: \mathcal{X} \mapsto \mathbb{R}$ is used, which assigns a certain utility to evaluating $f$ at some particular $x \in \mathcal{X}$ given the evidence set $\mathcal{D}$ at that time.
 This acquisition function should be defined such that it captures a correct balance between \textit{exploration} (to sample from areas with high uncertainty) and \textit{exploitation} (to sample from areas likely to improve on prior observations). For this reason many different classes of acquisition functions exist, which are discussed in little more detail in \autoref{sec:bayesian-optimization-prior-acquisition}.
 
 % General Formulation Algorithm
@@ -54,10 +54,10 @@ This acquisition function should be defined such that it captures a correct bala
 \begin{algorithm}[!t]
 	\caption{\acrlong{acr:bo} (General Formulation) \label{alg:bayesian-optimization}}
 	\begin{algorithmic}[1]
-		\Require{Domain $\mathcal{X} \subset \mathbb{R}^m (m \geq 1)$, prior $p(f)$ and acquisition function $u: \mathcal{X} \mapsto \mathbb{R}$}
+		\Require{Domain $\mathcal{X} \subset \mathbb{R}^m (m \geq 1)$, prior $p(f)$ and acquisition function $a: \mathcal{X} \mapsto \mathbb{R}$}
 		\Let{$\mathcal{D}_{1:n}$}{$\{(x_i, y_i)\}\rvert^{n}_{i=1}$} \Comment{$\mathcal{D}$ is the evidence set with $\mathcal{D}_{1:n}$ the $n$ initial sample-observation pairs}
 		\For{$t \gets n + 1, n + 2, \ldots$}
-			\Let{$x_t$}{$\argmax_{x \in \mathcal{X}} u(x \vert \mathcal{D}_{1:t-1})$} \Comment{Acquisition based on posterior $p(f \vert \mathcal{D}_{1:t})$}%\Comment{Retrieve the next sample}
+			\Let{$x_t$}{$\argmax_{x \in \mathcal{X}} a(x \vert \mathcal{D}_{1:t-1})$} \Comment{Acquisition based on posterior $p(f \vert \mathcal{D}_{1:t})$}%\Comment{Retrieve the next sample}
 			\Let{$y_t$}{$f(x_t) + \varepsilon_t$}  %\Comment{Record a new observation of $f$}
 			\Let{$\mathcal{D}_{1:t}$}{$\mathcal{D}_{1:t-1} \cup \{(x_t, y_t)\}$} \Comment{Augment $\mathcal{D}$ with the new evidence}
 			\State Update the prior $p(f)$ and posterior $p(f \vert \mathcal{D}_{1:t})$
@@ -151,6 +151,8 @@ $$\argmax_{x \in \mathcal{X}} \frac{\mathbb{E}[\max(0, \mu_f(x) - f(x^+) - \xi)]
 where $\mu_s(x)$ is the posterior mean at $x$ for the timing \acrshort{acr:gp}-model.
 
 Apart from the acquisition functions that have been discussed here, there are various other acquisition functions for specific purposes, like for example \textit{Hedge} \cite{hoffman2011portfolio} or \textit{Entropy Search} \cite{wang2016optimization} functions.
+%TODO Discuss shortly and refer to \cite{shahriari2016taking} that these are portfolio acq. functions https://www.cs.ox.ac.uk/people/nando.defreitas/publications/BayesOptLoop.pdf
+%TODO Posterior mean or posterior predictive mean?
 
 %Others possible acquisition functions that are used in Bayesian optimization are PMAX, IEMAX and GP-HEDGE. % TODO
 
