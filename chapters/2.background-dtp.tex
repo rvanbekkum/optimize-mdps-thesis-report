@@ -230,6 +230,14 @@ This uncertainty is captured by defining a probabilistic transition function $\d
 
 \newpage
 
+%TODO Update this figure and refer to it in the text
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\textwidth]{mdp}
+	\label{fig:mdp}
+	\caption{Schematic representation of an \acrshort{acr:mdp} agent which repeatedly selects an action $a \in A$ based on its current state $s \in \mathcal{S}$, after which it ends up in a state $s' \in \mathcal{S}$ and receives a reward $R(s, a, s')$ accordingly.}
+\end{figure}
+
 % Reward structure
 As the agent of an \acrshort{acr:mdp} aims to fulfill certain goals through the selection of actions, it requires some means of assessing which action is the best to pick.
 The value measure used in \acrshortpl{acr:mdp} is defined by a mapping $R: \mathcal{S} \times A \times \mathcal{S} \mapsto \mathbb{R}$ from states and actions to real-valued \textit{rewards} (in case of added value) and/or \textit{costs} (in case of lost value).
@@ -269,19 +277,20 @@ As such a \acrshort{acr:pomdp} can be defined as in \autoref{def:pomdp} below.
 As the true state of a \acrshort{acr:pomdp} is unknown, the transition function $\delta$ is defined over beliefs of states, and accordingly a policy $\pi$ maps beliefs to actions.
 The observation function $\Omega$ defines the probability of observations from state-action pairs in the \acrshort{acr:pomdp} and is used to iteratively update the belief-state of an agent.
 
-\subsubsection{Other Markov Models and Related State-Space Models}
-\label{subsec:other-markov-models}
-Apart from the discrete-state Markov Models that were discussed in this section, there exist numerous other types of Markov Models and closely related State-Space Models (SMMs), including among others the following:%, including continuous-state Markov Models (e.g., Linear Dynamical Systems with a Gaussian state-space \cite{Minka1999,barberBRML2012}) and other specialized variations. 
+%TODO Check if we can put this somewhere else, or should just leave it out
+%\subsubsection{Other Markov Models and Related State-Space Models}
+%\label{subsec:other-markov-models}
+%Apart from the discrete-state Markov Models that were discussed in this section, there exist numerous other types of Markov Models and closely related State-Space Models (SMMs), including among others the following:%, including continuous-state Markov Models (e.g., Linear Dynamical Systems with a Gaussian state-space \cite{Minka1999,barberBRML2012}) and other specialized variations. 
 
-\begin{description}
-	\item[Factored Markov Decision Process (FMDP)] An extension of the MDP model that allows for compact representation of states, transitions and rewards \cite{Degris2010}. In many real-life domains especially the state-space grows exponentially with the number of variables. Therefore FMDPs can be used to exponentially reduce the representation by means of a dynamic Bayesian network. The main drawback, however, is that finding the best policy becomes an NP-hard problem.
-	\item[Multi-Agent \acrshort{acr:mdp} (MMDP)] An \acrshort{acr:mdp} model for systems that involve multiple decision makers. In this model each agent chooses an individual action with the goal of optimizing a joint reward. Other variations involving multiple agents are Decentralized \acrshortpl{acr:mdp} (Dec-MDPs) and \acrshortpl{acr:pomdp} (Dec-POMDPs), which differ from MMDPs in that the agents can only approximate the global state of the process by their own (local) observations \cite{Melo20111757}.
-	%\item[Variable-order Markov Model (VOM)] To be determined 
-	\item[Linear Dynamical System (LDS)] A continuous-state State-Space Model with linear dynamics, Gaussian state space and the assumption of hidden variables as in \acrshortpl{acr:hmm} \cite{Minka1999, barberBRML2012, Ghahramani2000}.
-\end{description}
+%\begin{description}
+%	\item[Factored Markov Decision Process (FMDP)] An extension of the MDP model that allows for compact representation of states, transitions and rewards \cite{Degris2010}. In many real-life domains especially the state-space grows exponentially with the number of variables. Therefore FMDPs can be used to exponentially reduce the representation by means of a dynamic Bayesian network. The main drawback, however, is that finding the best policy becomes an NP-hard problem.
+%	\item[Multi-Agent \acrshort{acr:mdp} (MMDP)] An \acrshort{acr:mdp} model for systems that involve multiple decision makers. In this model each agent chooses an individual action with the goal of optimizing a joint reward. Other variations involving multiple agents are Decentralized \acrshortpl{acr:mdp} (Dec-MDPs) and \acrshortpl{acr:pomdp} (Dec-POMDPs), which differ from MMDPs in that the agents can only approximate the global state of the process by their own (local) observations \cite{Melo20111757}.
+%	%\item[Variable-order Markov Model (VOM)] To be determined 
+%	\item[Linear Dynamical System (LDS)] A continuous-state State-Space Model with linear dynamics, Gaussian state space and the assumption of hidden variables as in \acrshortpl{acr:hmm} \cite{Minka1999, barberBRML2012, Ghahramani2000}.
+%\end{description}
 % TODO Extend each with sentence to explain the need for these models
 
-As the remaining chapters only consider systems and processes that are modeled using discrete-state Markov Models, these variations will not be further discussed in more detail.
+%As the remaining chapters only consider systems and processes that are modeled using discrete-state Markov Models, these variations will not be further discussed in more detail.
 
 \subsection{Learning Markov Models}
 \label{sec:learning-markov-models}
@@ -291,6 +300,7 @@ There exist efficient methods for fitting a discrete stationary first-order Mark
 These methods estimate the transition distribution to fit a Markov Chain on a collected sequence of time-ordered states.
 One may obtain such a sequence by applying clustering algorithms such as $k$-means on the dataset and accordingly make predictions for each of the entries.
 
+\newpage
 The first-mentioned approach of likelihood maximization, works by estimating the transition probabilities by counting the observed transitions in the state sequence.
 That is, if we let $n_{ij}$ denote the number of observed transitions from state $s_j$ to state $s_i$, then the maximum-likelihood estimation of the corresponding transition probability is
 \begin{equation}
@@ -329,15 +339,17 @@ This is followed by a discussion of the most used algorithms in \acrshort{acr:rl
 % See chapter 8.2, show an adapted version of the figure and explain advantages and disadvantages
 % Explain the difference between planning and learning
 
-\begin{figure}[t!]
+
+
+\subsubsection{Model-Based Planning Techniques}
+\label{subsec:model-based-planning}
+
+\begin{figure}[!t]
 	\centering
 	\includegraphics[width=\textwidth]{mdp-planning-diagram-v3-cropped2}
 	\caption{Block diagram of the generic routine employed in model-based MDP planning techniques.}
 	\label{fig:model-based-routine}
 \end{figure}
-
-\subsubsection{Model-Based Planning Techniques}	% Also referred to as Indirect approaches
-\label{subsec:model-based-planning}
 
 In \acrshort{acr:dtp} the algorithms compute their plans or policies based on a probabilistic model of the environment.
 Most common is to prepare an \acrshort{acr:mdp} and apply exact dynamic programming solutions to compute an optimal policy for that model.

@@ -157,12 +157,12 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 	\caption{Model-Optimization Base Framework}
 	\label{alg:base-framework}
 	\begin{algorithmic}[1]
-		\Require{Set of execution traces $E$, Parameter space $\Theta$, Set of tasks $T$, Action space $A$, Time-step $t$, Discount factor $\gamma \in [0, 1]$, Weight factor $\beta \in [0, 1]$, Acquisition function $u: \Theta \mapsto \mathbb{R}$}%Training set $\mathcal{O} = \{O_1, \ldots, O_k\}$, Clustering algorithm, hyper-parameter(s) $\theta$, actions $A$}
+		\Require{Set of execution traces $E$, Parameter space $\Theta$, Set of tasks $T$, Action space $A$, Time-step $t$, Discount factor $\gamma \in [0, 1]$, Weight factor $\beta \in [0, 1]$, Acquisition function $a: \Theta \mapsto \mathbb{R}$}%Training set $\mathcal{O} = \{O_1, \ldots, O_k\}$, Clustering algorithm, hyper-parameter(s) $\theta$, actions $A$}
 		\Ensure{\acrshort{acr:mdp} $\mathcal{M}^\ast$}%\acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$} \Comment{$s_0$ and $R$ are here irrelevant}
 		\State $\mathcal{M}_\text{max} \gets \texttt{NULL}$
 		\State $V_{\mathcal{M}_\text{max}} \gets 0$
 		\State $\mathcal{D} \gets \emptyset$ \Comment{The evidence set storing samples and observations}
-		\State $\textit{gp} \gets GP(0, K)$ \Comment{Zero-mean \acrshort{acr:gp} with covariance $K$}
+		\State $\mathit{gp} \gets GP(0, K)$ \Comment{Zero-mean \acrshort{acr:gp} with covariance $K$}
 		\State Sample $\theta \in \Theta$ at random
 		\Repeat
 			\State $\mathcal{M}, V_\mathcal{M} \gets \textproc{LearningStep}(\theta)$
@@ -197,7 +197,8 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 		\Statex
 		\Function{OptimizationStep}{$\theta, V_{\mathcal{M}}$}
 			\State $\mathcal{D} \gets \mathcal{D} \cup \{(\theta, V_\mathcal{M})\}$
-			\Let{$\theta$}{$\argmax_{x \in \mathcal{\Theta}} u(x \vert \mathcal{D})$}
+			\State $\mathit{gp}.\textproc{fit}(\mathcal{D})$	\Comment{Fit a \acrshort{acr:gp} given $\mathcal{D}$, maximizing the log-marginal-likelihood}
+			\Let{$\theta$}{$\argmax_{x \in \mathcal{\Theta}} a(x \vert \mathcal{D})$}	\Comment{Suggest a sample $\theta$ to evaluate next}
 			\State\Return $\theta$
 		\EndFunction
 	\end{algorithmic}
