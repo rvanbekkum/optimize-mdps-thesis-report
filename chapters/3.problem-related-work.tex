@@ -5,7 +5,7 @@ A common approach in \acrshort{acr:dtp}, as was discussed in \autoref{ch:introdu
 In particular we focus our attention to devising \acrshort{acr:mdp} models, which need to accurately define what constitutes the state of the system, reflect uncertainty through transition probabilities, and specify goals through rewards.
 The problem we face is that hand-crafting accurate, well-generalizing models is a difficult and time-costly process for a human designer.
 To overcome this problem the goal is to automatize the model development process by applying learning algorithms on data that describes the dynamics of the system under consideration.
-Therefore this chapter aims to provide some insight into the existing approaches for automating the development of probabilistic models for planning under uncertainty.
+Therefore this chapter aims to provide some insight into the existing approaches for automating the development of probabilistic models for planning under uncertainty and the existing alternatives for automated control of systems involving uncertainty.
 
 First \autoref{sec:learning-probabilistic-models} gives an overview of the existing algorithms for learning models from execution traces of the system.
 Then, in \autoref{sec:active-learning} a number of approaches are examined, which combine offline methods for learning (initial) models with \acrshort{acr:rl} algorithms which update the model parameters online.
@@ -72,7 +72,7 @@ The type of algorithms that are considered here are based on a method called \te
 Given a training set $\mathcal{O}$ of i.i.d. observation sequences, this algorithm starts from an initial \acrshort{acr:hmm} whose state-space consists of separate states for each time-step in the sequences.
 The entries of the transition and emission matrix are thus initialized with probability one for each of the transitions between subsequent states and each percept in the observation sequence respectively.
 Although this \acrshort{acr:hmm} explains the data perfectly it is usually not efficient and therefore the model is iteratively updated by merging those pairs of states that decrease the likelihood the least.
-This repeats itself until a stop criterion is reached, which might be when the likelihood falls below a certain value or when a predefined number of states has been reached.
+This repeats itself until a stop criterion is reached, such as the likelihood falling below a certain value or reaching a predefined number of states.
 
 This approach can be adapted for learning \acrshortpl{acr:pomdp} as described in \cite{nikovski1999learning} such that the transition function is initially incomplete as it will only be defined for the actions corresponding to the transitions between subsequent states.
 A particular advantage of this approach for planning is that one can choose to adapt the merging criterion so that for instance states are only merged if they both map to the same goal percept.
