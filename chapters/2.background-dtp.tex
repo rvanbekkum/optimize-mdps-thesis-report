@@ -48,7 +48,7 @@ Therefore, this is followed by a discussion of the discrete-state Markov Models 
 \newpage
 
 \subsubsection{Markov Chains}
-\label{subsec:markov-chains}
+\label{sec:markov-chains}
 % Markov Chains: States and Transitions
 
 The evolution of system or processes can be viewed as so-called \textit{time-series}, in which a set of data-points can be ordered using an underlying physical dimension, typically time \cite{barberBRML2012}.
@@ -134,13 +134,13 @@ Putting these components together yields \autoref{def:markov-chain} below, which
 \newpage
 
 \subsubsection{Hidden Markov Models}
-\label{subsec:hidden-markov-models}
+\label{sec:hidden-markov-models}
 % Hidden Markov Models: Observations (partially observable) 
 % also called latent
 % inference problems
 % shortly discuss the succesful applications see \cite{barberBRML2012} speech recognition, object tracking, genetic sequence analysis and add citations to the corresponding works
 
-The Markov Chain model discussed in \autoref{subsec:markov-chains} requires the modeled system or stochastic process to be fully observable, meaning that each of its states correspond directly to an observation.
+The Markov Chain model discussed in \autoref{sec:markov-chains} requires the modeled system or stochastic process to be fully observable, meaning that each of its states correspond directly to an observation.
 However, it is not unusual to encounter real-world systems in which the states are assumed to be unobservable, though are correlated with observable events produced by the system.
 These systems can be modeled by a \acrfull{acr:hmm} in which the states, typically referred to as \textit{hidden} or \textit{latent} variables $h_{1:T}$, are unknown.
 Additionally this model consists of observations, typically referred to as \textit{observed} or \textit{visible} variables $v_{1:T}$, which are dependent on the hidden variables through an emission $p(o_t\vert h_t)$ graphically depicted in \autoref{fig:hmm}. From all of this follows \autoref{def:hmm} below, formally describing a stationary \acrshort{acr:hmm}.
@@ -213,7 +213,7 @@ In practice \acrshortpl{acr:hmm} have a wide range of applications. One example 
 %Other closely related inference problems are that of \textit{filtering} (inferring the present: $p(h_t\vert o_{1:t})$), \textit{prediction} (inferring the future: $p(h_t \vert o_{1:s})$ with $t > s$) and \textit{smoothing} (inferring the past: $p(h_t \vert o_{1:u})$ with $t < u$).
 
 \subsubsection{Markov Decision Processes}
-\label{subsec:mdps}
+\label{sec:mdps}
 
 % MDPs: Actions --> Is a probabilistic model			% Driven by the actions of an agent
 % 	(Exogeneous) events
@@ -258,7 +258,7 @@ However, one can also choose to express goals in alternative ways which do not r
 An example of this can be seen in \cite{bhatia2010sampling, lacerda2015optimal}, which replace the reward function of the classic \acrshort{acr:mdp}-framework by a (co-safe) Linear Temporal Logic (LTL) formula to be satisfied.
 
 \subsubsection{Partially Observable MDPs}
-\label{subsec:pomdps}
+\label{sec:pomdps}
 
 % Observations: .. POMDP
 % Reward Models and Value Functions
@@ -342,11 +342,11 @@ This is followed by a discussion of the most used algorithms in \acrshort{acr:rl
 
 
 \subsubsection{Model-Based Planning Techniques}
-\label{subsec:model-based-planning}
+\label{sec:model-based-planning}
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=\textwidth]{mdp-planning-diagram-v3-cropped2}
+	\includegraphics[width=\textwidth]{mdp-planning-diagram-v32-cropped}
 	\caption{Block diagram of the generic routine employed in model-based MDP planning techniques.}
 	\label{fig:model-based-routine}
 \end{figure}
@@ -504,7 +504,7 @@ Comparing \acrshort{acr:lp} solutions to the specialized \acrshort{acr:vi} and \
 \newpage
 
 \subsubsection{Reinforcement Learning Techniques}
-\label{subsec:reinforcement-learning}
+\label{sec:reinforcement-learning}
 
 \acrfull{acr:rl} techniques work on real experience based on which they update the behavior of the agent that is defined by an action-selection policy. To do this they require direct interaction with the environment to obtain experience and update value function estimations accordingly during execution.
 Although most planning algorithms cannot be used for learning problems, learning algorithms can be used for planning problems as they can make use of simulated experience.

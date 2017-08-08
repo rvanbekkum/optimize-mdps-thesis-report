@@ -30,7 +30,7 @@ In this section a number of the algorithms for this purpose are considered, wher
 \label{sec:baum-welch}
 
 The most widely applied approaches for learning probabilistic models are based on maximizing the likelihood of observing the execution traces of the dataset.
-When the goal is to learn the parameters of a Markov Chain, the transition probabilities can be estimated as we have seen in \autoref{subsec:markov-chains}, by the ratio of the times a particular transition is observed and the total number of transitions observed from the corresponding starting state.
+When the goal is to learn the parameters of a Markov Chain, the transition probabilities can be estimated as we have seen in \autoref{sec:markov-chains}, by the ratio of the times a particular transition is observed and the total number of transitions observed from the corresponding starting state.
 However, while Markov Chains are similar to \acrshortpl{acr:mdp} in that they describe the evolution of a stochastic process over time, they do not involve decisions on actions to perform.
 Due to the close nature of these probabilistic models the likelihood maximization can be applied almost directly to learn the transition probabilities of \acrshortpl{acr:mdp}, although requires more data due to the addition of actions.
 
@@ -242,7 +242,7 @@ However, while the traditional \acrshort{acr:mdpip} framework demands solution t
 
 An alternative framework is the \textit{\acrfull{acr:bmdp}} where a range of the transition probabilities and rewards are known, such that it can be viewed as a set of possible \acrshortpl{acr:mdp}.
 In fact, \acrshortpl{acr:bmdp} are a special case of \acrshortpl{acr:mdpip} where the attainable probabilities can be defined by a discrete set rather than linear constraints, but where ranges can also be defined on the rewards.
-When it is possible to restrict the parameters of the \acrshort{acr:mdp} at intervals as is done in \acrshort{acr:bmdp}, the algorithms that exist for \acrshortpl{acr:bmdp} exploit the restricted structure of the parameters more efficiently than \acrshortpl{acr:mdpip}, because the \acrshort{acr:mdpip} solutions demand \acrshort{acr:lp} approaches in each iteration.
+When it is possible to restrict the parameters of the \acrshort{acr:mdp} at intervals as is done in the \acrshort{acr:bmdp} framework, the algorithms that exist for \acrshortpl{acr:bmdp} exploit the restricted structure of the parameters more efficiently than \acrshortpl{acr:mdpip}, because the \acrshort{acr:mdpip} solutions demand \acrshort{acr:lp} approaches in each iteration.
 For \acrshortpl{acr:bmdp} solution techniques exist that can efficiently learn optimal policies, such as \textit{interval \acrshort{acr:vi}} \cite{givan2000bounded} or robust versions of \acrshort{acr:rtdp} \cite{buffet2005robust}.
 
 % TODO;s

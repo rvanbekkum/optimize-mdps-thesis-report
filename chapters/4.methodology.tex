@@ -122,8 +122,8 @@ This would make us define a reward function $R: \mathcal{S} \times A \times \mat
 \[
 R(s, a, s') = 
 \begin{cases}
-	1 & \text{if } s' = s_7 \land s \neq s'\\
-	0 & \text{otherwise}
+\hspace{4pt} 	1 & \text{if } s' = s_7 \land s \neq s'\\
+\hspace{4pt} 	0 & \text{otherwise}
 \end{cases}
 \]
 
@@ -222,7 +222,7 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=\textwidth]{learning-cycle-complete-v22}
+	\includegraphics[width=\textwidth]{learning-cycle-complete-v23}
 	\caption{Schematic diagram of the model learning and optimization routine.}
 	\label{fig:learning-routine-complete}
 \end{figure}
@@ -230,7 +230,7 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 The learning and optimization routine described in this section forms the \textit{base framework} for the problem dealt with.
 This routine, schematically depicted in \autoref{fig:learning-routine-complete}, aims to properly adjust the hyper-parameters $\theta$ of the employed model learning algorithm by posing it as an optimization task.
 The objective is then to obtain an \acrshort{acr:mdp} that maximizes the performance of executing the plans that are derived from it.
-In the remainder of this section we explain the working of this routine of which the corresponding pseudocode is presented in \autoref{alg:base-framework}.
+In the remainder of this section we explain the working of this routine of which the corresponding pseudo-code is presented in \autoref{alg:base-framework}.
 
 %The learning and optimization routine described in this section, depicted in \autoref{fig:learning-routine-complete}, aims to achieve this by posing the adjustment of these parameters as an optimization task, with the objective of obtaining an \acrshort{acr:mdp} model that maximizes the performance of executing the plans that are derived from it.
 
@@ -245,27 +245,32 @@ This learning step starts off with a data-set of execution traces $E$ obtained b
 As we can see in \autoref{alg:base-framework}, line~\ref{alg:line:learn}, the step is parameterized by $\theta$, which represents the parameter-setting to be used for the employed model learning algorithm.
 Given a parameter-setting $\theta$, a state-space $\mathcal{S}$ is acquired by quantizing the execution traces $E$ using an unsupervised machine learning algorithm.
 Subsequently, a transition function $\delta$ is acquired by applying a known model-learning algorithm (such as one of those described in \autoref{sec:learning-probabilistic-models}) given the data-set $E$, state-space $\mathcal{S}$ and possible actions $A$.
-The tasks to perform are accordingly mapped to a reward function $R$ over the acquired state-space $\mathcal{S}$ (or alternatively over state-action pairs or state-action-state triplets).
+The tasks to perform are each accordingly mapped to a reward function $R$ over the acquired state-space $\mathcal{S}$ (or alternatively over state-action pairs or state-action-state triplets).
 The state-space $\mathcal{S}$, transition function $\delta$, action set $A$, reward function $R$ and a configurable initial state $s_0$ are then combined into an \acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$.
 
 To assess the performance yielded by $\mathcal{M}$, the \acrshort{acr:mdp} is solved by applying known \acrshort{acr:dtp} algorithms like \acrshort{acr:vi} or \acrshort{acr:pi} to obtain policies for a set of tasks the system is expected to perform.
 The value of the model $V_{\mathcal{M}}$ is then determined by checking how well the system is expected to perform by execution according to the derived policies (e.g., based on simulations and/or the value function obtained by a \acrshort{acr:dtp} algorithm).
-The sections below describes each of the components of this algorithm in more detail and in particularly defines the performance measure that is used for assessing the value of learned \acrshortpl{acr:mdp}.
+The sections below describes each of the components of this algorithm in more detail and most importantly defines the performance measure that is used for assessing the value of learned \acrshortpl{acr:mdp}.
 %\autoref{sec:performance-measure} describes in detail how the performance yielded by the learned \acrshortpl{acr:mdp} is assessed and how a fair comparison of different \acrshortpl{acr:mdp} may be achieved for this routine.
 
 %TODO Finish and refer to algorithm environment
-%TODO Explain where each component of the MDP comes from
-%TODO Devote a paragraph clearly on how the reward function is defined; multiply the reward with the discrepancy factor rather than the value 
+%vTODO Explain where each component of the MDP comes from
+%vTODO Devote a paragraph clearly on how the reward function is defined; multiply the reward with the discrepancy factor rather than the value 
 
 \subsubsection{Action-Space and Time Step}
-The action space $A$ of the \acrshort{acr:mdp} is one of the input parameters for the framework and should match the actions used for obtaining the set $E$ of execution traces.
+The action space $A$ of the \acrshort{acr:mdp} to be learned is one of the input parameters for the framework and should match the actions used in obtaining the set $E$ of execution traces.
 Similarly, the time step $t$ is an input parameter as well, which specifies the time in between stages in which the agent selects an action, again matching the time step used in obtaining the set $E$ of execution traces.
-In our running example, one of the possibilities is defining the action space as the set of cardinal directions as seen in \autoref{sec:application-mobile-robot}.
-The time step for the mobile robot would then correspond to the period of time it moves in one of these directions after selecting one of these actions.
+In our running example, one possibility is to define the action space as the set of movements in the cardinal and inter-cardinal directions as seen earlier in \autoref{sec:application-mobile-robot}.
+The time step $t$ for the mobile robot would then correspond to the period of time it moves in one of these directions after it has selected an action $a \in A$.
 
 \subsubsection{State-Space}
+From the provided set of execution traces $E$, a state-space $\mathcal{S}$ is learned based on the current hyper-parameter setting $\theta$ in the learning step.
+For instance, in our running example, a $k$-means clustering can be applied on for instance, coordinates in the execution traces $E$ describing the reachable locations of the robot, where $k$ is specified by the setting of $\theta$.
 
 \subsubsection{Transition Function}
+In the learning step the transition function $\delta$ is obtained by applying a known model-learning algorithm, for which here a likelihood maximization approach is selected for learning the transition probabilities of a fully observable \acrshort{acr:mdp}.
+The transition function is defined for the provided action space $A$ and earlier acquired state-space $\mathcal{S}$ and approximated from the transitions in the set $E$ of execution traces.
+%Depending on the application, one could choose to apply another algorithm
 
 \subsubsection{Tasks and Reward Functions}
 \label{sec:reward-function}
@@ -299,8 +304,67 @@ The time step for the mobile robot would then correspond to the period of time i
 	\label{fig:goal-trap-state}
 \end{figure}
 
+The goal for the class of problems of interest is to obtain a well-generalizing model that performs well on multiple different tasks.
+Therefore an estimate of the value of a model is assessed over a set $T$ of tasks provided as input to the framework, where each task is presented as the combination of a starting and goal configuration.
+%To achieve this, let us first define multiple starting configurations and multiple goals for the system.
+
+The starting configurations are each mapped to corresponding states in the \acrshort{acr:mdp}, matching the quantization to state-space $\mathcal{S}$, so that one can define $\mathcal{S}_0 \subseteq \mathcal{S}$ as a set of initial states.
+Similarly, the goals are each mapped to states, such that one can define $\mathcal{S}_G \subseteq \mathcal{S}$ as a set of goals.
+One problem that emerges, however, is that there might not be a one-to-one correspondence between learned and true (goal) states, which leads to the possibility of small state spaces yielding high value while the goal states might not map well to the true goal states.
+To take care of this, we introduce a discrepancy factor $\xi \in [0, 1]$, which corresponds to the fraction of data points within the goal state that map to the true goal.
+
+Let us then define $R_G$ as the set of reward functions $R_i$ for each $i \in \mathcal{S}_G$ in which a one-time reward (which is realized as depicted in \autoref{fig:goal-trap-state}) is received only in goal-state $i$.
+The reason the reward needs to be only obtainable once is to ensure that the expressions $V_\mathit{DTP}$ and $V_\mathit{SIM}$ are in the same range and can be therefore be used together.
+The reward function $R_i$ for some task with goal state $i \in \mathcal{S}_G$ is then defined as follows:
+\begin{equation}
+R_i(s, a, s') = 
+\begin{cases}
+\hspace{4pt} \xi & \text{if } s' = i \land s \neq s'\\
+\hspace{4pt} 0 & \text{otherwise}
+\end{cases}
+\end{equation}
+
+Accordingly one can define $T_{\mathcal{M}} = \mathcal{S_0} \times R_G$ as the set of tasks, in the form of all pairs of initial states and reward functions, over which the performance is assessed.
+The next section discusses how the value of a model $\mathcal{M}$ is assessed in the learning step over these tasks.
+
+\newpage %
+
 \subsubsection{Performance Measure}
 \label{sec:performance-measure}
+
+Posing the learning of probabilistic models as an optimization task requires us to define a mapping of \acrshortpl{acr:mdp} to a performance measure that can fairly compare different models.
+As discussed earlier, one can express the performance of an \acrshort{acr:mdp} in terms of how well the agent performs tasks following the policies that are derived from the model.
+Therefore, one option is to make use of the value function $V$ obtained by a \acrshort{acr:dtp} algorithm, such as \acrshort{acr:vi} or \acrshort{acr:pi}.
+Based on such a value function, an expression of how well the agent is expected to perform some task $t = (s_0, R) \in T_\mathcal{M}$ is:
+\begin{equation}
+\label{eq:vdtp}
+V_{\mathit{DTP},(s_0,R)} = V[s_0]
+\end{equation}
+where $s_0 \in \mathcal{S}$ is the initial state and $R$ the reward function of the \acrshort{acr:mdp} for the task.
+
+However, although the \acrshort{acr:dtp} algorithm may yield high value for the task, it might be that the agent will not perform well following the policy in the real world.
+To better assess the performance, one could execute simulations in which the agent follows the policy derived from the \acrshort{acr:mdp} model.
+Although performing simulations is more cost-expensive, it yields a better approximation of how well the agent executes a task following a policy obtained from the model.
+Accordingly, let us express the performance on some task in simulations as:
+\begin{equation}
+\label{eq:vsim}
+V_{\mathit{SIM}, (s_0, R)} = \gamma^{k} \cdot R[i]
+\end{equation}
+where $s_0 \in \mathcal{S}$ is the initial state, $R$ the reward function, $\gamma$ the discount factor, $i \in \mathcal{S}$ the goal state and $k$ the number of steps taken to reach the goal.
+
+Combining the expressions of \autoref{eq:vdtp} and \autoref{eq:vsim} yields the following expression of the performance on some task $t \in T_\mathcal{M}$:
+\begin{equation}
+\label{eq:vcom}
+\beta \cdot V_{\mathit{DTP}, t=(s_0, R)} + (1 - \beta) \cdot V_{\mathit{SIM}, t=(s_0, R)}
+\end{equation}
+where $\beta \in [0, 1]$ is a parameter which specifies the relative weight of $V_{\mathit{DTP}, t}$ against that of $V_{\mathit{SIM}, t}$ and where $s_0$ and $R$ are the initial state and reward function for the task respectively.
+
+\noindent Putting this all together, the performance of an \acrshort{acr:mdp} $\mathcal{M}$ can in this way be expressed as:
+\begin{equation}
+\label{eq:vm}
+V_{\mathcal{M}} = \frac{\sum_{t \in T_\mathcal{M}} \beta \cdot V_{\mathit{DTP}, t} + (1 - \beta) \cdot V_{\mathit{SIM}, t}}{|T_\mathcal{M}|}
+\end{equation}
+where $T_\mathcal{M}$ is the set consisting of the pairs of initial states and reward functions of the tasks over which the performance is assessed.
 
 %\begin{itemize}
 %	\item Start off with data-set of execution traces obtained beforehand
@@ -319,12 +383,13 @@ The time step for the mobile robot would then correspond to the period of time i
 The second main step of the routine will be referred to as the \textit{optimization step}, in which a parameter-setting $\theta$ is selected for the next learning step in such way that yielded performance converges to a global maximum as quickly as possible.
 As initially there is no knowledge of the performance given the settings of the learning parameter(s) $\theta$, in the first few routine-iterations parameter-settings are selected at random from the designer-specified domain $\Theta$ (i.e., the parameter-space).
 Together with the value $V_{\mathcal{M}}$ of the corresponding model obtained in the learning step for each of these parameters $\theta$, they are stored in an evidence set $\mathcal{D}$.
-The objective function $f: \Theta \mapsto \mathbb{R}$ is then defined such that it maps parameter-settings $\theta \in \Theta$ to real-valued performance yielded by \acrshortpl{acr:mdp}.
+The objective function $f$ in our case is the $\texttt{LearningStep}:  \Theta \mapsto \mathbb{R}$ function which maps parameter-settings $\theta \in \Theta$ to real-valued performance yielded by \acrshortpl{acr:mdp}.
 
 As discussed earlier in  \autoref{sec:bayesian-optimization-problem}, the objective functions for the class of \acrshort{acr:sdm} problems tend to be expensive to evaluate as proper estimations can only be made through expensive simulations.
 Therefore, \acrlong{acr:bo} emerges as an attractive method to find a global maximizer $\theta^\ast \in \Theta$ for our objective function.
 After each iteration the evidence set $\mathcal{D}$ is augmented with a new observation, based on which the posterior $p(f\vert \mathcal{D})$ of the objective function $f$ is updated accordingly.
-A new parameter-setting for the next learning step is then sampled, corresponding to maximal utility in the selected acquisition function.
+A new parameter-setting for the next learning step is then sampled at the point with maximum utility in the selected acquisition function $a: \Theta \mapsto \mathbb{R}$.
+This procedure is repeated until some criterium is reached, which can be a fixed number of iterations, a fixed time or a custom stopping criterion, e.g., observing no improvement for some number of iterations.
 
 %\begin{itemize}
 %	\item As said, at first a number $n$ of parameter-settings are selected randomly, stored in evidence set $\mathcal{D}$.
@@ -334,55 +399,55 @@ A new parameter-setting for the next learning step is then sampled, correspondin
 %	\item New evidence is then acquired based on the utility function used in the optimization.
 %\end{itemize}
 
-\subsection{Performance Measure}
+%\subsection{Performance Measure}
 %\label{sec:performance-measure}
-%TODO Move this up to learning step
+%vTODO Move this up to learning step
 
-Posing the learning of probabilistic models as an optimization task requires us to define a mapping of \acrshortpl{acr:mdp} to a performance measure that can fairly compare different models.
-As discussed earlier, one can express the performance of an \acrshort{acr:mdp} in terms of how well the agent performs tasks following policies that are derived from the model.
-Therefore, one option is to make use of the value function $V$ obtained by a \acrshort{acr:dtp} algorithm (e.g., \acrshort{acr:vi} or \acrshort{acr:pi}).
-
-One problem that emerges, however, is that there might not be a one-to-one correspondence between learned and true (goal) states, which leads to the possibility of small state spaces yielding high value while the goal states might not map well to the true goal states.
-To take care of this, we introduce a discrepancy factor $\xi \in [0, 1]$, which corresponds to the fraction of data points within the goal state that map to the true goal.
-
-Accordingly, a possible expression of how well the agent executes its task then is:
-\begin{equation}
-\label{eq:vdtp}
-V_{\mathit{DTP},(s_0,R)} = \xi \cdot V[s_0]
-\end{equation}
-where $s_0 \in \mathcal{S}$ is the initial state and $R$ the reward function of the \acrshort{acr:mdp} for the task.
-
-However, although the \acrshort{acr:dtp} algorithm may yield high value for the task, it might be that the agent will not perform well following the policy in the real world.
-To better assess the performance, one could execute simulations in which the agent follows the policy derived from the \acrshort{acr:mdp} model.
-Although performing simulations is more cost-expensive, it yields a better approximation of how well the agent executes a task following a policy obtained from the model.
-Accordingly, let us express the performance on a task in the simulations as:
-\begin{equation}
-\label{eq:vsim}
-V_{\mathit{SIM}, (s_0, R)} = \gamma^{t} \cdot R[i]
-\end{equation}
-where $s_0 \in \mathcal{S}$ is the initial state, $R$ the reward function, $\gamma$ the discount factor, $i \in \mathcal{S}$ the goal state and $t$ the number of steps taken to reach the goal.
-
-Combining the expressions of \autoref{eq:vdtp} and \autoref{eq:vsim} yields the following expression of the performance on a task:
-\begin{equation}
-\label{eq:vcom}
-\beta \cdot V_{\mathit{DTP}, t=(s_0, R)} + (1 - \beta) \cdot V_{\mathit{SIM}, t=(s_0, R)}
-\end{equation}
-where $\beta \in [0, 1]$ is a parameter which specifies the relative weight of $V_{\mathit{DTP}, t}$ against that of $V_{\mathit{SIM}, t}$ and where $s_0$ and $R$ are the initial state and reward function for the task respectively.
-
-As the desire is to obtain a well-generalizing model that performs well on different tasks, we estimate the performance by obtaining the value yielded for multiple tasks.
-To achieve this, let us first define multiple starting configurations and multiple goals for the system.
-The starting configurations are each mapped to corresponding states in the \acrshort{acr:mdp}, so that one can define $\mathcal{S}_0 \subseteq \mathcal{S}$ as a set of initial states.
-Similarly, the goals are each mapped to states, such that one can define $\mathcal{S}_G \subseteq \mathcal{S}$ as a set of goals.
-Let us then define $R_G$ as a set of reward functions $R_i$ for each $i \in \mathcal{S}_G$ in which a one-time reward (which is realized as depicted in \autoref{fig:goal-trap-state}) is received only in goal-state $i$.
-The reason the reward can only be obtained once is because in that case $V_{\mathit{DTP}, t}$ and $V_{\mathit{SIM}, t}$ will be in the same range.
-Then accordingly we can define $T = \mathcal{S_0} \times R_G$ as the set of tasks, in the form of all pairs of initial and goal states, over which the performance is assessed.
-
-\noindent Putting this all together, the performance of an \acrshort{acr:mdp} $\mathcal{M}$ can in this way be expressed as:
-\begin{equation}
-\label{eq:vm}
-	V_{\mathcal{M}} = \frac{\sum_{t \in T} \beta \cdot V_{\mathit{DTP}, t} + (1 - \beta) \cdot V_{\mathit{SIM}, t}}{|T|}
-\end{equation}
-where $T$ is the set consisting of the pairs of initial states and reward functions of the tasks over which the performance is assessed.
+%Posing the learning of probabilistic models as an optimization task requires us to define a mapping of \acrshortpl{acr:mdp} to a performance measure that can fairly compare different models.
+%As discussed earlier, one can express the performance of an \acrshort{acr:mdp} in terms of how well the agent performs tasks following policies that are derived from the model.
+%Therefore, one option is to make use of the value function $V$ obtained by a \acrshort{acr:dtp} algorithm (e.g., \acrshort{acr:vi} or \acrshort{acr:pi}).
+%
+%One problem that emerges, however, is that there might not be a one-to-one correspondence between learned and true (goal) states, which leads to the possibility of small state spaces yielding high value while the goal states might not map well to the true goal states.
+%To take care of this, we introduce a discrepancy factor $\xi \in [0, 1]$, which corresponds to the fraction of data points within the goal state that map to the true goal.
+%
+%Accordingly, a possible expression of how well the agent executes its task then is:
+%\begin{equation}
+%\label{eq:vdtp}
+%V_{\mathit{DTP},(s_0,R)} = \xi \cdot V[s_0]
+%\end{equation}
+%where $s_0 \in \mathcal{S}$ is the initial state and $R$ the reward function of the \acrshort{acr:mdp} for the task.
+%
+%However, although the \acrshort{acr:dtp} algorithm may yield high value for the task, it might be that the agent will not perform well following the policy in the real world.
+%To better assess the performance, one could execute simulations in which the agent follows the policy derived from the \acrshort{acr:mdp} model.
+%Although performing simulations is more cost-expensive, it yields a better approximation of how well the agent executes a task following a policy obtained from the model.
+%Accordingly, let us express the performance on a task in the simulations as:
+%\begin{equation}
+%\label{eq:vsim}
+%V_{\mathit{SIM}, (s_0, R)} = \gamma^{t} \cdot R[i]
+%\end{equation}
+%where $s_0 \in \mathcal{S}$ is the initial state, $R$ the reward function, $\gamma$ the discount factor, $i \in \mathcal{S}$ the goal state and $t$ the number of steps taken to reach the goal.
+%
+%Combining the expressions of \autoref{eq:vdtp} and \autoref{eq:vsim} yields the following expression of the performance on a task:
+%\begin{equation}
+%\label{eq:vcom}
+%\beta \cdot V_{\mathit{DTP}, t=(s_0, R)} + (1 - \beta) \cdot V_{\mathit{SIM}, t=(s_0, R)}
+%\end{equation}
+%where $\beta \in [0, 1]$ is a parameter which specifies the relative weight of $V_{\mathit{DTP}, t}$ against that of $V_{\mathit{SIM}, t}$ and where $s_0$ and $R$ are the initial state and reward function for the task respectively.
+%
+%As the desire is to obtain a well-generalizing model that performs well on different tasks, we estimate the performance by obtaining the value yielded for multiple tasks.
+%To achieve this, let us first define multiple starting configurations and multiple goals for the system.
+%The starting configurations are each mapped to corresponding states in the \acrshort{acr:mdp}, so that one can define $\mathcal{S}_0 \subseteq \mathcal{S}$ as a set of initial states.
+%Similarly, the goals are each mapped to states, such that one can define $\mathcal{S}_G \subseteq \mathcal{S}$ as a set of goals.
+%Let us then define $R_G$ as a set of reward functions $R_i$ for each $i \in \mathcal{S}_G$ in which a one-time reward (which is realized as depicted in \autoref{fig:goal-trap-state}) is received only in goal-state $i$.
+%The reason the reward can only be obtained once is because in that case $V_{\mathit{DTP}, t}$ and $V_{\mathit{SIM}, t}$ will be in the same range.
+%Then accordingly we can define $T = \mathcal{S_0} \times R_G$ as the set of tasks, in the form of all pairs of initial and goal states, over which the performance is assessed.
+%
+%\noindent Putting this all together, the performance of an \acrshort{acr:mdp} $\mathcal{M}$ can in this way be expressed as:
+%\begin{equation}
+%\label{eq:vm}
+%	V_{\mathcal{M}} = \frac{\sum_{t \in T} \beta \cdot V_{\mathit{DTP}, t} + (1 - \beta) \cdot V_{\mathit{SIM}, t}}{|T|}
+%\end{equation}
+%where $T$ is the set consisting of the pairs of initial states and reward functions of the tasks over which the performance is assessed.
 
 % There have been debates about the performance
 % measure that should be maximized during learning {
@@ -414,6 +479,8 @@ where $T$ is the set consisting of the pairs of initial states and reward functi
 % Two approaches:
 % - Clustering training data to obtain states
 % - Trajectory Clustering
+
+\newpage
 
 \section{Multi-Phase Framework}
 \label{sec:cost-effective-optimization}
@@ -461,13 +528,9 @@ where $T$ is the set consisting of the pairs of initial states and reward functi
 	\end{algorithmic}
 \end{algorithm}
 
-\newpage
-
 To make the solution more cost-effective, the framework is extended by defining three phases with the aim of exploiting the lower cost of computing the value function for \acrshortpl{acr:mdp} in comparison to the cost of executing plans in simulations or the real world.
 That is, assessing performance solely based on learned \acrshort{acr:mdp} models is less cost-expensive, although the model might not accurately reflect the real world as its abstracts over low-level details.
 This section defines the phases of the extension, of which each subsequent phase better reflects the real world, but on the other hand are accompanied by higher costs as is depicted in \autoref{fig:abstraction-cost}.
-
-%\blindtext
 
 %\begin{itemize}
 %	\item Change the $\beta$-parameter of Eq 5.1 over time
@@ -478,14 +541,14 @@ This section defines the phases of the extension, of which each subsequent phase
 \afterpage{
 	\begin{figure}[t]
 		\centering
-		\includegraphics[width=1.0\textwidth]{phase-1.pdf}
+		\includegraphics[width=1.0\textwidth]{phase-1v2.pdf}
 		\caption{Block diagram showing the steps of the first phase of the multi-phase optimization framework. This phase develops a distribution which reflects the interesting area of the parameter space solely based on the value functions of \acrshortpl{acr:mdp}.}
 		\label{fig:phase-1}
 	\end{figure}
 	
 	\begin{figure}[t]
 		\centering
-		\includegraphics[width=1.0\textwidth]{phase-2.pdf}
+		\includegraphics[width=1.0\textwidth]{phase-2v3.pdf}
 		\caption{Block diagram showing the steps of the second phase of the multi-phase optimization framework. This phase uses the distribution learned in the first phase as a prior and optimizes for an \acrshort{acr:mdp} which maximizes performance in simulations.}
 		\label{fig:phase-2}
 	\end{figure}
