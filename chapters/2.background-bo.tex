@@ -21,7 +21,7 @@ Formally, to find a global maximizer $x^\ast \in \mathcal{X}$ for which:
 In particular the problem turns out to be a common bottleneck when dealing with an objective function that is unknown and expensive to evaluate in terms of the required computational resources.
 As an example, one could think of finding the hyper-parameters for a neural network which maximize the performance, where each single evaluation of a set of parameters requires one to train the neural network and assess the performance on a huge dataset.
 
-Although this problem of optimizing expensive functions can be found in many different contexts, it is foremost a problem in sequential decision theory. 
+Although this problem of optimizing expensive functions can be found in many different contexts, it is foremost a problem in \acrshort{acr:sdm}. 
 That is, typically one can only hope to estimate objective functions of \acrshort{acr:sdm} problems in AI planning and reinforcement learning through expensive simulations \cite{Brochu2010}. 
 A particularly relevant optimization problem pops up when considering the problem of learning to control systems that involve uncertainty, in which an important issue is that of faithfully modeling the uncertainty in the outcomes of actions \cite{Ghahramani2015}.
 This particular problem has recently received quite some attention, posing it as a problem of learning and optimizing the parameters of a probabilistic model of the system, such as the model's transition probabilities, reward function or optimal policy \cite{Poupart2010}.
@@ -76,7 +76,7 @@ In order to apply \acrlong{acr:bo} there are two major choices that need to be m
 
 \subsubsection*{Prior Distributions}
 \label{sec:bayesian-optimization-prior}
-In \acrlong{acr:bo} the most common choice for the prior distribution is a \acrfull{acr:gp}, which is typically well-suited as it accounts for the uncertainty associated with each prediction.
+In \acrlong{acr:bo} the \textit{de facto} standard for the prior distribution is a \acrfull{acr:gp}, which is typically well-suited as it accounts for the uncertainty associated with each prediction.
 Another important aspect that makes a \acrshort{acr:gp} a convenient choice for the prior distribution is that it induces a posterior distribution over the objective function that is analytically tractable.
 Intuitively a \acrshort{acr:gp} can be viewed as a prior which assumes that similar inputs result in similar outputs.
 For an objective function $f$, the \acrshort{acr:gp} defines a Gaussian probability distribution over $f(x)$ for each $x$, so that a \acrshort{acr:gp} can be expressed as a probability distribution over functions:
@@ -112,7 +112,7 @@ The next step is defining an acquisition function which is used in the optimizat
 Typically, high utility in the acquisition functions corresponds to potentially high objective function values.
 However, to avoid getting stuck in local optima, acquisition functions are defined such that a trade-off is made between exploration and exploitation.
 In each iteration of the \acrshort{acr:bo} framework, a new observation is sampled at the point $x \in \mathcal{X}$ where the utility is the highest.
-Traditionally, the \acrfull{acr:mpi}, \acrfull{acr:mei} and \acrfull{acr:gp-ucb} functions are used for \acrlong{acr:bo}.
+Traditionally, the \acrfull{acr:mpi}, \acrfull{acr:mei} and \acrfull{acr:gp-ucb} functions are used for \acrlong{acr:bo} \cite{shahriari2016taking}.
 %This section presents an overview of the most common choices for acquisition functions used for Bayesian Optimization, together with their individual advantages and disadvantages.
 In the discussion of these acquisition functions, let us define $f(x^+)$ as the `best' observation, corresponding to the sample $x^+ = \argmax_{x_i \in x_{1:t}} y_i$ when considering the first $t$ samples.
 In the following overview each of these acquisition functions are defined accompanied by a discussion of their main advantages and disadvantages seen in practice.
@@ -158,18 +158,30 @@ To account for this aspect, one could apply cost-sensitive optimization by using
 
 Further expanding on this, various \textit{portfolio allocation} techniques have been suggested that address the issue that there is no single acquisition function that outperforms the others for all problem instances.
 One example is the \textit{\acrshort{acr:gp}-Hedge} algorithm \cite{brochu2010portfolio, shahriari2016taking} which holds a portfolio of acquisition functions and employs past performance of each of these functions to predict their future acquisition performance.
-Though this algorithm fails to account for valuable information gained through exploration, which has led to alternative portfolio algorithms, such as the \textit{Entropy Search Portfolio} \cite{shahriari2016taking, wang2016optimization} which considers the gain of information of each acquisition function towards the optimum.
+However, this algorithm fails to account for valuable information gained through exploration, which has led to alternative portfolio algorithms, such as the \textit{Entropy Search Portfolio} \cite{shahriari2016taking, wang2016optimization} which considers the gain of information of each acquisition function towards the optimum.
+
+Finally, one can choose to blend the acquisition functions of a set of \acrshortpl{acr:gp} with varying hyper-parameter settings by computing the \textit{integrated acquisition function} \cite{snoek2012practical}:
+
+$$\hat{a}(x\vert\mathcal{D}) = \int a(x\vert\mathcal{D}, \theta_{\mathit{gp}})p(\theta_\mathit{gp}\vert\mathcal{D}) d\theta_{\mathit{gp}}$$
+
+\noindent where $a(x)$ is the utility at $x \in \mathcal{X}$ in the \acrshort{acr:mei} function for the \acrshort{acr:gp} with hyper-parameters $\theta_\mathit{gp}$ given the evidence set $\mathcal{D}$.
+Computing $\hat{a}(x)$ is commonly realized by a Monte Carlo integration over the acquisition functions of the \acrshortpl{acr:gp}.
+This integrated function is typically used to account for uncertainty in the hyper-parameters of the underlying \acrshort{acr:gp} in the \acrshort{acr:bo} framework.
+A benefit of this Bayesian treatment of these hyper-parameters is that the number of choices to be made is reduced and leads to a more automated optimization solution.
 
 %For this acquisition function that is proposed in \cite{snoek2012practical}, another \acrshort{acr:gp}-model is defined over the evaluation time of the objective function for the same domain $\mathcal{X}$.
 %So in each iteration the \acrshort{acr:mei-ps} function samples $x \in \mathcal{X}$ such that:
 
 %Apart from the acquisition functions that have been discussed here, there are various other acquisition functions for specific purposes, like for example \textit{Hedge} \cite{hoffman2011portfolio} or \textit{Entropy Search} \cite{wang2016optimization} functions.
-%TODO Discuss shortly and refer to \cite{shahriari2016taking} that these are portfolio acq. functions https://www.cs.ox.ac.uk/people/nando.defreitas/publications/BayesOptLoop.pdf
+%vTODO Discuss shortly and refer to \cite{shahriari2016taking} that these are portfolio acq. functions https://www.cs.ox.ac.uk/people/nando.defreitas/publications/BayesOptLoop.pdf
 %TODO Posterior mean or posterior predictive mean?
 
-%Others possible acquisition functions that are used in Bayesian optimization are PMAX, IEMAX and GP-HEDGE. % TODO
+%Others possible acquisition functions that are used in Bayesian optimization are PMAX, IEMAX and GP-HEDGE. %vTODO
 
-\subsection{Applications of Bayesian Optimization to Planning Problems}
+%\subsection{Toy Example}
+%\label{sec:bayesian-optimization-toy-example}
+
+\subsection{Applications of Bayesian Optimization to SDM Problems}
 \label{sec:bayesian-optimization-applications}
 
 As we consider the optimization of learning probabilistic models for planning under uncertainty in this thesis, it might be valuable to have a look at how \acrlong{acr:bo} is applied to closely related tasks for planning.
@@ -181,19 +193,19 @@ Typically, estimating the belief-state is an expensive problem, typically carrie
 Therefore, to minimize computational cost, a \acrlong{acr:bo} algorithm is applied with the choice of a \acrshort{acr:gp}-prior over $C$ and where new samples are acquired using an \acrshort{acr:mei} acquisition function.
 Applying \acrlong{acr:bo} allows for a more cost-efficient online path planning method for optimal exploration of an environment compared to other approaches.
 
-Another consideration for exploration of environments with stochastic dynamics is that of safety. That is, the assumption of an \acrshort{acr:mdp} being \textit{ergodic}, which is when any state is reachable from another, is impractical as systems tend to get stuck or break due to unsafe exploration. Therefore, in \cite{turchetta2016safe} a method of safe exploration is proposed that based on an initial set of states that are known a priori to be safe, iteratively identifies which nearby states are safe to visit.
+Another consideration for exploration of environments with stochastic dynamics is that of safety. That is, the assumption of an \acrshort{acr:mdp} being \textit{ergodic}, which is when any state is reachable from another, is impractical as systems tend to get stuck or break due to unsafe exploration. 
+Therefore, in \cite{turchetta2016safe} a method of safe exploration is proposed that, based on an initial set of states that are known a priori to be safe, iteratively identifies which nearby states are safe to visit.
 This is done by making regularity assumptions on the safety feature, and by such modeling this safety feature by a \acrshort{acr:gp} prior with a Mat\'ern 5/2 kernel.
 The goal of their \texttt{SAFEMDP} algorithm is to visit those states that expand the set of safe states (of which is known that a safe return route exists which is inferred from the \acrshort{acr:mdp}'s transition dynamics) as quickly as possible, so to minimize the resources required to explore the \acrshort{acr:mdp}.
 Therefore, the acquisition is performed such that those states are selected that are known to be safe and comprise the highest uncertainty, so that the acquired knowledge with every sample is maximized.
 
-Finally, another relevant example is seen in \cite{wilson2014using} in which \acrlong{acr:bo} is used to optimize policies for \acrshort{acr:rl} by exploiting generated trajectory data.
+Finally, multiple papers have shown that the \acrshort{acr:bo} framework can be employed to speed up online policy search for \acrshort{acr:rl} tasks.
+The proposed algorithms in these papers, have the \acrshort{acr:bo} framework select and evaluate a policy in each iteration and keep track of estimates of the expected value of all policies.
+One example is the \texttt{PILCO} framework \cite{deisenroth2011pilco}, a model-based online policy search method, which models the dynamics of a system by a non-parametric \acrshort{acr:gp} so that policies are retrieved indirectly.
+Another example is seen in \cite{wilson2014using} in which \acrlong{acr:bo} is used to optimize policies for \acrshort{acr:rl} by exploiting generated trajectory data.
 To take advantage of the obtained trajectory information in the \acrlong{acr:bo} this information is intertwined with the kernel of the \acrshort{acr:gp} prior, in such way that the induced behavior (i.e., defined by sequences of selected actions) of pairs of policies are taken into account in a behavior-based kernel (BBK).
 Accordingly, given an evidence set $\mathcal{D}_{1:n} = \{(\pi_i, \eta(\pi_i), \xi_i)\}$ an (estimate) of the expected return $\eta(\pi_i)$ of policy $\pi_i$ is computed using a set of trajectories $\xi_i$.
-Finally, a model-based method of \acrlong{acr:bo} is proposed as well, which learns transition probabilities and reward functions based on collected trajectory data to approximate the expected return through simulations on a probabilistic model.
+This paper also proposes a model-based \acrlong{acr:bo} method which learns transition probabilities and reward functions based on collected trajectory data to approximate the expected return through simulations on a probabilistic model.
 To account for inaccuracies of learned models, this model-based algorithm introduces a $\beta$-term in the kernel that ensures that the model-information is neglected when it turns out to be inaccurate based on the occurrence of systematic errors.
 
 % \cite{martinez2007active}, ... (Robot Planning and Exploration under uncertainty)
-
-%\subsection{Extensions on Bayesian Optimization}
-%\label{sec:bayesian-optimization-extensions}
-%\blindtext

@@ -35,10 +35,10 @@ However, while Markov Chains are similar to \acrshortpl{acr:mdp} in that they de
 Due to the close nature of these probabilistic models the likelihood maximization can be applied almost directly to learn the transition probabilities of \acrshortpl{acr:mdp}, although requires more data due to the addition of actions.
 
 In practice, it is more common to only have a sequence of observations at one's disposal which do not directly map to the states of the system.
-The approach of likelihood maximization generalizes to learning partially observable Markov Models through the well-known Baum-Welch algorithm, which is a special instance of the Expectation Maximization (EM) algorithm generally used for learning the parameters of \acrshortpl{acr:hmm}.
+The approach of likelihood maximization generalizes to learning partially observable Markov Models through the well-known \textit{Baum-Welch algorithm} \cite{welch2003hidden}, which is a special instance of the Expectation Maximization (EM) algorithm generally used for learning the parameters of \acrshortpl{acr:hmm}.
 Given a discrete or continuous observation space $\mathcal{V}$, a discrete state space $\mathcal{S}$, and a set $\mathcal{O}$ of i.i.d. observation sequences, the algorithm learns a model $\mathcal{M}^\ast = \argmax_\mathcal{M} p(\mathcal{O}\vert\mathcal{M})$.
 Informally, this is done by first providing manual estimates of the model parameters and then iteratively computing the expectations of how frequently the transitions and emissions are used (i.e., the \textit{E-step}) and updating these parameters based on those computed expectations (i.e., the \textit{M-step}).
-For a more detailed explanation of the Baum-Welch algorithm please refer to the tutorial by \citeauthor{bilmes1998gentle} in \cite{bilmes1998gentle}.
+For a more detailed explanation of the Baum-Welch algorithm one may refer to the tutorial by \citeauthor{bilmes1998gentle} in \cite{bilmes1998gentle}.
 
 Although the approach turns out to work quite well for learning \acrshortpl{acr:hmm} for recognition purposes, some problems emerge when applying the algorithm to learn \acrshortpl{acr:pomdp} for planning under uncertainty.
 That is, the algorithm is well-known to be sensitive to its initialization (particularly in the case of continuous observations) and depending on the choice of the initial model parameters it may result in local maxima.
@@ -51,7 +51,7 @@ Based on a set of gathered odometric readings an initial \textit{topological} mo
 Then an adapted version of Baum-Welch is applied which takes into account odometric informaton to iteratively update the model.
 The obtained results are compared to those that emerge from the traditional Baum-Welch algorithm, which is used to demonstrate that exploiting odometric information can reduce the number of iterations and improve the final model.
 
-Similarly, an adaptation of the Baum-Welch algorithm is applied in \cite{koenig1996unsupervised} to learn \acrshortpl{acr:pomdp} which exploits prior knowledge of map symmetry and does not adjust probabilities that are assumed to be approximately correct because the sensor and actuator models are expected to be similar in different environments.
+Similarly, an adaptation of the Baum-Welch algorithm is applied in \cite{koenig1996unsupervised} to learn \acrshortpl{acr:pomdp} which exploits prior knowledge of map symmetry and does not adjust probabilities that are assumed to be approximately correct since the sensor and actuator models are expected to be similar in different environments.
 In this way the amount of required training data is restricted and updating the model happens more selectively and efficiently, although it demands the need for hand-crafting an initial topological model and defining constraints on the model structure.
 
 % Explain drawbacks of Baum-Welch for planning: e.g. local maxima
@@ -75,7 +75,7 @@ Although this \acrshort{acr:hmm} explains the data perfectly it is usually not e
 This repeats itself until a stop criterion is reached, such as the likelihood falling below a certain value or reaching a predefined number of states.
 
 This approach can be adapted for learning \acrshortpl{acr:pomdp} as described in \cite{nikovski1999learning} such that the transition function is initially incomplete as it will only be defined for the actions corresponding to the transitions between subsequent states.
-A particular advantage of this approach for planning is that one can choose to adapt the merging criterion so that for instance states are only merged if they both map to the same goal percept.
+A particular advantage of this approach is that one can choose to adapt the merging criterion so that for instance states are only merged if they both map to the same goal percept.
 However, a major disadvantage of the approach is that alternative merges are never considered by the algorithm, although in the end they may result in better models.
 This means that the approach is prone to local maxima, although this can be avoided to some extent by considering a set of most promising merges in each iteration, although it would make the algorithm even more cost-expensive than it already is.
 
@@ -149,9 +149,13 @@ A class of approaches that we consider in this section are those that combine of
 In \acrshort{acr:rl} a distinction exists between model-free and model-based methods, where in the former the choice of action is made based on previously realized value, while the latter evaluates candidate actions based on their expected future rewards.
 Model-free or \textit{direct} \acrshort{acr:rl} can therefore be viewed as corresponding to habitual behavior, while model-based \acrshort{acr:rl} corresponds to goal-directed behavior.
 When the system under consideration encompasses considerable structure and its dynamics can be modeled accurately, model-based approaches tend to use experiential data more efficiently, be more resilient to changing goals and are better capable of obtaining near-optimal policies \cite{atkeson1997}.
-The planning problems involving these type of systems are those that qualify for applying model-based \acrshort{acr:rl} where the initial \acrshort{acr:mdp} could be acquired by offline model learning.
+The \acrshort{acr:sdm} problems involving these type of systems are those that qualify for applying model-based \acrshort{acr:rl} in which an initial \acrshort{acr:mdp} could be obtained by offline model learning.
+However, one should note that model-free \acrshort{acr:rl} approaches are better suited for learning from scratch (i.e., \acrshort{acr:sdm} problems with very limited prior knowledge and data), as model-based \acrshort{acr:rl} approaches tend to suffer from model bias \cite{deisenroth2011pilco}.
+That is, model-based \acrshort{acr:rl} makes the inherent assumption that the underlying model sufficiently accurately reflects the real-world environment.
 
-To improve the estimations of the model parameters, the algorithms in model-based \acrshort{acr:rl} demand for efficient exploration, for which various approaches exist that are optimistic in face of uncertainty.
+\newpage
+
+To improve the estimations of the model parameters in model-based \acrshort{acr:rl}, the algorithms demand for efficient exploration, for which various approaches exist that are optimistic in face of uncertainty.
 An example is the $E^3$ algorithm \cite{kearns2002near} which explicitly chooses between exploiting the known part of the \acrshort{acr:mdp} and optimally reaching the part that needs to be explored. 
 Its exploration is based on \textit{balanced wandering}, which means that the agent will prefer the action that has been executed the least from its current state (breaking ties randomly) until the state has been visited a sufficient number of times.
 Another algorithm is the $R$-Max algorithm \cite{Brafman2002}, which has a built-in mechanism for switching between exploitation and exploration and differs in its exploration by letting the agent make the assumption that a maximum possible reward can be obtained from unexplored state-action pairs.
@@ -198,12 +202,12 @@ The algorithm guides the exploration by selecting these actions for which is kno
 \end{algorithm}
 
 Considerable work has been conducted on investigating the application of Bayesian methods to \acrshort{acr:rl} motivated by their close relation to decision theory for making decisions under uncertainty. 
-In \textit{\acrfull{acr:brl}} the idea is to learn a model of the environment by considering the unknown parameters of the model as random variables.
+In \textit{\acrfull{acr:brl}} \cite{ghavamzadeh2015bayesian} the idea is to learn a model of the environment by considering the unknown parameters of the model as random variables.
 Over these random variables a prior distribution $p(\theta)$ is defined corresponding to the prior beliefs over the unknown parameters $\theta$ of the model.
 A common choice for discrete-state and action \acrshortpl{acr:mdp} is a multinomial \textit{Dirichlet} prior, which is parameterized by a count-vector $\Phi = (\phi_1, \ldots, \phi_k)$ which defines the number of observations of all possible transitions.
 Then, as evidence is gathered, the posterior on $\theta$ (which quantifies the uncertainty over the parameters) is updated based on Bayes' rule from which an estimation of the model parameters can be obtained.
-A framework that is accordingly used in model-based \acrshort{acr:brl} is the \textit{Bayes-Adaptive \acrshort{acr:mdp}}, which augments the original state space $\mathcal{S}$, transition function $\delta$ and reward function $R$ by jointly combining them with the posterior's hyper-parameters $\Phi$ \cite{guez2012efficient}.
-A general formulation of the steps of model-based \acrshort{acr:brl} (based on \cite{png2011bayesian}) is shown in \autoref{alg:bayesian-reinforcement-learning}.
+A framework that is accordingly used in model-based \acrshort{acr:brl} is the \textit{Bayes-Adaptive \acrshort{acr:mdp}} \cite{guez2012efficient}, which augments the original state space $\mathcal{S}$, transition function $\delta$ and reward function $R$ by jointly combining them with the posterior's hyper-parameters $\Phi$.
+A general formulation of the steps of model-based \acrshort{acr:brl} is shown in \autoref{alg:bayesian-reinforcement-learning} \cite{png2011bayesian}.
 
 A major drawback of model-based \acrshort{acr:brl} is that obtaining exact solutions appears computationally intractable.
 Nonetheless various approximate \acrshort{acr:brl} methods have been devised to provide feasible solutions (such as Bayesian DP, BOSS and Monte-Carlo tree search approaches), of which a majority is summarized in \cite{ghavamzadeh2015bayesian} for the interested reader.
@@ -243,7 +247,12 @@ However, while the traditional \acrshort{acr:mdpip} framework demands solution t
 An alternative framework is the \textit{\acrfull{acr:bmdp}} where a range of the transition probabilities and rewards are known, such that it can be viewed as a set of possible \acrshortpl{acr:mdp}.
 In fact, \acrshortpl{acr:bmdp} are a special case of \acrshortpl{acr:mdpip} where the attainable probabilities can be defined by a discrete set rather than linear constraints, but where ranges can also be defined on the rewards.
 When it is possible to restrict the parameters of the \acrshort{acr:mdp} at intervals as is done in the \acrshort{acr:bmdp} framework, the algorithms that exist for \acrshortpl{acr:bmdp} exploit the restricted structure of the parameters more efficiently than \acrshortpl{acr:mdpip}, because the \acrshort{acr:mdpip} solutions demand \acrshort{acr:lp} approaches in each iteration.
-For \acrshortpl{acr:bmdp} solution techniques exist that can efficiently learn optimal policies, such as \textit{interval \acrshort{acr:vi}} \cite{givan2000bounded} or robust versions of \acrshort{acr:rtdp} \cite{buffet2005robust}.
+There exist solution techniques for \acrshortpl{acr:bmdp} that can efficiently learn optimal policies, such as \textit{interval \acrshort{acr:vi}} \cite{givan2000bounded} or robust versions of \acrshort{acr:rtdp} \cite{buffet2005robust}.
+
+
+%\section{Gaussian Process Dynamics}
+%\label{sec:gp-dynamics}
+%http://machinelearning.wustl.edu/mlpapers/paper_files/ICML2011Deisenroth_323.pdf
 
 % TODO;s
 %% Fitting Markov Chains/MDPs:
