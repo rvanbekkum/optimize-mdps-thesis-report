@@ -111,7 +111,7 @@ The Mat\'ern kernel serves as a more flexible class, where the hyper-parameters 
 The next step is defining an acquisition function which is used in the optimization process to efficiently sample observations towards the global optimum.
 Typically, high utility in the acquisition functions corresponds to potentially high objective function values.
 However, to avoid getting stuck in local optima, acquisition functions are defined such that a trade-off is made between exploration and exploitation.
-In each iteration of \acrlong{acr:bo}, observations are sampled at the point $x \in \mathcal{X}$ where the utility is the highest.
+In each iteration of the \acrshort{acr:bo} framework, a new observation is sampled at the point $x \in \mathcal{X}$ where the utility is the highest.
 Traditionally, the \acrfull{acr:mpi}, \acrfull{acr:mei} and \acrfull{acr:gp-ucb} functions are used for \acrlong{acr:bo}.
 %This section presents an overview of the most common choices for acquisition functions used for Bayesian Optimization, together with their individual advantages and disadvantages.
 In the discussion of these acquisition functions, let us define $f(x^+)$ as the `best' observation, corresponding to the sample $x^+ = \argmax_{x_i \in x_{1:t}} y_i$ when considering the first $t$ samples.
@@ -144,13 +144,26 @@ In the following overview each of these acquisition functions are defined accomp
 
 In some domains, the time that is needed to evaluate the objective function depends on the region from which a point $x \in \mathcal{X}$ is sampled.
 For example, when again the optimization of the hyper-parameters of neural networks is considered, one may observe that for some settings of parameters it takes a lot longer to train a model.
-To account for this aspect, one could apply cost-sensitive optimization by using the \acrfull{acr:mei-ps} function
-For this acquisition function that is proposed in \cite{snoek2012practical}, another \acrshort{acr:gp}-model is defined over the evaluation time of the objective function for the same domain $\mathcal{X}$.
-So in each iteration the \acrshort{acr:mei-ps} function samples $x \in \mathcal{X}$ such that:
-$$\argmax_{x \in \mathcal{X}} \frac{\mathbb{E}[\max(0, \mu_f(x) - f(x^+) - \xi)]}{\mu_s(x)}$$
-where $\mu_s(x)$ is the posterior mean at $x$ for the timing \acrshort{acr:gp}-model.
+To account for this aspect, one could apply cost-sensitive optimization by using the \acrfull{acr:mei-ps} function.
+\begin{description}
+	\item[\acrfull{acr:mei-ps}] This acquisition function, proposed in \cite{snoek2012practical}, makes use of another \acrshort{acr:gp}-model over the evaluation time of the objective function over the same domain $\mathcal{X}$.
+	The \acrshort{acr:mei-ps} selects the next sample $x \in \mathcal{X}$ such that:
+	$$\argmax_{x \in \mathcal{X}} \frac{\mathbb{E}[\max(0, \mu_f(x) - f(x^+) - \xi)]}{\mu_s(x)}$$
+	where $\mu_s(x)$ is the posterior mean at $x$ for the timing \acrshort{acr:gp}-model, while $\mu_f$ and $\xi$ are defined as in the \acrshort{acr:mei} function.
+	\begin{description}
+		\item[Advantages] Prefers samples that are expected to be evaluated with lower cost.
+		\item[Disadvantages] Requires another timing \acrshort{acr:gp}-model accompanied by increased costs.
+	\end{description}
+\end{description}
 
-Apart from the acquisition functions that have been discussed here, there are various other acquisition functions for specific purposes, like for example \textit{Hedge} \cite{hoffman2011portfolio} or \textit{Entropy Search} \cite{wang2016optimization} functions.
+Further expanding on this, various \textit{portfolio allocation} techniques have been suggested that address the issue that there is no single acquisition function that outperforms the others for all problem instances.
+One example is the \textit{\acrshort{acr:gp}-Hedge} algorithm \cite{brochu2010portfolio, shahriari2016taking} which holds a portfolio of acquisition functions and employs past performance of each of these functions to predict their future acquisition performance.
+Though this algorithm fails to account for valuable information gained through exploration, which has led to alternative portfolio algorithms, such as the \textit{Entropy Search Portfolio} \cite{shahriari2016taking, wang2016optimization} which considers the gain of information of each acquisition function towards the optimum.
+
+%For this acquisition function that is proposed in \cite{snoek2012practical}, another \acrshort{acr:gp}-model is defined over the evaluation time of the objective function for the same domain $\mathcal{X}$.
+%So in each iteration the \acrshort{acr:mei-ps} function samples $x \in \mathcal{X}$ such that:
+
+%Apart from the acquisition functions that have been discussed here, there are various other acquisition functions for specific purposes, like for example \textit{Hedge} \cite{hoffman2011portfolio} or \textit{Entropy Search} \cite{wang2016optimization} functions.
 %TODO Discuss shortly and refer to \cite{shahriari2016taking} that these are portfolio acq. functions https://www.cs.ox.ac.uk/people/nando.defreitas/publications/BayesOptLoop.pdf
 %TODO Posterior mean or posterior predictive mean?
 
@@ -159,13 +172,11 @@ Apart from the acquisition functions that have been discussed here, there are va
 \subsection{Applications of Bayesian Optimization to Planning Problems}
 \label{sec:bayesian-optimization-applications}
 
-% TODO Write out completely, this is just a short overview
-% Most interesting applications that involve or are closely related to \acrshort{acr:dtp}:
 As we consider the optimization of learning probabilistic models for planning under uncertainty in this thesis, it might be valuable to have a look at how \acrlong{acr:bo} is applied to closely related tasks for planning.
 Therefore, in this section a number of applications that involve or are closely related to \acrshort{acr:dtp} are highlighted, to get an idea of the applicability of \acrlong{acr:bo} and identify the motivations for using this method.
 
 In \cite{MartinezCantin2009}, \acrlong{acr:bo} is applied for a mobile robot that adaptively plans a path while maximizing the information it obtains from observations about its own location and the location of navigation landmarks in the environment.
-The objective/cost function $C$ is parametrized by a policy-vector $\pi$ and approximations for selected samples (of robot pose and landmark locations) are made by different functions (i.e., average mean square error (AMSE), maximum a posteriori square error (MAPSE) and a largest marginal heuristic) over the belief-states of the \acrshort{acr:pomdp}.
+The objective/cost function $C$ is parametrized by a policy-vector $\pi$ and approximations for selected samples (of robot pose and landmark locations) are made by different functions over the belief-states of the \acrshort{acr:pomdp} (i.e., average mean square error (AMSE), maximum a posteriori square error (MAPSE) and a largest marginal heuristic).
 Typically, estimating the belief-state is an expensive problem, typically carried out through SLAM algorithms in robotics.
 Therefore, to minimize computational cost, a \acrlong{acr:bo} algorithm is applied with the choice of a \acrshort{acr:gp}-prior over $C$ and where new samples are acquired using an \acrshort{acr:mei} acquisition function.
 Applying \acrlong{acr:bo} allows for a more cost-efficient online path planning method for optimal exploration of an environment compared to other approaches.

@@ -234,8 +234,8 @@ This uncertainty is captured by defining a probabilistic transition function $\d
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\textwidth]{mdp}
-	\label{fig:mdp}
 	\caption{Schematic representation of an \acrshort{acr:mdp} agent which repeatedly selects an action $a \in A$ based on its current state $s \in \mathcal{S}$, after which it ends up in a state $s' \in \mathcal{S}$ and receives a reward $R(s, a, s')$ accordingly.}
+	\label{fig:mdp}
 \end{figure}
 
 % Reward structure
@@ -250,6 +250,9 @@ Putting these components together results in \autoref{def:mdp} below.
 	\label{def:mdp}
 	A \textit{\acrfull{acr:mdp}} is a 5-tuple $(\mathcal{S}, s_0, A, \delta, R)$, where $\mathcal{S}$ is a state space, $s_0 \in \mathcal{S}$ an initial state, $A = \{a_1, \ldots, a_m\}$ a finite set of actions to choose from, $\delta: \mathcal{S} \times A \times \mathcal{S} \mapsto [0, 1]$ a probabilistic transition function and $R: \mathcal{S} \times A \times \mathcal{S} \mapsto \mathbb{R}$ a reward function.
 \end{definition}
+
+In \autoref{fig:mdp} a schematic representation is shown of how an agent operates in an environment under the \acrshort{acr:mdp} framework.
+That is, in each decision epoch, the agent selects an action $a \in A$ and executes it in the environment causing a state transition from the current state $s \in \mathcal{S}$ to some state $s' \in \mathcal{S}$ where-after a reward $R(s, a, s')$ is received accordingly.
 
 % Policies
 In the context of \acrshort{acr:dtp}, \acrshortpl{acr:mdp} are used to find an optimal course of action, often referred to as a plan or \textit{policy} $\pi: \mathcal{S} \mapsto A$.
@@ -292,6 +295,8 @@ The observation function $\Omega$ defines the probability of observations from s
 
 %As the remaining chapters only consider systems and processes that are modeled using discrete-state Markov Models, these variations will not be further discussed in more detail.
 
+\newpage
+
 \subsection{Learning Markov Models}
 \label{sec:learning-markov-models}
 
@@ -300,7 +305,6 @@ There exist efficient methods for fitting a discrete stationary first-order Mark
 These methods estimate the transition distribution to fit a Markov Chain on a collected sequence of time-ordered states.
 One may obtain such a sequence by applying clustering algorithms such as $k$-means on the dataset and accordingly make predictions for each of the entries.
 
-\newpage
 The first-mentioned approach of likelihood maximization, works by estimating the transition probabilities by counting the observed transitions in the state sequence.
 That is, if we let $n_{ij}$ denote the number of observed transitions from state $s_j$ to state $s_i$, then the maximum-likelihood estimation of the corresponding transition probability is
 \begin{equation}
@@ -314,7 +318,7 @@ p(\mat{A}) = \prod_{j} \text{Dir}(\mat{A}_j \vert \alpha_j)
 \end{equation}
 parametrized by a vector $\arr{\alpha}$ with $\alpha_j > 0$ \cite{pasanisi2012estimating,barberBRML2012}.
 
-Due to the close nature of \acrshortpl{acr:mdp} these approaches can be applied almost directly to learn transition probabilities of discrete-state \acrshort{acr:mdp}, although more data will be required due to the addition of actions.
+Due to the close nature of \acrshortpl{acr:mdp} these approaches can be applied almost directly to learn transition probabilities of discrete-state \acrshortpl{acr:mdp}, although more data will be required due to the addition of actions.
 To learn partially observable models, on the other hand, one requires algorithms that work with a set of observations and estimate emission probabilities.
 For this thesis, however, we limit ourselves to learning fully observable \acrshortpl{acr:mdp}, but review these algorithms for learning \acrshortpl{acr:hmm} and \acrshortpl{acr:pomdp} in \autoref{sec:learning-probabilistic-models}.
 
@@ -323,7 +327,7 @@ For this thesis, however, we limit ourselves to learning fully observable \acrsh
 
 In \acrshort{acr:sdm} problems typically the aim is to determine a policy that maximizes the total expected value.
 In algorithmic planning techniques a probabilistic model of the environment, which includes estimates of the transition probabilities and rewards, is used to obtain an optimal policy by exploring its state-space towards a goal.
-On the other hand, in \acrfull{acr:rl} the optimal policy is learned while interacting with the environment and it is applied when one does not know the transition probabilities and rewards for its states upfront.
+On the other hand, in \acrfull{acr:rl} the optimal policy is learned while interacting with the environment and it is applied when one does not know the transition probabilities and rewards for the system in advance.
 Both techniques have in common that they iteratively update estimations of a value function to derive a policy.
 The main difference though is that in planning this progress is carried out based on simulated experience from a model, while in learning techniques this is based on real experience from executing agents in an environment \cite{sutton1998reinforcement}.
 All by all, planning and \acrshort{acr:rl} are closely related and various ideas can be exchanged between the two.
@@ -356,7 +360,7 @@ Most common is to prepare an \acrshort{acr:mdp} and apply exact dynamic programm
 The routine that is typically followed in \acrshort{acr:mdp} planning is depicted in \autoref{fig:model-based-routine}.
 The state space, transition function and action space are usually handcrafted, based on expertise or trial and error.
 The goal that should be fulfilled is translated into a reward model, mapping positive highly-valued rewards to desirable states and low rewards/costs to states that are not desirable or need to be avoided.
-These parts together form the \acrshort{acr:mdp} which is fed to a planning algorithm which is often referred to as \textit{\acrshort{acr:mdp} solver}.
+These parts together form the \acrshort{acr:mdp} which is fed to a planning algorithm, often referred to as an \textit{\acrshort{acr:mdp} solver}.
 From this solver, a policy $\pi$ is obtained, which is usually evaluated through simulations or automated model checking tools to check if the policy will satisfy the set of goals.%usually evaluated by applying it in one or more simulations, rather than using it in a real-world environment.
 %Another option is to make use of automated model checking tools which can verify whether the policy will satisfy the set goals. %TODO Add citation to book about model checking from APS and Bruno?
 After evaluating the current policy, one may choose to stick with the current policy or adjust the parameter settings of the solver or \acrshort{acr:mdp} model and obtain a new policy.
@@ -404,7 +408,7 @@ As can be seen in \autoref{alg:vi}, convergence is reached as soon as the change
 After such convergence has been reached, the policy can be defined by selecting the action $a \in A$ for each state $s \in \mathcal{S}$ that is most likely to maximize the collected rewards based on the value of $V_t(s)$.
 All by all, the algorithm works well when the state space is relatively small, but for large state spaces more storage is required and it may take longer to reach convergence.
 
-Note that an alternative formulation of the \acrshort{acr:vi} algorithm can be given that makes use of a $Q$-table instead of a value-function $V$.
+Note that an alternative formulation of the \acrshort{acr:vi} algorithm can be given that makes use of a $Q$-table instead of a value-function $V$ \cite{singh2000convergence}.
 In this formulation the entries $Q(s, a)$ are updated in each iteration for each state-action pair.
 The optimal policy can then be obtained directly by selecting the action with the maximum value in the $Q$-table for each action, though it requires more storage compared to a value function.
 
@@ -506,16 +510,16 @@ Comparing \acrshort{acr:lp} solutions to the specialized \acrshort{acr:vi} and \
 \subsubsection{Reinforcement Learning Techniques}
 \label{sec:reinforcement-learning}
 
-\acrfull{acr:rl} techniques work on real experience based on which they update the behavior of the agent that is defined by an action-selection policy. To do this they require direct interaction with the environment to obtain experience and update value function estimations accordingly during execution.
+\acrfull{acr:rl} techniques work on real experience based on which they update the behavior of the agent which is defined by an action-selection policy. To do this they require direct interaction with the environment to obtain experience and update value function estimations accordingly during execution.
 Although most planning algorithms cannot be used for learning problems, learning algorithms can be used for planning problems as they can make use of simulated experience.
 There are several techniques that exist, of which the most common ones are discussed in the remainder of this section.
 
 \paragraph{Q-Learning}
 \label{sec:q-learning}
 
-Q-Learning is a model-free reinforcement learning technique which discovers an action-selection policy by learning estimates of the optimal Q-values of an \acrshort{acr:mdp}.
+Q-Learning \cite{dayan1992q, sutton1998reinforcement} is a model-free reinforcement learning technique which discovers an action-selection policy by learning estimates of the optimal Q-values of an \acrshort{acr:mdp}.
 The technique starts off with a Q-table $Q$, which is arbitrarily initialized, containing the Q-values $Q(s,a)$ for each state-action pair $(s,a)$.
-In each point in time, the agent for which the Q-Learning technique is applied, is assumed to be in a certain state $s$, and chooses a next action $a$ to execute based on the current Q-value estimates.
+At each point in time the agent for which the Q-Learning technique is applied is assumed to be in a certain state $s$ and chooses a next action $a$ to execute based on the current Q-value estimates.
 After executing an action the agent ends up in a new state $s'$ and observes a certain reward $r$.
 The Q-table is then updated accordingly based on the following update rule:
 \[
@@ -555,7 +559,7 @@ A near-optimal policy can then be constructed by selecting the action with the h
 	\end{algorithmic}
 \end{algorithm}
 
-SARSA is another model-free \acrshort{acr:rl} algorithm which is similar to Q-Learning.
+SARSA \cite{sutton1998reinforcement} is another model-free \acrshort{acr:rl} algorithm which is similar to Q-Learning.
 While Q-Learning is an off-policy method which learns the value of the optimal policy, SARSA is an on-policy method which learns the value of the policy it currently follows in order to iteratively improve this policy.
 In each iteration, it simulates the action yielded by its policy and observes the reward and next state.
 Accordingly the $Q$-table is updated based on these observations as shown in \autoref{alg:sarsa}, which repeats itself with the observed $s'$ and action $a'$ imposed by the policy $\pi$ that is derived from $Q$.

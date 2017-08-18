@@ -135,10 +135,13 @@ Therefore it might be valuable to investigate how this could be exploited to ach
 
 We propose a framework for automating the development of probabilistic models in the form of \acrshortpl{acr:mdp} by applying learning algorithms on data describing the dynamics of the system under consideration.
 The data about the environment that is used by these learning algorithms is gathered prior to the model learning process in an exploration phase.
-In order to obtain accurate probabilistic models for the system under consideration, the parameters of the used learning algorithm should be tweaked in such way to optimize the performance in the execution of its tasks.
+%In order to obtain accurate probabilistic models for the system under consideration, the hyper-parameters of the used learning algorithm should be tweaked in such way to optimize the performance in the execution of its tasks.
+Although various algorithms for learning \acrshortpl{acr:mdp} from a dataset do already exist, the state-of-the-art lacks a method for setting the hyper-parameters of these algorithms so to best reflect the underlying system and maximize the performance in the execution of its tasks.
+
 %In order to obtain accurate probabilistic models for the system under consideration, the parameter-settings of the used model learning algorithm are iteratively tweaked towards a setting that maximizes the performance in the execution of the tasks expected to be performed.
-To achieve this we pose the adjustment of the learning algorithm parameters as an optimization task to maximize the performance that follows from executing plans derived from learned \acrshortpl{acr:mdp}.
-The optimization is performed by applying a technique known as \acrlong{acr:bo}, so that we define a probability distribution over functions to model the performance measure and iteratively sample parameter-settings towards a global maximizer of the performance.
+%To achieve this we pose the adjustment of the learning algorithm parameters as an optimization task to maximize the performance that follows from executing plans derived from learned \acrshortpl{acr:mdp}.
+To address this problem, the proposed framework poses the adjustment of the learning algorithm parameters as an optimization task of maximizing the performance that follows from executing plans derived from learned \acrshortpl{acr:mdp}.
+The optimization is performed by applying a technique known as \acrlong{acr:bo}, such that we define a probability distribution over functions to model the performance measure and iteratively sample parameter-settings towards a global maximizer of the performance.
 
 %To address model inadequacies that are due to incomplete data, we propose to incorporate the identification of insufficient exploration for the transitions from those states that are visited in the execution of obtained plans.
 %That is, for those learned models for which the data was observed to be incomplete, the observations of the performance for the corresponding parameter-settings are modeled as noisy or uncertain.
@@ -155,7 +158,7 @@ The framework is applied, tested and evaluated for the domain of mobile robot na
 A solution in this context is a policy which maps discretized robot poses into fine-grained navigation actions so to move a mobile robot to a certain goal location.
 Probabilistic models are acquired by applying unsupervised machine learning algorithms on execution traces (consisting of odometry data describing robot poses) obtained in an exploration phase.
 The optimization of the model is based on the performance of acquired models in simulations, which is expressed in terms of the time that has passed to reach multiple goal locations.
-Incomplete exploration data is here identified by inspecting the trajectories that are obtained from the execution of an optimal plan for an \acrshort{acr:mdp}.
+%Incomplete exploration data is here identified by inspecting the trajectories that are obtained from the execution of an optimal plan for an \acrshort{acr:mdp}.
 
 % labeled as noisy uncertain observation of the performance of the model
 

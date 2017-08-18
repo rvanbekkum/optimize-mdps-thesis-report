@@ -236,7 +236,7 @@ In the remainder of this section we explain the working of this routine of which
 
 \subsection{Learning Step}
 \label{sec:learning-step}
-%TODO Explain the components that we learn/derive (state space and transition function and accordingly reward functions) and which components are fixed (actions)
+%vTODO Explain the components that we learn/derive (state space and transition function and accordingly reward functions) and which components are fixed (actions)
 
 The routine can be viewed as consisting of two subsequent steps which are repeated until an \acrshort{acr:mdp} model that yields satisfactory performance is obtained.
 The first of these two main steps will be referred to as the \textit{learning step}, in which an \acrshort{acr:mdp} model is learned and its value is assessed.
@@ -253,7 +253,7 @@ The value of the model $V_{\mathcal{M}}$ is then determined by checking how well
 The sections below describes each of the components of this algorithm in more detail and most importantly defines the performance measure that is used for assessing the value of learned \acrshortpl{acr:mdp}.
 %\autoref{sec:performance-measure} describes in detail how the performance yielded by the learned \acrshortpl{acr:mdp} is assessed and how a fair comparison of different \acrshortpl{acr:mdp} may be achieved for this routine.
 
-%TODO Finish and refer to algorithm environment
+%~TODO Finish and refer to algorithm environment
 %vTODO Explain where each component of the MDP comes from
 %vTODO Devote a paragraph clearly on how the reward function is defined; multiply the reward with the discrepancy factor rather than the value 
 
@@ -300,7 +300,7 @@ The transition function is defined for the provided action space $A$ and earlier
 	%\draw [->, dashed, shorten >=0pt] (s3) to[right] node[auto] {} ++(1.3,0)
 	;
 	\end{tikzpicture}
-	\caption{One-time reward in goal state G in an \acrshort{acr:mdp} realized by a trap state T.}
+	\caption{One-time reward in goal state G in an \acrshort{acr:mdp} realized by an absorbing state T.}
 	\label{fig:goal-trap-state}
 \end{figure}
 
@@ -311,15 +311,24 @@ Therefore an estimate of the value of a model is assessed over a set $T$ of task
 The starting configurations are each mapped to corresponding states in the \acrshort{acr:mdp}, matching the quantization to state-space $\mathcal{S}$, so that one can define $\mathcal{S}_0 \subseteq \mathcal{S}$ as a set of initial states.
 Similarly, the goals are each mapped to states, such that one can define $\mathcal{S}_G \subseteq \mathcal{S}$ as a set of goals.
 One problem that emerges, however, is that there might not be a one-to-one correspondence between learned and true (goal) states, which leads to the possibility of small state spaces yielding high value while the goal states might not map well to the true goal states.
-To take care of this, we introduce a discrepancy factor $\xi \in [0, 1]$, which corresponds to the fraction of data points within the goal state that map to the true goal.
+To take care of this, we introduce a discrepancy factor $\xi \in [0, 1]$, which corresponds to the fraction of entries from the set $E$ within the goal state that map to the true goal.
 
 Let us then define $R_G$ as the set of reward functions $R_i$ for each $i \in \mathcal{S}_G$ in which a one-time reward (which is realized as depicted in \autoref{fig:goal-trap-state}) is received only in goal-state $i$.
-The reason the reward needs to be only obtainable once is to ensure that the expressions $V_\mathit{DTP}$ and $V_\mathit{SIM}$ are in the same range and can be therefore be used together.
-The reward function $R_i$ for some task with goal state $i \in \mathcal{S}_G$ is then defined as follows:
+Note that as such, an equivalent formulation can be given as a \textit{stochastic shortest path} problem \cite{GuillotS17} for the resulting \acrshortpl{acr:mdp}.
+The reason the reward needs to be only obtainable once is to ensure that the expressions $V_\mathit{DTP}$ and $V_\mathit{SIM}$ are in the same range and can be used together as discussed in the next section.
+%The reward function $R_i: \mathcal{S} \mapsto \mathbb{R}$ for some task with goal state $i \in \mathcal{S}_G$ is then defined as follows:
+%\begin{equation}
+%R_i(s) = 
+%\begin{cases}
+%\hspace{4pt} \xi & \text{if } s = i \\
+%\hspace{4pt} 0 & \text{otherwise}
+%\end{cases}
+%\end{equation}
+The reward function $R_i: \mathcal{S} \times A \times \mathcal{S} \mapsto \mathbb{R}$ for some task with goal state $i \in \mathcal{S}_G$ is then defined as follows:
 \begin{equation}
 R_i(s, a, s') = 
 \begin{cases}
-\hspace{4pt} \xi & \text{if } s' = i \land s \neq s'\\
+\hspace{4pt} \xi & \text{if } s' = i \\
 \hspace{4pt} 0 & \text{otherwise}
 \end{cases}
 \end{equation}
@@ -338,7 +347,7 @@ Therefore, one option is to make use of the value function $V$ obtained by a \ac
 Based on such a value function, an expression of how well the agent is expected to perform some task $t = (s_0, R) \in T_\mathcal{M}$ is:
 \begin{equation}
 \label{eq:vdtp}
-V_{\mathit{DTP},(s_0,R)} = V[s_0]
+V_{\mathit{DTP}, t=(s_0, R)} = V[s_0]
 \end{equation}
 where $s_0 \in \mathcal{S}$ is the initial state and $R$ the reward function of the \acrshort{acr:mdp} for the task.
 
@@ -348,7 +357,7 @@ Although performing simulations is more cost-expensive, it yields a better appro
 Accordingly, let us express the performance on some task in simulations as:
 \begin{equation}
 \label{eq:vsim}
-V_{\mathit{SIM}, (s_0, R)} = \gamma^{k} \cdot R[i]
+V_{\mathit{SIM}, t=(s_0, R)} = \gamma^{k} \cdot R[i]
 \end{equation}
 where $s_0 \in \mathcal{S}$ is the initial state, $R$ the reward function, $\gamma$ the discount factor, $i \in \mathcal{S}$ the goal state and $k$ the number of steps taken to reach the goal.
 
@@ -571,12 +580,12 @@ Therefore, this first phase is relatively cost-cheap, and although it abstracts 
 Hence, the goal of this first phase is to narrow down the search space to a subspace of learning parameters more likely to yield high performance.
 
 The block diagram in \autoref{fig:phase-1} depicts the main steps of this first phase. The execution traces from the exploration are used to obtain \acrshortpl{acr:mdp} by applying the learning algorithms given a parameter-setting $\theta$.
-The value of a learned model $\mathcal{M}$ is then only based on the value functions $V$ for a set of tasks $T$ the system is expected to perform.
+The value of a learned model $\mathcal{M}$ is then only based on the value functions $V$ for a set of tasks $T_\mathcal{M}$ the system is expected to perform.
 The value of model $\mathcal{M}$ is thus computed as:
 \begin{equation} 
-V_{\mathcal{M}} = \frac{\sum_{t \in T} V_{\mathit{DTP}, t}}{|T|}
+V_{\mathcal{M}} = \frac{\sum_{t \in T_\mathcal{M}} V_{\mathit{DTP}, t}}{|T_\mathcal{M}|}
 \end{equation}
-where each task $t \in T$ is defined in terms of an initial state and reward function.
+where each task $t \in T_\mathcal{M}$ is defined in terms of an initial state and reward function.
 Based on the gathered evidence new parameter-settings $\theta$ are sampled iteratively, which are those settings for which the utility is the highest in the acquisition function used for \acrshort{acr:bo}.
 This continues until a stopping condition has been met, where in this first phase stopping after a fixed number of iterations should be acceptable, as the goal is only to narrow down the search space.
 At the end of the first phase, the resulting posterior \acrshort{acr:gp} distribution is taken and used as a prior for the next optimization phase.
