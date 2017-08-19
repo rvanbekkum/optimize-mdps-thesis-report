@@ -47,7 +47,14 @@ This posterior can be viewed as an estimation of the objective function $f$, som
 
 % Acquisition function
 To decide on which $x \in \mathcal{X}$ to sample and gather a new observation $f(x)$ from next, a so-called \textit{acquisition function} $a: \mathcal{X} \mapsto \mathbb{R}$ is used, which assigns a certain utility to evaluating $f$ at some particular $x \in \mathcal{X}$ given the evidence set $\mathcal{D}$ at that time.
-This acquisition function should be defined such that it captures a correct balance between \textit{exploration} (to sample from areas with high uncertainty) and \textit{exploitation} (to sample from areas likely to improve on prior observations). For this reason many different classes of acquisition functions exist, which are discussed in little more detail in \autoref{sec:bayesian-optimization-prior-acquisition}.
+This acquisition function should be defined such that it captures a correct balance between \textit{exploration} (to sample from areas with high uncertainty) and \textit{exploitation} (to sample from areas likely to improve on prior observations). For this reason many different classes of acquisition functions exist, which are discussed in detail in \autoref{sec:bayesian-optimization-prior-acquisition}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{bo_toy_example_v2}
+	\caption{An example of using \acrlong{acr:bo} on a toy example problem. The plots show a \acrshort{acr:gp} approximation of objective function $f$ over four iterations based on $N$ observations. The plots also show the corresponding \acrshort{acr:gp-ucb} acquisition function $a$ for these \acrshort{acr:gp} approximations, which yield high utility for those areas of the domain $\mathcal{X}$ with high prediction uncertainty.}
+	\label{fig:bo-toy-example}
+\end{figure}
 
 % General Formulation Algorithm
 
@@ -67,8 +74,16 @@ This acquisition function should be defined such that it captures a correct bala
 	\end{algorithmic}
 \end{algorithm}
 
+The procedure is illustrated by a toy example in \autoref{fig:bo-toy-example}  with the goal of retrieving the global maximum of the usually unknown objective function $f$.
+The prior and acquisition function in this example are set to some of the most common options (i.e., a zero-mean \acrlong{acr:gp} and \acrshort{acr:gp-ucb} function).
+The plots show four subsequent iterations which each add a new observation of the objective function $f$ and update the posterior/surrogate function accordingly.
+The sample for each next iteration is selected at the point with the highest utility in the acquisition function $a$, in the plots denoted by a star symbol.
+
 The general formulation of the \acrshort{acr:bo} framework is presented in \autoref{alg:bayesian-optimization}.
-For an implementation of the algorithm still three components need to be defined, which are the domain $\mathcal{X}$ of $f$, the prior over $f$, and last of all the acquisition function $u$.
+An implementation of this framework still requires one to define three components, which are the domain $\mathcal{X}$ of $f$, the prior over $f$, and last of all the acquisition function $a$.
+The next section discusses the various options that exist for the latter two components in detail.
+
+\newpage
 
 \subsection{Choice of Prior and Acquisition Function}
 \label{sec:bayesian-optimization-prior-acquisition}
@@ -91,7 +106,7 @@ f \sim GP(m(\cdot), K(\cdot, \cdot))
 \end{equation}
 so that the \acrshort{acr:gp} is completely specified by a mean function $m$ and a \textit{kernel} function $K$ defining the covariance.
 The mean function $\mu$ is typically initialized by a constant mean, usually zero, due to the assumption that all points in the parameter space are equally likely and because the conditional mean can still be flexibly specified by the kernel function $K$ \cite{kawaguchi2015bayesian}.
-\newpage
+
 The choice of the kernel or covariance function of the \acrshort{acr:gp} determines the smoothness of the estimations on the performance and confidence intervals of unexplored samples in the parameter space.
 According to the various literature in the field of \acrlong{acr:bo} the most common kernels are said to be the \textit{squared exponential} (also known as \textit{radial basis function (RBF)} or Gaussian) kernel and Mat\'ern kernel.
 However, the squared exponential kernel turns out unrealistically smooth for practical applications \cite{snoek2012practical} and therefore would require properly selecting its hyper-parameters.

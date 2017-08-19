@@ -1,7 +1,7 @@
 \chapter{Introduction}
 \label{ch:introduction}
 
-In numerous real-world settings, such as traffic light control \cite{wiering2004intelligent}, mobile robot navigation \cite{MartinezCantin2009} or decision-making in medical treatment \cite{schaefer2005modeling}, it is quite common to be faced with uncertainty about the effect of an action (possibly selected based on incomplete or faulty).
+In numerous real-world settings, such as traffic light control \cite{wiering2004intelligent}, mobile robot navigation \cite{MartinezCantin2009} or decision-making in medical treatment \cite{schaefer2005modeling}, it is quite common to be faced with uncertainty about the effect of an action (possibly selected based on incomplete or faulty observations).
 Therefore, when plans are provided to impose a course of action for such settings, they need to be more sophisticated, anticipating for the observations that might be made and being able to act accordingly.
 That is, a proper trade-off should be made between the different possible outcomes and the costs of executing a plan.
 
@@ -136,12 +136,13 @@ Therefore it might be valuable to investigate how this could be exploited to ach
 We propose a framework for automating the development of probabilistic models in the form of \acrshortpl{acr:mdp} by applying learning algorithms on data describing the dynamics of the system under consideration.
 The data about the environment that is used by these learning algorithms is gathered prior to the model learning process in an exploration phase.
 %In order to obtain accurate probabilistic models for the system under consideration, the hyper-parameters of the used learning algorithm should be tweaked in such way to optimize the performance in the execution of its tasks.
-Although various algorithms for learning \acrshortpl{acr:mdp} from a dataset \cite{shatkay1997learning, welch2003hidden, nikovski2002state} do already exist, the state of the art lacks a method for setting the hyper-parameters of these algorithms so to best reflect the underlying system and maximize the performance in the execution of its tasks.
+Although various algorithms for learning \acrshortpl{acr:mdp} offline from a dataset \cite{shatkay1997learning, welch2003hidden, nikovski2002state} do already exist, the state of the art lacks a method for setting the hyper-parameters of these algorithms so to best reflect the underlying system and maximize the performance in the execution of its tasks.
 
 %In order to obtain accurate probabilistic models for the system under consideration, the parameter-settings of the used model learning algorithm are iteratively tweaked towards a setting that maximizes the performance in the execution of the tasks expected to be performed.
 %To achieve this we pose the adjustment of the learning algorithm parameters as an optimization task to maximize the performance that follows from executing plans derived from learned \acrshortpl{acr:mdp}.
 To address this problem, the proposed framework poses the adjustment of the learning algorithm parameters as an optimization task of maximizing the performance that follows from executing plans derived from learned \acrshortpl{acr:mdp}.
-The optimization is performed by applying a technique known as \acrlong{acr:bo}, such that we define a probability distribution over functions to model the performance measure and iteratively sample parameter-settings towards a global maximizer of the performance.
+The optimization is performed by applying a technique known as \acrfull{acr:bo}, such that we define a probability distribution over functions to model the performance measure and iteratively sample parameter-settings towards a global maximizer of the performance.
+Although algorithms that employ the same framework for optimizing the parameters of probabilistic models \cite{ghavamzadeh2015bayesian, guez2012efficient} or policy search \cite{deisenroth2011pilco, wilson2014using} do exist, these are online approaches that do not utilise the available data prior to interacting with the real world environment.
 
 %To address model inadequacies that are due to incomplete data, we propose to incorporate the identification of insufficient exploration for the transitions from those states that are visited in the execution of obtained plans.
 %That is, for those learned models for which the data was observed to be incomplete, the observations of the performance for the corresponding parameter-settings are modeled as noisy or uncertain.
@@ -149,7 +150,7 @@ The optimization is performed by applying a technique known as \acrlong{acr:bo},
 
 To achieve a more cost-effective optimization, the parameter search space is first narrowed down by a pre-processing step.
 In this step assessments of the model value are made on a more abstract level (i.e., based on the computed value function for an \acrshort{acr:mdp}).
-The posterior that follows from this step is then used to define a prior over the true model value used for the following step.
+The posterior that follows from this step is then used to steer the acquisition in the main optimization step.
 
 In attempt to further improve the learned models, a post-processing step is performed that aims to identify and fix discrepancies between the model and the real-world.
 This post-processing step increases the resolution for those areas of the state-space when it identifies the outcomes of actions in simulations do not match the learned transition probabilities.
@@ -180,7 +181,7 @@ Finally, we focus on the domain of mobile robot navigation to evaluate and test 
 One of the important aspects to consider, is which data should be collected to describe the dynamics of the system to learn models from this data.
 For our implementation we choose to collect data about the robot's poses from internal odometry, but for other applications we might not be able to describe the states and transitions of the system through a geometric model and may need other learning algorithms than the clustering algorithms we use for our application.
 An example of such applications might be that of learning \acrshortpl{acr:mdp} for traffic light control \cite{wiering2004intelligent, delgado2011efficient}, in which, for instance, lane-turn probabilities could be learned from a data-set.
-As a side note, this application seems particularly appropriate to be approached in combination with \acrshort{acr:rl} techniques, as it could adapt to the changes that occur over time.
+Note that this application seems particularly appropriate to be approached in combination with \acrshort{acr:rl} techniques, so that the system is able to adapt to changes that occur over time.
 
 % POMDPs: Restricted to MDPs, but could possible be extended to deal where the states are cannot be directly observed and should be inferred from observations.
 % Field of application: We will discuss how the proposed method could be applied to other domains, although we will focus on the domain of mobile robot navigation to evaluate and test our method.
@@ -195,7 +196,7 @@ This section describes the topics of the remaining chapters and how they relate 
 In \autoref{ch:background} we discuss the required background for both the planning and optimization aspect of this thesis.
 First of all, in \autoref{sec:decision-theoretic-planning}, the chapter concretizes the type of problems dealt with in \acrshort{acr:dtp}. 
 Accordingly, this chapter discusses the background on how dedicated probabilistic models can be used to reflect uncertainty in the systems under consideration.
-It presents how these probabilistic models can be used by existing planning algorithms and how this relates to and differs from  \acrlong{acr:rl}.
+It presents how these probabilistic models can be used by existing planning algorithms and how this relates to and differs from \acrshort{acr:rl} techniques.
 Secondly, in \autoref{sec:bayesian-optimization}, the chapter discusses a method known as \acrlong{acr:bo} which we use for the optimization of the parameters of the model learning algorithms used in the proposed framework.
 We formally describe how this method works and how it is applies to our problem of developing probabilistic models for planning, supported by a number of successful applications for learning and planning.
 %For the optimization of the parameters of learning algorithms we use a method known as \acrlong{acr:bo}. In \autoref{ch:bayesian-optimization} we formally describe how this method works and how it is relevant to sequential decision making, supported by a number of successful applications for learning and planning.
