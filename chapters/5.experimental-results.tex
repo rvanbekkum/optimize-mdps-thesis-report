@@ -48,7 +48,7 @@ In the remainder of this section, we briefly explain for what part of the implem
 \end{table}
 
 \subsubsection{Python Libraries}
-\label{sec:software-packages}
+
 The module has been implemented in Python 2.7, due to its easily usable libraries for machine learning and plotting and other widely available packages, but also because of its convenient capability of interacting with the simulation software used.
 
 For \acrshort{acr:mdp} planning, the \texttt{pymdptoolbox} library \cite{cordwellpymdptoolbox}, is used, which implements various planning algorithms for discrete-time \acrshortpl{acr:mdp}. 
@@ -62,40 +62,45 @@ For \acrlong{acr:bo} the \texttt{bayesian-optimization} library \cite{nogueiraba
 The further main Python packages used, have been listed in \autoref{tab:software-packages} and include \texttt{numpy} for the storage and manipulation of arrays and matrices used in the implementation and \texttt{matplotlib} for creating the various plots shown in this chapter.
 
 \subsubsection{Simulator and Mobile Robot}
-\label{sec:simulator}
 
-%TODO Maybe remove these figures and rather show a figure of the simulator with the SCITOS robot?
+%vTODO Maybe remove these figures and rather show a figure of the simulator with the SCITOS robot?
 % Make figure with two subfigures
 \begin{figure}[t]
 \centering
 \begin{minipage}{0.4\textwidth}
 	\centering
+	\vspace{21pt}
 	\includegraphics[width=0.3\linewidth]{scitosa5_1_model}
+	\vspace{4pt}
 	\captionof{figure}{The SCITOS-A5, mobile service robot by Metralabs GmbH \cite{Metralabs}}
 	\label{fig:scitosa5}
 \end{minipage}
 \qquad
-\begin{minipage}{0.4\textwidth}
+%%\begin{minipage}{0.4\textwidth}
+%%	\centering
+%%	\vspace{23pt}
+%%	\includegraphics[width=1.1\linewidth]{scitosa5_2_TIM}
+%%	\vspace{-10pt}
+%%	\captionof{figure}{The SCITOS-A5 in one of its application environments. Shown here is robot \textit{TIM}, used for leading visitors of the German Technical Museum in Berlin through the exhibits \cite{Metralabs}.}
+%%	\label{fig:scitosa5_2}
+%%\end{minipage}
+\begin{minipage}{0.525\textwidth}
 	\centering
-	\vspace{23pt}
-	\includegraphics[width=1.1\linewidth]{scitosa5_2_TIM}
+	\vspace{10pt}
+	\includegraphics[width=1\linewidth]{simulator}
 	\vspace{-10pt}
-	\captionof{figure}{The SCITOS-A5 in one of its application environments. Shown here is robot \textit{TIM}, used for leading visitors of the German Technical Museum in Berlin through the exhibits \cite{Metralabs}.}
-	\label{fig:scitosa5_2}
+	\captionof{figure}{The SCITOS-A5 robot in a running MORSE simulation of the \texttt{tum\_kitchen} environment.}
+	\label{fig:simulator}
 \end{minipage}
+\quad
 \end{figure}
 
-For performing simulations the \textit{MORSE} simulator \cite{morse_simpar_2012}, a generic simulator for academic robots, has been used in combination with the \textit{ROS} middleware to control the robot in the environment.
-The simulations are performed with the Metralabs GmbH \textit{SCITOS-A5} \cite{Metralabs}, depicted in \autoref{fig:scitosa5}, an industry-standard mobile service robot designed specifically for interacting with humans and guiding them to products or exhibits (e.g., see \autoref{fig:scitosa5_2}).
+For performing simulations the \textit{MORSE} simulator \cite{morse_simpar_2012}, a generic simulator for academic robots, has been used in combination with the \textit{ROS} middleware to control the robot in an environment.
+The simulations are performed with the Metralabs GmbH \textit{SCITOS-A5} \cite{Metralabs}, depicted in \autoref{fig:scitosa5}, an industry-standard mobile service robot designed specifically for interacting with humans and guiding them to products or exhibits.
 This robot is equipped with several sensors which can be used for navigation and \acrfull{acr:hri}, such as an omni-directional camera, 24 ultrasonic sensors, a collision sensor and a SICK laser range finder \cite{gross2008shopbot}.
 As described in \autoref{sec:datasets} we are particularly interested in the odometric capabilities of the robot for the implementation that has been used in our experiments.
+\autoref{fig:simulator} shows this robot in a MORSE simulation of one of the office environments used for our experiments.
 The \texttt{strands-desktop} meta-package (developed as part of the \textit{STRANDS} project \cite{hawes2016strands}) was used to obtain all required simulation software mentioned above with ease, in which the environments used in the simulations of our experiments are contained as well.
-
-
-
-%
-%\vspace{12pt}
-%\noindent\fbox{\textbf{TODO:} Not completely finished yet.}
 
 %Software used for the implementation:
 %\begin{itemize}
@@ -130,7 +135,7 @@ The \texttt{strands-desktop} meta-package (developed as part of the \textit{STRA
 	\label{tab:datasets-environments}\centering
 	\begin{tabular}{|l|r|r|}
 		\hline
-		\textbf{Environment Name} & \textbf{Estimated Area (\si{\metre\squared})} & \textbf{Number of Entries in Dataset} \\
+		\textbf{Environment Name} & \textbf{Approximate Area (\si{\metre\squared})} & \textbf{Number of Entries in Dataset} \\
 		\hline
 		\texttt{tum\_kitchen}& \num{100}              &   \num{4370}                                    \\
 		\hline
@@ -145,8 +150,8 @@ For our implementation and the experiments that have been carried out, execution
 This exploration is performed inside the simulator both for a relatively small environment (i.e., \texttt{tum\_kitchen}, based on a university kitchen of the Technical University of M\"unchen) and  large environment (i.e., \texttt{uol\_bl}) obtained from a repository of the \textit{STRANDS} project.
 
 In the exploration a new entry is recorded in a file after each time step of $t = \SI{1.0}{\second}$, which each contain the robot's pose based on odometric readings with its location as $x$ and $y$ position and its orientation described by the $yaw$.
-Apart from that each entry also stores the action that is executed next from the current pose.
-Thus, accordingly the next entry tells us the robot's pose after the action in the previous entry has been executed.
+Apart from that, each entry also stores the action that is executed next from the current pose.
+As a result, the next entry tells us the robot's pose after the action in the previous entry has been executed.
 
 In \autoref{tab:datasets-excerpt} an excerpt of one of the datasets is shown, which might give a clearer picture of the data that has been gathered and the format in which it has been stored.
 The possible actions of the robot correspond to a discrete set of robot movements in $8$ different directions, being \textit{south}, \textit{south-east}, \textit{east}, \textit{north-east}, \textit{north}, \textit{north-west}, \textit{west} and \textit{south-west}.
@@ -164,7 +169,6 @@ This implementation optimizes for an \acrshort{acr:mdp} that maximizes the yield
 In this section the relevant details of each part of the implementation are discussed.
 
 \subsubsection{Learning Step}
-\label{sec:learning-step-robot}
 
 For learning discrete-state \acrshortpl{acr:mdp} from the acquired execution traces, a likelihood maximization approach is applied based on a state space obtained from clustering algorithms.
 That is, the state-space is first obtained by applying a clustering algorithm (i.e., $k$-means, \acrshort{acr:gmm}) with the given $\theta$ as its parameter-setting and geometric positions of the execution traces as its training set.
@@ -176,16 +180,16 @@ The model value is assessed based on how fast (i.e., expressed by the number of 
 For our domain we define each task as navigating from a start location to a goal location in the environment, each presented as a pair of coordinates, as fast as possible.
 We translate these tasks into something that can be fed to the learned \acrshort{acr:mdp}, first of all, by setting the initial state of the \acrshort{acr:mdp} to the state predicted by the selected clustering algorithm for the start coordinates.
 Similarly, a goal state is obtained, and accordingly a reward function for the \acrshort{acr:mdp} is defined by setting a one-time reward for this state.
-To avoid small state spaces (in which goal states do not map directly to true goals) yielding high value, a discrepancy factor is computed and used as described in \autoref{sec:performance-measure}.
+To avoid small state spaces (in which goal states do not map directly to true goals) yielding high value, a discrepancy factor is computed and used as described in \autoref{sec:learning-step}.
 
 For each task, a value function and policy is computed for the \acrshort{acr:mdp} using the \acrshort{acr:vi} algorithm.
-Based on the computed value functions and simulations following the corresponding policies, the value $V_\mathcal{M}$ of the learned \acrshort{acr:mdp} $\mathcal{M}$ is computed as in \autoref{eq:vm} of \autoref{sec:performance-measure}.
+Based on the computed value functions and simulations following the corresponding policies, the value $V_\mathcal{M}$ of the learned \acrshort{acr:mdp} $\mathcal{M}$ is computed as in \autoref{eq:vm} of \autoref{sec:learning-step}.
 In the simulations, for each task, the robot is first put at the start location defined by the task and then moves in the direction imposed by the computed policy at each discrete time step.
 It repeats this until the goal state has been reached.
 At that point, however, the ``true'' goal might not have been reached by the robot.
 This is a problem, because if we would quit the simulation as soon as the goal state has been reached, then \acrshortpl{acr:mdp} with state spaces that are too simple would yield high value.
-To take this into account, as soon as the robot reaches the goal state, it checks if it is inside a designer-specified range of the goal location.
-If not, the robot is moved into the direction of the goal location and the same check is performed again.
+To take this into account, as soon as the robot reaches the goal state, it checks if it is inside a designer-specified range of the goal location (i.e., the \textit{goal radius} in \autoref{tab:designer-settings}).
+If not, the robot is moved into the direction of the goal location and the same check is performed.
 
 To avoid the simulations running endlessly on a certain task, time-outs are defined at which the simulation is quit.
 First of all, a (relatively short) \textit{goal time-out} is defined for reaching the goal from the goal state, which clearly cannot take too long.
@@ -210,15 +214,30 @@ Further, additional data is logged in each iteration, which is the total iterati
 	% Output: Model value, time
 % Logging
 
-\subsubsection{Optimization Step}
-\label{sec:optimization-step-robot}
+\begin{table}
+	\caption{Settings for goal radius, parameter domain $\Theta$, time-outs and discount factor used for each of the environments in the experiments.}
+	\label{tab:designer-settings}\centering
+	\begin{tabular}{|l|r|r|r|r|r|r|}
+		\hline
+		\textbf{Environment} & \textbf{Goal Radius} & \textbf{Parameter} & \textbf{Goal T/O} & \textbf{Stuck T/O} & \textbf{Global T/O} & \textbf{Discount}  \\
+		
+		& \textbf{(\si\meter)} & \textbf{Domain $\Theta$} & (\si{\second}) & (\si{\second}) & (\si{\second}) & \textbf{Factor $\gamma$}\\
+		\hline
+		\texttt{tum\_kitchen} & \num{0.5} & $[2, 300]$ & \num{10} & \num{10} & \num{30} & \num{0.95} \\
+		\hline
+		\texttt{uol\_bl} & \num{1.0} & $[100, 1000]$ & \num{10} & \num{10} & \num{120} & \num{0.95}\\
+		\hline
+	\end{tabular}
+\end{table}
 
-For the implementation of the framework for this domain we make use of the \acrshort{acr:bo} framework for optimization based on a \acrshort{acr:gp} with a Mat\'ern 5/2 kernel.
+\subsubsection{Optimization Step}
+
+For the implementation of the framework for this domain we make use of the \acrshort{acr:bo} framework for optimization based on a \acrshort{acr:gp} with a Mat\'ern 3/2 kernel.
 As initially there is no knowledge about the model value given a parameter-setting $\theta$, first, a number of random settings are selected for which yielded performance is assessed and stored in an evidence set.
 In the following iterations new settings for $\theta$ are chosen with maximum utility in the selected acquisition function, which is repeated for a fixed number of iterations.
 
-For the extension of the framework described in \autoref{sec:cost-effective-optimization} the first phase is executed as an individual optimization procedure, where the model values are solely based on computed value functions and no simulations are performed.
-The resulting posterior of this first phase is then used to define the prior for the second phase with the aim of finding a global maximizer faster than without this pre-processing.
+The first phase of the multi-phase framework described in \autoref{sec:multi-phase-framework} is executed as an individual optimization procedure, where the model values $V_\mathcal{M}$ are solely based on computed value functions and no simulations are performed.
+The resulting posterior of this first phase is then used in the acquisition of the first few samples in the second phase with the aim of finding a global maximizer faster.
 
 %% OPTIMIZATION STEP
 % Initial points (random points)
@@ -233,26 +252,70 @@ The resulting posterior of this first phase is then used to define the prior for
 %	\item Simulations of following policy
 %\end{itemize}
 
+\afterpage{
+	\begin{figure}
+		\centering
+		%\captionsetup{font=small}
+		\captionsetup[subfigure]{font=footnotesize}
+		%\captionsetup[subfigure]{justification=centering}
+		\begin{subfigure}{\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{demo_clustering_v2}
+			\caption{State space of an \acrshort{acr:mdp} with $112$ states for the \texttt{tum\_kitchen} environment learned by $k$-Means clustering. The plot depicts one of the tasks the mobile robot is expected to perform. The start location maps to a single state, labeled `$\mathsf{1}$'. The goal center maps to the state labeled `$\mathsf{51}$', while the goal area intersects with multiple states.}
+			\label{fig:demo-clustering}
+		\end{subfigure}
+		
+		\bigskip
+		
+		\begin{subfigure}{\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{trajectory_v4}
+			\caption{A MORSE simulation of the \texttt{tum\_kitchen} environment, showing the trajectory the SCITOS-A5 robot will follow to accomplish the task depicted in \autoref{fig:demo-clustering} according to the policy computed from the \acrshort{acr:mdp} using the \acrshort{acr:vi} algorithm.}
+			\label{fig:demo-trajectory}
+		\end{subfigure}
+		\bigskip
+		
+		\caption{Demonstration of the implementation learning the state-space of an \acrshort{acr:mdp} and using it for path planning for a task in the \texttt{tum\_kitchen} environment.}
+		\label{fig:demonstration}
+	\end{figure}
+	\clearpage
+}
+
+\newpage
+
+\subsection{Demonstration}
+\label{sec:demonstration}
+
+To provide the reader with a better insight as to how the implementation utilizes execution traces to learn \acrshortpl{acr:mdp} and use these for path planning, a demonstration is given of a single iteration of the framework, supported by the illustrations in \autoref{fig:demonstration}.
+For this demonstration, let us assume that the optimization step provides us with a new parameter-setting $\theta = 112$, specifying the number of states of the \acrshort{acr:mdp}, to evaluate.
+
+First, given this parameter-setting a state-space $\mathcal{S}$ is now learned by a $k$-Means clustering on the execution traces $E$ as shown in \autoref{fig:demo-clustering}.
+Correspondingly, the transition function $\delta$ is fitted by maximum likelihood and the set of tasks $T$ are mapped to this state-space.
+To illustrate, let us take the task of moving from the position $(-1.9, 1.05)$ to $(2.0, -5.6)$, mapping to the states labeled with `$\mathsf{1}$' and `$\mathsf{51}$' respectively as shown in \autoref{fig:demo-clustering}.
+Translating this into an initial state $s_0$ and reward function $R$ as described in \autoref{sec:learning-step}, results in an \acrshort{acr:mdp} $(\mathcal{S}, s_0, A, \delta, R)$ that can be solved using the \acrshort{acr:vi} algorithm for a policy (and value function).
+Then to assess the performance in the simulator, this policy is employed, so that the robot will follow the trajectory as shown in \autoref{fig:demo-trajectory} (n.b., the robot might slip slightly in the simulation).
+Then, with $k$ being the total number of time-steps, a performance measure for this task is obtained through \autoref{eq:vsim}.
+
+%\begin{figure}[t!]
+%	\centering
+%	\includegraphics[width=0.9\textwidth]{demo_clustering_v2}
+%	\caption{Clustering}
+%	\label{fig:demo-clustering}
+%\end{figure}
+%
+%\begin{figure}[t!]
+%		\centering
+%		\includegraphics[width=\linewidth]{trajectory_v4}
+%		\caption{Trajectory.}
+%		\label{fig:demo-trajectory}
+%\end{figure}
+
+%\newpage
+
 \section{Experiment Configurations}
 \label{sec:scenarios}
 
-\begin{table}
-	\caption{Settings for goal radius, parameter domain $\Theta$, time-outs and discount factor used for each of the environments in the experiments.}
-	\label{tab:designer-settings}\centering
-	\begin{tabular}{|l|r|r|r|r|r|r|}
-		\hline
-		\textbf{Environment} & \textbf{Goal Radius} & \textbf{Parameter} & \textbf{Goal T/O} & \textbf{Stuck T/O} & \textbf{Global T/O} & \textbf{Discount}  \\
-
-		& \textbf{(\si\meter)} & \textbf{Domain $\Theta$} & (\si{\second}) & (\si{\second}) & (\si{\second}) & \textbf{Factor $\gamma$}\\
-		\hline
-		\texttt{tum\_kitchen} & \num{0.5} & $[2, 300]$ & \num{10} & \num{10} & \num{30} & \num{0.95} \\
-		\hline
-		\texttt{uol\_bl} & \num{1.0} & $[100, 1000]$ & \num{10} & \num{10} & \num{120} & \num{0.95}\\
-		\hline
-	\end{tabular}
-\end{table}
-
-\begin{table}
+\begin{table}[t!]
 	\caption{Details on the different configurations used for the experiments on the base (single phase) framework.}
 	\label{tab:configurations-base}\centering
 	\begin{tabular}{|l|l|r|l|l|r|}
@@ -300,8 +363,8 @@ The resulting posterior of this first phase is then used to define the prior for
 	\end{tabular}
 \end{table}
 
-\begin{table}
-	\caption{Details on the different configurations used for the experiments on the multiphase framework.}
+\begin{table}[t!]
+	\caption{Details on the different configurations used for the experiments on the multi-phase framework.}
 	\label{tab:configurations-multi}\centering
 	\begin{tabular}{|l|l|r|l|l|r|}
 		\hline
@@ -309,25 +372,27 @@ The resulting posterior of this first phase is then used to define the prior for
 		\hline 
 		13 & \texttt{tum\_kitchen} & 0.0 & \acrshort{acr:mei} & $k$-Means & 100\% \\
 		\hline
-		14 & \texttt{tum\_kitchen} & 0.25 & \acrshort{acr:mei} & $k$-Means & 100\% \\
+		14 & \texttt{tum\_kitchen} & 0.0 & \acrshort{acr:gp-ucb} & $k$-Means & 100\% \\
 		\hline
-		15 & \texttt{tum\_kitchen} & 0.50 & \acrshort{acr:mei} & $k$-Means & 100\% \\
+%		15 & \texttt{tum\_kitchen} & 0.50 & \acrshort{acr:mei} & $k$-Means & 100\% \\
+%		\hline
+		15 & \texttt{uol\_bl} & 0.0 & \acrshort{acr:mei} & $k$-Means & 100\% \\
 		\hline
-		16 & \texttt{uol\_bl} & 0.0 & \acrshort{acr:mei} & $k$-Means & 100\% \\
+		16 & \texttt{uol\_bl} & 0.0 & \acrshort{acr:gp-ucb} & $k$-Means & 100\% \\
 		\hline
-		17 & \texttt{uol\_bl} & 0.25 & \acrshort{acr:mei} & $k$-Means & 100\% \\
-		\hline
-		18 & \texttt{uol\_bl} & 0.50 & \acrshort{acr:mei} & $k$-Means & 100\% \\
-		\hline
+%		17 & \texttt{uol\_bl} & 0.25 & \acrshort{acr:mei} & $k$-Means & 100\% \\
+%		\hline
+%		18 & \texttt{uol\_bl} & 0.50 & \acrshort{acr:mei} & $k$-Means & 100\% \\
+%		\hline
 	\end{tabular}
 \end{table}
 
 In this section an overview is provided of the experiments that have been performed with the robot navigation implementation of the framework.
 \autoref{tab:designer-settings} shows the auxiliary settings used in the experiments for aspects like time-outs, parameter domain and goal radius for each of the environments.
-Experiments are conducted for both the \textit{base} framework and \textit{multiphase} framework with each of the environments.
+Experiments are conducted for both the \textit{base} framework and \textit{multi-phase} framework with each of the environments.
 The configurations for these experiments are shown in \autoref{tab:configurations-base} and \autoref{tab:configurations-multi} respectively.
 
-The configurations were chosen in such with the aim of being able to identify how the results are affected based on changes in the used acquisition function, weight factor, clustering algorithm and the part of the dataset used.
+The configurations were chosen with the aim of being able to identify how the results are affected based on changes in the used acquisition function, weight factor, clustering algorithm and the part of the dataset used.
 In each of these experiments data is stored that comprise the generated evidence sets, log-files and the \acrshortpl{acr:mdp} that yield the best performance.
 In the next section the obtained results for each of these configurations are shown and discussed accordingly.
 
@@ -361,10 +426,11 @@ In the next section the obtained results for each of these configurations are sh
 
 \section{Results and Discussion}
 \label{sec:results}
+%TODO Fix order of figures and update text
 
 From the experiments that have been performed according to the configurations presented in \autoref{sec:scenarios} results have been obtained that are discussed in this section.
 First, we present and review the results obtained for the experiments that follow the base framework in \autoref{sec:base-framework-results}.
-Then, in \autoref{sec:multiphase-framework-results} the results for the multiphase-extension of the framework are presented and discussed. Each of the plots presented in these sections show the resulting posterior that follows from the evidence gathered in the \acrshort{acr:bo} in which $\theta$ is the parameter-setting for model learning and $f$ is the (unknown) objective function mapping these to model values.
+Then, in \autoref{sec:multiphase-framework-results} the results for the multi-phase extension of the framework are presented and discussed. Each of the plots presented in these sections show the resulting posterior that follows from the evidence gathered in the \acrshort{acr:bo} in which $\theta$ is the parameter-setting for model learning and $f$ is the (unknown) objective function mapping these to model values.
 
 \subsection{Base Framework}
 \label{sec:base-framework-results}
@@ -373,26 +439,31 @@ Then, in \autoref{sec:multiphase-framework-results} the results for the multipha
 	% ID = 1
 	\begin{figure}[t!]
 		\centering
-		\includegraphics[width=0.9\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ei}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 1).}
+		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ei}
+		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ei_maximum}
+		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 1).}
 		\label{fig:exp1}
 	\end{figure}
 	% ID = 2
 	\begin{figure}[t!]
 		\centering
-		\includegraphics[width=0.9\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_75_acq_ei}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $75\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 2).}
+		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_75_acq_ei}
+		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_75_acq_ei_maximum}
+		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $75\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 2).}
 		\label{fig:exp2}
 	\end{figure}
 	% ID = 3
 	\begin{figure}[t!]
 		\centering
-		\includegraphics[width=0.9\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_50_acq_ei}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $50\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 3).}
+		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_50_acq_ei}
+		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_50_acq_ei_maximum}
+		\caption{Plots showing \acrshort{acr:gp}  posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $50\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 3).}
 		\label{fig:exp3}
 	\end{figure}
 	\clearpage
 }
+
+\subsubsection{Tum Kitchen Environment}
 
 First of all, let us consider the results obtained for the small \texttt{tum\_kitchen} environment.
 Overall, in \Crefrange{fig:exp1}{fig:exp9} one can see that the optimum $\theta_\mathsf{max}$ found lies mostly, with a few explainable exceptions, in the same area of the parameter space.
@@ -403,15 +474,17 @@ What might explain this, is that this particular section of the dataset adds dat
 	% ID = 4
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.9\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ucb}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 4).}
+		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ucb}
+		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ucb_maximum}
+		\caption{Plots showing \acrshort{acr:gp}  posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 4).}
 		\label{fig:exp4}
 	\end{figure}
 	% ID = 5
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.9\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_eips}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei-ps} acquisition function used (Experiment 5).}
+		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_eips}
+		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_eips_maximum}
+		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei-ps} acquisition function used (Experiment 5).}
 		\label{fig:exp5}
 	\end{figure}
 
@@ -426,64 +499,75 @@ In particular we notice the low model-values for a large number of components of
 	% ID = 6
 	\begin{figure}[t!]
 		\centering
-		\includegraphics[width=1.0\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ei}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{tum\_kitchen} environment, $\beta = 0.0$, \acrshort{acr:gmm}, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 6).}
+		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ei}
+		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ei_maximum}
+		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, \acrshort{acr:gmm}, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 6).}
 		\label{fig:exp6}
 	\end{figure}
 	% ID = 7
 	\begin{figure}[t!]
 		\centering
-		\includegraphics[width=1.0\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ucb}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 7).}
+		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ucb}
+		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ucb_maximum}
+		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 7).}
 		\label{fig:exp7}
+	\end{figure}
+	% ID = 8
+	\begin{figure}[t!]
+		\centering
+		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_025__alg_kmeans_pct_100_acq_ei}
+		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_025__alg_kmeans_pct_100_acq_ei_maximum}
+		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.25$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 8).}
+		\label{fig:exp8}
 	\end{figure}
 	\clearpage
 }
 
-\newpage
+
+% ID = 9
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_05__alg_kmeans_pct_100_acq_ei}
+	\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_05__alg_kmeans_pct_100_acq_ei_maximum}
+	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.5$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used(Experiment 9).}
+	\label{fig:exp9}
+\end{figure}
 	
 Finally, we look at the influence of the weight factor $\beta$ for the small environment considering the plots of \autoref{fig:exp1}, \autoref{fig:exp8} and \autoref{fig:exp9}.
 In this particular situation, one might benefit from weighing $V_\mathit{DTP}$ in the model-value, as it could make a clearer distinction between values for different settings for $\theta$.
 However, setting $\theta$ might also lead to a bias, which is that although $V_\mathit{DTP}$ may have high value, computed policies may not work well in the simulations or the real world.
 
-	% ID = 8
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=1.0\textwidth]{plots/tum_base/plot_b_025__alg_kmeans_pct_100_acq_ei}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{tum\_kitchen} environment, $\beta = 0.25$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 8).}
-		\label{fig:exp8}
-	\end{figure}
-	% ID = 9
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=1.0\textwidth]{plots/tum_base/plot_b_05__alg_kmeans_pct_100_acq_ei}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{tum\_kitchen} environment, $\beta = 0.5$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used(Experiment 9).}
-		\label{fig:exp9}
-	\end{figure}
+\newpage
+
+\subsubsection{UOL BL Environment}
 
 Then, let us next consider the results for the large \texttt{uol\_bl} environment. In \Crefrange{fig:exp10}{fig:exp12} plots are shown for the experiments in which different acquisitions were used in the \acrshort{acr:bo}.
 One can observe that the optima found after 20 steps are quite different, which might indicate that more steps are necessary to move towards a global optimum for each of these experiments.
 
 \afterpage{
 	% ID = 10
+
 	\begin{figure}[t!]
 		\centering
-		\includegraphics[width=0.9\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ei}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{uol\_bl} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 10).}
+		\includegraphics[width=0.495\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ei}
+		\includegraphics[width=0.485\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ei_maximum}
+		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{uol\_bl} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 10).}
 		\label{fig:exp10}
 	\end{figure}
 	% ID = 11
 	\begin{figure}[t!]
 		\centering
-		\includegraphics[width=0.9\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ucb}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{uol\_bl} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 11).}
+		\includegraphics[width=0.495\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ucb}
+		\includegraphics[width=0.485\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ucb_maximum}
+		\caption{Plot showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{uol\_bl} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 11).}
 		\label{fig:exp11}
 	\end{figure}
 	% ID = 12
 	\begin{figure}[t!]
 		\centering
-		\includegraphics[width=0.9\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_eips}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{uol\_bl} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei-ps} acquisition function used (Experiment 12).}
+		\includegraphics[width=0.495\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_eips}
+		\includegraphics[width=0.485\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_eips_maximum}
+		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{uol\_bl} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei-ps} acquisition function used (Experiment 12).}
 		\label{fig:exp12}
 	\end{figure}
 	\clearpage
@@ -494,60 +578,44 @@ One can observe that the optima found after 20 steps are quite different, which 
 \subsection{Multiphase Framework}
 \label{sec:multiphase-framework-results}
 
-In \Crefrange{fig:exp13}{fig:exp18} one can see that optima are found within the same area of the parameter space as seen in the results for the base framework. However the logs do not show the pre-processing influencing the area of interest in the second phase.
+In \Crefrange{fig:exp13}{fig:exp16} one can see that optima are found within the same area of the parameter space as seen in the results for the base framework.
 
 \vspace{12pt}
 \noindent\fbox{\textbf{TODO:} Fix problems most likely in implementation for the multi-phase framework for more usable results.}
 
-\afterpage{
-	% ID = 13
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.9\textwidth]{plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ei}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 13).}
-		\label{fig:exp13}
-	\end{figure}
-	% ID = 14
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.9\textwidth]{plots/tum_multi/plot_b_025__alg_kmeans_pct_100_acq_ei}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{tum\_kitchen} environment, $\beta = 0.25$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 14).}
-		\label{fig:exp14}
-	\end{figure}
-	% ID = 15
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.9\textwidth]{plots/tum_multi/plot_b_05__alg_kmeans_pct_100_acq_ei}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{tum\_kitchen} environment, $\beta = 0.5$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 15).}
-		\label{fig:exp15}
-	\end{figure}
-	\clearpage
-}
+% ID = 13
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=0.495\textwidth]{plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ei}
+	\includegraphics[width=0.485\textwidth]{plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ei_maximum}
+	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 30 iterations of the multi-phase framework on the \texttt{tum\_kitchen} environment, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 13).}
+	\label{fig:exp13}
+\end{figure}
+% ID = 14
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=0.495\textwidth]{plots/tum_multi/plot_b_00__alg_gmm_pct_100_acq_ei}
+	\includegraphics[width=0.485\textwidth]{plots/tum_multi/plot_b_00__alg_gmm_pct_100_acq_ei_maximum}
+	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 30 iterations of the multi-phase framework on the \texttt{tum\_kitchen} environment, \acrshort{acr:gmm}, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 14).}
+	\label{fig:exp14}
+\end{figure}%TODO Update
 
-\afterpage{
-	% ID = 16
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.9\textwidth]{plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ei}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{uol\_bl} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 16).}
-		\label{fig:exp16}
-	\end{figure}
-	% ID = 17
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.9\textwidth]{plots/uol_multi/plot_b_025__alg_kmeans_pct_100_acq_ei}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{uol\_bl} environment, $\beta = 0.25$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 17).}
-		\label{fig:exp17}
-	\end{figure}
-	% ID = 18
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.9\textwidth]{plots/uol_multi/plot_b_05__alg_kmeans_pct_100_acq_ei}
-		\caption{Plot showing posterior after 20 iterations of the optimization routine for the \texttt{uol\_bl} environment, $\beta = 0.5$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 18).}
-		\label{fig:exp18}
-	\end{figure}
-	\clearpage
-}
+% ID = 15
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=0.495\textwidth]{plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ei}
+	\includegraphics[width=0.485\textwidth]{plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ei_maximum}
+	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 30 iterations of the multi-phase framework on the \texttt{uol\_bl} environment, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 15).}
+	\label{fig:exp15}
+\end{figure}
+% ID = 16
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=0.495\textwidth]{plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ucb}
+	\includegraphics[width=0.485\textwidth]{plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ucb_maximum}
+	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 30 iterations of the multi-phase framework on the \texttt{uol\_bl} environment, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 16).}
+	\label{fig:exp16}
+\end{figure}
 
 % Small state-spaces: discrepancy between goal state and true goal is discounted
 % Large state-spaces overshooting + overfitting on limited training data

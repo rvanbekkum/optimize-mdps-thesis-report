@@ -10,7 +10,7 @@ Then, in \autoref{sec:application-mobile-robot}, the application of mobile robot
 This application is also used for evaluating the proposed framework through the experiments that were carried out and are documented in \autoref{ch:experimental-results}.
 Next, \autoref{sec:dataset-prerequisites} describes the prerequisites for the dataset serving as the input of the proposed model-learning framework.
 Subsequently, in \autoref{sec:model-learning-routine}, a detailed description of the learning and optimization routine is provided which forms our \textit{base framework} for learning optimal \acrshortpl{acr:mdp}.
-Finally, in \autoref{sec:cost-effective-optimization}, we define our extension of this base framework in the form of a \textit{multi-phase framework} consisting of three phases whose aim is to further improve on the effectiveness of the framework.
+Finally, in \autoref{sec:multi-phase-framework}, we define our extension of this base framework in the form of a \textit{multi-phase framework} consisting of three phases whose aim is to further improve on the effectiveness of the framework.
 %In \autoref{sec:model-learning-routine} a detailed explanation is provided of the learning and optimization routine which forms the basis of our framework.
 %Then in \autoref{sec:cost-effective-optimization} the framework is extended such that it consists of three cost-incremental phases.
 %Finally, in \autoref{sec:application-mobile-robot} a possible application (i.e., mobile robot navigation) of the framework is discussed, which is also used for evaluating the approach through the experiments that have been carried out and which are described in \autoref{ch:experimental-results}.
@@ -164,28 +164,28 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 
 \section{Base Framework}
 \label{sec:model-learning-routine}
-%TODO Formalize the methodology
+%vTODO Formalize the methodology
 
 \begin{algorithm}[t!]
 	\caption{\acrshort{acr:mdp}-Optimization Base Framework}
 	\label{alg:base-framework}
 	\begin{algorithmic}[1]
 		\Require{Set of execution traces $E$, Parameter space $\Theta$, Set of tasks $T$, Action space $A$, Time-step $t$, Discount factor $\gamma \in [0, 1]$, Weight factor $\beta \in [0, 1]$, Acquisition function $a: \Theta \mapsto \mathbb{R}$}%Training set $\mathcal{O} = \{O_1, \ldots, O_k\}$, Clustering algorithm, hyper-parameter(s) $\theta$, actions $A$}
-		\Ensure{\acrshort{acr:mdp} $\mathcal{M}^\ast$}%\acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$} \Comment{$s_0$ and $R$ are here irrelevant}
-		\State $\mathcal{M}_\text{max} \gets \texttt{NULL}$
-		\State $V_{\mathcal{M}_\text{max}} \gets 0$
+		\Ensure{\acrshort{acr:mdp} $\mathcal{M}$, Evidence set $\mathcal{D}$}%\acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$} \Comment{$s_0$ and $R$ are here irrelevant}
+		\State $\mathcal{M}_\mathsf{max} \gets \texttt{NULL}$
+		\State $V_{\mathcal{M}_\mathsf{max}} \gets 0$
 		\State $\mathcal{D} \gets \emptyset$ \Comment{The evidence set storing samples and observations}
 		\State $\mathit{gp} \gets GP(0, K)$ \Comment{Zero-mean \acrshort{acr:gp} with covariance $K$}
 		\State Sample $\theta \in \Theta$ at random
 		\Repeat
-			\State $\mathcal{M}, V_\mathcal{M} \gets \textproc{LearningStep}(\theta)$
-			\If{$V_\mathcal{M} > V_{\mathcal{M}_\text{max}}$}
-				\State $V_{\mathcal{M}_\text{max}} \gets V_\mathcal{M}$
-				\State $\mathcal{M}_\text{max} \gets \mathcal{M}$
-			\EndIf
-			\State $\theta \gets \textproc{OptimizationStep}(\theta, V_\mathcal{M})$
+		\State $\mathcal{M}, V_\mathcal{M} \gets \textproc{LearningStep}(\theta)$
+		\If{$V_\mathcal{M} > V_{\mathcal{M}_\mathsf{max}}$}
+		\State $V_{\mathcal{M}_\mathsf{max}} \gets V_\mathcal{M}$
+		\State $\mathcal{M}_\mathsf{max} \gets \mathcal{M}$
+		\EndIf
+		\State $\theta \gets \textproc{OptimizationStep}(\theta, V_\mathcal{M}, \mathcal{D}, \mathit{gp})$
 		\Until{convergence}
-		\State\Return 
+		\State\Return $\mathcal{M}_\mathsf{max}, \mathcal{D}$
 		\Statex
 		\Function{LearningStep}{$\theta$}	\label{alg:line:learn}
 			\State $\mathcal{S} \gets \textproc{Quantization}(E, \theta)$
@@ -211,10 +211,10 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 			\State\Return $\mathcal{M}, V_\mathcal{M}$
 		\EndFunction
 		\Statex
-		\Function{OptimizationStep}{$\theta, V_{\mathcal{M}}$}
+		\Function{OptimizationStep}{$\theta, V_{\mathcal{M}}, \mathcal{D}, \mathit{gp}$}
 			\State $\mathcal{D} \gets \mathcal{D} \cup \{(\theta, V_\mathcal{M})\}$
 			\State $\mathit{gp}.\textproc{fit}(\mathcal{D})$	\Comment{Fit a \acrshort{acr:gp} given $\mathcal{D}$, maximizing the log-marginal-likelihood}
-			\Let{$\theta$}{$\argmax_{x \in \mathcal{\Theta}} a(x \vert \mathcal{D})$}	\Comment{Suggest a sample $\theta$ to evaluate next}
+			\Let{$\theta$}{$\argmax_{x \in \mathcal{\Theta}} a(x \vert \mathcal{D}, \mathit{gp})$}	\Comment{Suggest a sample $\theta$ to evaluate next}
 			\State\Return $\theta$
 		\EndFunction
 	\end{algorithmic}
@@ -273,7 +273,6 @@ The transition function is defined for the provided action space $A$ and earlier
 %Depending on the application, one could choose to apply another algorithm
 
 \subsubsection{Tasks and Reward Functions}
-\label{sec:reward-function}
 
 \begin{figure}[t!]
 	\centering
@@ -339,7 +338,6 @@ The next section discusses how the value of a model $\mathcal{M}$ is assessed in
 \newpage %
 
 \subsubsection{Performance Measure}
-\label{sec:performance-measure}
 
 Posing the learning of probabilistic models as an optimization task requires us to define a mapping of \acrshortpl{acr:mdp} to a performance measure that can fairly compare different models.
 As discussed earlier, one can express the performance of an \acrshort{acr:mdp} in terms of how well the agent performs tasks following the policies that are derived from the model.
@@ -392,7 +390,7 @@ where $T_\mathcal{M}$ is the set consisting of the pairs of initial states and r
 The second main step of the routine will be referred to as the \textit{optimization step}, in which a parameter-setting $\theta$ is selected for the next learning step in such way that yielded performance converges to a global maximum as quickly as possible.
 As initially there is no knowledge of the performance given the settings of the learning parameter(s) $\theta$, in the first few routine-iterations parameter-settings are selected at random from the designer-specified domain $\Theta$ (i.e., the parameter-space).
 Together with the value $V_{\mathcal{M}}$ of the corresponding model obtained in the learning step for each of these parameters $\theta$, they are stored in an evidence set $\mathcal{D}$.
-The objective function $f$ in our case is the $\texttt{LearningStep}:  \Theta \mapsto \mathbb{R}$ function which maps parameter-settings $\theta \in \Theta$ to real-valued performance yielded by \acrshortpl{acr:mdp}.
+The objective function $f$ in our case is the $\texttt{LearningStep}$ function which maps parameter-settings $\theta \in \Theta$ to real-valued performance yielded by \acrshortpl{acr:mdp}.
 
 As discussed earlier in  \autoref{sec:bayesian-optimization-problem}, the objective functions for the class of \acrshort{acr:sdm} problems tend to be expensive to evaluate as proper estimations can only be made through expensive simulations.
 Therefore, \acrlong{acr:bo} emerges as an attractive method to find a global maximizer $\theta^\ast \in \Theta$ for our objective function.
@@ -489,10 +487,67 @@ This procedure is repeated until some criterium is reached, which can be a fixed
 % - Clustering training data to obtain states
 % - Trajectory Clustering
 
-\newpage
+\afterpage{
+
+\begin{algorithm}[t!]
+	\caption{\acrshort{acr:mdp}-Optimization Multi-Phase Framework}
+	\label{alg:multi-phase-framework}
+	\begin{algorithmic}[1]
+		\Require{Set of execution traces $E$, Parameter space $\Theta$, Set of tasks $T$, Action space $A$, Time-step $t$, Discount factor $\gamma \in [0, 1]$, Acquisition function $a_1: \Theta \mapsto \mathbb{R}$}
+		\Ensure{\acrshort{acr:mdp} $\mathcal{M}^\ast$}
+		
+		\State $\mathcal{D}_1, \mathit{gp}_1 \gets \textproc{Phase1}()$
+		\State $\mathcal{M}_\mathsf{max} \gets \textproc{Phase2}()$
+		
+		\Statex
+		\Function{Phase1}{}
+		\State $\beta = 1.0$ \Comment{Compute $V_\mathcal{M}$ based on the value function, i.e., $V_\mathcal{M} = V_\mathit{DTP}$}
+		\State $\mathcal{D} \gets \emptyset$
+		\State $\mathit{gp} \gets GP(0, K)$
+		\Repeat
+		\State $\mathcal{M}, V_\mathcal{M} \gets \textproc{LearningStep}(\theta)$
+		\State $\theta \gets \textproc{OptimizationStep}(\theta, V_\mathcal{M})$
+		\Until{convergence}
+		\State\Return $\mathcal{D}, \mathit{gp}$
+		\EndFunction
+		\Statex
+		\Function{Phase2}{}
+		%\State $\mathcal{M}_2, \mathcal{D}_2, \mathit{gp}_2 \gets \textproc{BaseFramework}(E, \Theta, T, A, t, \gamma, \beta=0.0, a_2)$
+		\State $\beta = 0.0$ \Comment{Compute $V_\mathcal{M}$ based on simulations, i.e., $V_\mathcal{M} = V_\mathit{SIM}$}
+		\State $\mathcal{D}_2 \gets \emptyset$
+		\State $\mathit{gp}_2 \gets GP(0, K)$
+		\State $\mathcal{M}_\mathsf{max} \gets \texttt{NULL}$
+		\State $V_{\mathcal{M}_\mathsf{max}} \gets 0.0$
+		\State $\theta \gets \argmax_{x \in \Theta} \mathsf{EI}(x\vert\mathcal{D}_1, \mathit{gp}_1)$
+		\State $\alpha \gets 0.5$
+		\Repeat
+			\State $\mathcal{M}, V_\mathcal{M} \gets \textproc{LearningStep}(\theta)$
+			\If{$V_\mathcal{M} > V_{\mathcal{M}_\mathsf{max}}$}
+			\State $V_{\mathcal{M}_\mathsf{max}} \gets V_\mathcal{M}$
+			\State $\mathcal{M}_\mathsf{max} \gets \mathcal{M}$
+			\EndIf
+			\State $\theta \gets \textproc{OptimizationStep2}(\theta, V_\mathcal{M}, \alpha)$
+			\State $\alpha = 0.5$
+		\Until{convergence}
+		\State\Return $\mathcal{M}_2$
+		\EndFunction
+		\Statex
+		\Function{OptimizationStep2}{$\theta, V_\mathcal{M}, \alpha$}\Comment{The $\alpha$ parameter weighs the $\mathsf{EI}$ of the first phase.}
+			\State $\mathcal{D}_2 \gets \mathcal{D}_2 \cup \{(\theta, V_\mathcal{M})\}$
+			\State $\mathit{gp}_2.\textproc{fit}(\mathcal{D}_2)$
+			\State $\theta \gets \argmax_{x \in \Theta} \alpha\cdot\mathsf{EI}(x\vert\mathcal{D}_1, \mathit{gp}_1) + (1 - \alpha)\cdot\mathsf{EI}(x\vert\mathcal{D}_2, \mathit{gp}_2)$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+\clearpage
+}
 
 \section{Multi-Phase Framework}
-\label{sec:cost-effective-optimization}
+\label{sec:multi-phase-framework}
+
+To make the solution more cost-effective, the framework is extended by defining three phases with the aim of exploiting the lower cost of computing the value function for \acrshortpl{acr:mdp} in comparison to the cost of executing plans in simulations or the real world.
+That is, assessing performance solely based on learned \acrshort{acr:mdp} models is less cost-expensive, although the model might not accurately reflect the real world as its abstracts over low-level details.
+This section defines the phases of the extension, of which each subsequent phase better reflects the real world, but on the other hand are accompanied by higher costs as is depicted in \autoref{fig:abstraction-cost}.
 
 \begin{figure}[t]
 	\centering
@@ -500,46 +555,6 @@ This procedure is repeated until some criterium is reached, which can be a fixed
 	\caption{Correspondence of the phases of the model learning framework to the different levels of abstraction.}
 	\label{fig:abstraction-cost}
 \end{figure}
-
-\begin{algorithm}[t!]
-	\caption{\acrshort{acr:mdp}-Optimization Multi-Phase Framework}
-	\label{alg:multi-phase-framework}
-	\begin{algorithmic}[1]
-		\Require{Set of execution traces $E$, Parameter space $\Theta$, Set of tasks $T$, Action space $A$, Time-step $t$, Discount factor $\gamma \in [0, 1]$, Acquisition function $a: \Theta \mapsto \mathbb{R}$}%Training set $\mathcal{O} = \{O_1, \ldots, O_k\}$, Clustering algorithm, hyper-parameter(s) $\theta$, actions $A$}
-		\Ensure{\acrshort{acr:mdp} $\mathcal{M}^\ast$}
-		
-		\State $\mathcal{M}_\text{max} \gets \texttt{NULL}$
-		\State $V_{\mathcal{M}_\text{max}} \gets 0$
-		\State $\mathit{gp} \gets \textproc{Phase\_1}()$
-		\State $\textproc{Phase\_2}()$
-		
-		\Statex
-		\Function{Phase\_1}{}
-			\State $\mathcal{D} \gets \emptyset$
-			\State $\mathit{gp} \gets GP(0, K)$
-			\State Sample $\theta \in \Theta$ at random
-			\Repeat
-				\State $\mathcal{M}, V_\mathcal{M} \gets \textproc{LearningStep}(\theta)$
-				\State $\theta \gets \textproc{OptimizationStep}(\theta, V_\mathcal{M})$
-			\Until{convergence}
-			\State\Return $\mathit{gp}$
-		\EndFunction
-		\Statex
-		\Function{Phase\_2}{$\mathit{gp1}$}
-			\State $\mathcal{D} \gets \emptyset$
-			\State $\mathit{gp2} \gets GP(0, K)$
-			\State Sample $\theta \in \Theta$ at random
-			\Repeat
-			\State $\mathcal{M}, V_\mathcal{M} \gets \textproc{LearningStep}(\theta)$
-			\State $\theta \gets \textproc{OptimizationStep}(\theta, V_\mathcal{M})$
-			\Until{convergence}
-		\EndFunction
-	\end{algorithmic}
-\end{algorithm}
-
-To make the solution more cost-effective, the framework is extended by defining three phases with the aim of exploiting the lower cost of computing the value function for \acrshortpl{acr:mdp} in comparison to the cost of executing plans in simulations or the real world.
-That is, assessing performance solely based on learned \acrshort{acr:mdp} models is less cost-expensive, although the model might not accurately reflect the real world as its abstracts over low-level details.
-This section defines the phases of the extension, of which each subsequent phase better reflects the real world, but on the other hand are accompanied by higher costs as is depicted in \autoref{fig:abstraction-cost}.
 
 %\begin{itemize}
 %	\item Change the $\beta$-parameter of Eq 5.1 over time
