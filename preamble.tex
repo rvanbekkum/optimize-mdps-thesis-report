@@ -30,6 +30,12 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 
 %% Custom Definitions %%
+% Algorithm line reference
+\makeatletter
+\patchcmd{\ALG@step}{\addtocounter{ALG@line}{1}}{\refstepcounter{ALG@line}}{}{}
+\newcommand{\ALG@lineautorefname}{Line}
+\makeatother
+
 \def\subsubsectionautorefname{Section}
 \def\subsectionautorefname{Section}
 \def\sectionautorefname{Section}

@@ -5,7 +5,7 @@ A common approach in \acrshort{acr:dtp}, as was discussed in \autoref{ch:introdu
 In particular we focus our attention to devising \acrshort{acr:mdp} models, which need to accurately define what constitutes the state of the system, reflect uncertainty through transition probabilities, and specify goals through rewards.
 The problem we face is that hand-crafting accurate, well-generalizing models is a difficult and time-costly process for a human designer.
 To overcome this problem the goal is to automatize the model development process by applying learning algorithms on data that describes the dynamics of the system under consideration.
-Therefore this chapter aims to provide some insight into the existing approaches for automating the development of probabilistic models for planning under uncertainty and the existing alternatives for automated control of systems involving uncertainty.
+Therefore, this chapter aims to provide some insight into the existing approaches for automating the development of probabilistic models for planning under uncertainty and the existing alternatives for automated control of systems involving uncertainty.
 
 First \autoref{sec:learning-probabilistic-models} gives an overview of the existing algorithms for learning models from execution traces of the system.
 Then, in \autoref{sec:active-learning} a number of approaches are examined, which combine offline methods for learning (initial) models with \acrshort{acr:rl} algorithms which update the model parameters online.
@@ -139,7 +139,7 @@ In case the observations have an underlying metric space, one can choose to appl
 \label{sec:active-learning}
 
 Devising a completely accurate specification of the \acrshort{acr:mdp}'s transition probabilities typically turns out infeasible for real-world \acrshort{acr:dtp} problems.
-However it should be noted that the learning algorithms that have been addressed earlier, usually recover enough to let an \acrshort{acr:mdp} reflect the actual environment in which an agent operates.
+However, it should be noted that the learning algorithms that have been addressed earlier, usually recover enough to let an \acrshort{acr:mdp} reflect the actual environment in which an agent operates.
 The plans that are derived accordingly from these models yield better performance than a random choice of actions in the execution of the system would.
 A class of approaches that we consider in this section are those that combine offline model learning and planning methods with online (reinforcement) learning methods which incrementally update the model parameters.
 

@@ -171,7 +171,7 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 	\label{alg:base-framework}
 	\begin{algorithmic}[1]
 		\Require{Set of execution traces $E$, Parameter space $\Theta$, Set of tasks $T$, Action space $A$, Time-step $t$, Discount factor $\gamma \in [0, 1]$, Weight factor $\beta \in [0, 1]$, Acquisition function $a: \Theta \mapsto \mathbb{R}$}%Training set $\mathcal{O} = \{O_1, \ldots, O_k\}$, Clustering algorithm, hyper-parameter(s) $\theta$, actions $A$}
-		\Ensure{\acrshort{acr:mdp} $\mathcal{M}$, Evidence set $\mathcal{D}$}%\acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$} \Comment{$s_0$ and $R$ are here irrelevant}
+		\Ensure{\acrshort{acr:mdp} $\mathcal{M}_\mathsf{max}$, Evidence set $\mathcal{D}$}%\acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$} \Comment{$s_0$ and $R$ are here irrelevant}
 		\State $\mathcal{M}_\mathsf{max} \gets \texttt{NULL}$
 		\State $V_{\mathcal{M}_\mathsf{max}} \gets 0$
 		\State $\mathcal{D} \gets \emptyset$ \Comment{The evidence set storing samples and observations}
@@ -194,13 +194,15 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 			\State $V_\mathit{SIM} \gets 0$
 			\ForAll{$(\mathit{start}, \mathit{goal}) \in T$}
 			\State $\{s_0, s_g\} \gets \textproc{ToStates}(\{\mathit{start}, \mathit{goal}\})$
-			\State $R \gets \textproc{ToRewardFunction}(s_0, s_g)$
+			\State $R \gets \textproc{ToRewardFunction}(s_g)$
 			\State $\mathcal{M} \gets (\mathcal{S}, s_0, A, \delta, R)$
 			\State $V, \pi \gets \textproc{DTPPlanning}(\mathcal{M})$	\Comment{Solve for a policy $\pi$ using a \acrshort{acr:dtp} algorithm, such as \acrshort{acr:vi}}
 			\State $V_\mathit{DTP} \gets V_\mathit{DTP} + V[s_0]$
 			\If{$\beta < 1$}
-				\State $\mathit{steps} \gets \textproc{RunSim}(\mathcal{M}, \pi, t)$
-				\State $V_\mathit{SIM} \gets V_\mathit{SIM} + \gamma^\mathit{steps} \cdot R[s_g]$
+				\State $\mathsf{task\_status}, \mathit{steps} \gets \textproc{RunSim}(\mathcal{M}, \pi)$
+				\If{$\mathsf{task\_status} = \texttt{success}$}
+					\State $V_\mathit{SIM} \gets V_\mathit{SIM} + \gamma^\mathit{steps} \cdot R[s_g]$
+				\EndIf
 			\EndIf
 			\EndFor
 			%\State $V_\mathit{DTP} \gets \frac{V_\mathit{DTP}}{|T|}$
@@ -214,8 +216,7 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 		\Function{OptimizationStep}{$\theta, V_{\mathcal{M}}, \mathcal{D}, \mathit{gp}$}
 			\State $\mathcal{D} \gets \mathcal{D} \cup \{(\theta, V_\mathcal{M})\}$
 			\State $\mathit{gp}.\textproc{fit}(\mathcal{D})$	\Comment{Fit a \acrshort{acr:gp} given $\mathcal{D}$, maximizing the log-marginal-likelihood}
-			\Let{$\theta$}{$\argmax_{x \in \mathcal{\Theta}} a(x \vert \mathcal{D}, \mathit{gp})$}	\Comment{Suggest a sample $\theta$ to evaluate next}
-			\State\Return $\theta$
+			\State\Return $\argmax_{x \in \mathcal{\Theta}} a(x \vert \mathcal{D}, \mathit{gp})$	\Comment{Suggest a sample $\theta$ to evaluate next}
 		\EndFunction
 	\end{algorithmic}
 \end{algorithm}
@@ -242,7 +243,7 @@ The routine can be viewed as consisting of two subsequent steps which are repeat
 The first of these two main steps will be referred to as the \textit{learning step}, in which an \acrshort{acr:mdp} model is learned and its value is assessed.
 
 This learning step starts off with a data-set of execution traces $E$ obtained beforehand as described in \autoref{sec:dataset-prerequisites}.
-As we can see in \autoref{alg:base-framework}, line~\ref{alg:line:learn}, the step is parameterized by $\theta$, which represents the parameter-setting to be used for the employed model learning algorithm.
+As we can see in \autoref{alg:base-framework}, \autoref{alg:line:learn}, the step is parameterized by $\theta$, which represents the parameter-setting to be used for the employed model learning algorithm.
 Given a parameter-setting $\theta$, a state-space $\mathcal{S}$ is acquired by quantizing the execution traces $E$ using an unsupervised machine learning algorithm.
 Subsequently, a transition function $\delta$ is acquired by applying a known model-learning algorithm (such as one of those described in \autoref{sec:learning-probabilistic-models}) given the data-set $E$, state-space $\mathcal{S}$ and possible actions $A$.
 The tasks to perform are each accordingly mapped to a reward function $R$ over the acquired state-space $\mathcal{S}$ (or alternatively over state-action pairs or state-action-state triplets).
@@ -304,7 +305,7 @@ The transition function is defined for the provided action space $A$ and earlier
 \end{figure}
 
 The goal for the class of problems of interest is to obtain a well-generalizing model that performs well on multiple different tasks.
-Therefore an estimate of the value of a model is assessed over a set $T$ of tasks provided as input to the framework, where each task is presented as the combination of a starting and goal configuration.
+Therefore, an estimate of the value of a model is assessed over a set $T$ of tasks provided as input to the framework, where each task is presented as the combination of a starting and goal configuration.
 %To achieve this, let us first define multiple starting configurations and multiple goals for the system.
 
 The starting configurations are each mapped to corresponding states in the \acrshort{acr:mdp}, matching the quantization to state-space $\mathcal{S}$, so that one can define $\mathcal{S}_0 \subseteq \mathcal{S}$ as a set of initial states.
@@ -490,18 +491,18 @@ This procedure is repeated until some criterium is reached, which can be a fixed
 \afterpage{
 
 \begin{algorithm}[t!]
-	\caption{\acrshort{acr:mdp}-Optimization Multi-Phase Framework}
+	\caption{\acrshort{acr:mdp}-Optimization Multi-Phase Framework (Phase 1 and 2)}
 	\label{alg:multi-phase-framework}
 	\begin{algorithmic}[1]
 		\Require{Set of execution traces $E$, Parameter space $\Theta$, Set of tasks $T$, Action space $A$, Time-step $t$, Discount factor $\gamma \in [0, 1]$, Acquisition function $a_1: \Theta \mapsto \mathbb{R}$}
-		\Ensure{\acrshort{acr:mdp} $\mathcal{M}^\ast$}
+		\Ensure{\acrshort{acr:mdp} $\mathcal{M}_\mathsf{max}$}
 		
 		\State $\mathcal{D}_1, \mathit{gp}_1 \gets \textproc{Phase1}()$
 		\State $\mathcal{M}_\mathsf{max} \gets \textproc{Phase2}()$
 		
 		\Statex
-		\Function{Phase1}{}
-		\State $\beta = 1.0$ \Comment{Compute $V_\mathcal{M}$ based on the value function, i.e., $V_\mathcal{M} = V_\mathit{DTP}$}
+		\Function{Phase1}{}\label{alg:line:phase1}
+		\State $\beta \gets 1.0$ \Comment{Compute $V_\mathcal{M}$ based on the value function, i.e., $V_\mathcal{M} = V_\mathit{DTP}$}
 		\State $\mathcal{D} \gets \emptyset$
 		\State $\mathit{gp} \gets GP(0, K)$
 		\Repeat
@@ -511,9 +512,9 @@ This procedure is repeated until some criterium is reached, which can be a fixed
 		\State\Return $\mathcal{D}, \mathit{gp}$
 		\EndFunction
 		\Statex
-		\Function{Phase2}{}
+		\Function{Phase2}{}\label{alg:line:phase2}
 		%\State $\mathcal{M}_2, \mathcal{D}_2, \mathit{gp}_2 \gets \textproc{BaseFramework}(E, \Theta, T, A, t, \gamma, \beta=0.0, a_2)$
-		\State $\beta = 0.0$ \Comment{Compute $V_\mathcal{M}$ based on simulations, i.e., $V_\mathcal{M} = V_\mathit{SIM}$}
+		\State $\beta \gets 0.0$ \Comment{Compute $V_\mathcal{M}$ based on simulations, i.e., $V_\mathcal{M} = V_\mathit{SIM}$}
 		\State $\mathcal{D}_2 \gets \emptyset$
 		\State $\mathit{gp}_2 \gets GP(0, K)$
 		\State $\mathcal{M}_\mathsf{max} \gets \texttt{NULL}$
@@ -527,7 +528,7 @@ This procedure is repeated until some criterium is reached, which can be a fixed
 			\State $\mathcal{M}_\mathsf{max} \gets \mathcal{M}$
 			\EndIf
 			\State $\theta \gets \textproc{OptimizationStep2}(\theta, V_\mathcal{M}, \alpha)$
-			\State $\alpha = 0.5$
+			\State $\alpha \gets \alpha / 2$
 		\Until{convergence}
 		\State\Return $\mathcal{M}_2$
 		\EndFunction
@@ -535,7 +536,7 @@ This procedure is repeated until some criterium is reached, which can be a fixed
 		\Function{OptimizationStep2}{$\theta, V_\mathcal{M}, \alpha$}\Comment{The $\alpha$ parameter weighs the $\mathsf{EI}$ of the first phase.}
 			\State $\mathcal{D}_2 \gets \mathcal{D}_2 \cup \{(\theta, V_\mathcal{M})\}$
 			\State $\mathit{gp}_2.\textproc{fit}(\mathcal{D}_2)$
-			\State $\theta \gets \argmax_{x \in \Theta} \alpha\cdot\mathsf{EI}(x\vert\mathcal{D}_1, \mathit{gp}_1) + (1 - \alpha)\cdot\mathsf{EI}(x\vert\mathcal{D}_2, \mathit{gp}_2)$
+			\State\Return $\argmax_{x \in \Theta} \alpha\cdot\mathsf{EI}(x\vert\mathcal{D}_1, \mathit{gp}_1) + (1 - \alpha)\cdot\mathsf{EI}(x\vert\mathcal{D}_2, \mathit{gp}_2)$
 		\EndFunction
 	\end{algorithmic}
 \end{algorithm}
@@ -580,7 +581,7 @@ This section defines the phases of the extension, of which each subsequent phase
 	\begin{figure}[t!]
 		\centering
 		\includegraphics[width=1.0\textwidth]{phase-3.pdf}
-		\caption{An illustration of the goal of the third phase in the context of mobile robot navigation. In the navigation towards the goal state $s_8$, the robot might get stuck in state $s_2$ following the optimal policy. Therefore higher resolution is needed in this area of the state space.}
+		\caption{An illustration of the goal of the third phase in the context of mobile robot navigation. In the navigation towards the goal state $s_8$, the robot might get stuck in state $s_2$ following the optimal policy. Therefore, higher resolution is needed in this area of the state space.}
 		\label{fig:phase-3}
 	\end{figure}
 	\clearpage
@@ -590,20 +591,22 @@ This section defines the phases of the extension, of which each subsequent phase
 \label{sec:phase-1}
 
 In the first phase the performance is assessed solely based on the value functions derived by the \acrshort{acr:dtp} algorithm used for planning.
-This means the $\beta$ parameter is set to $\beta = 1$ such that the performance $V_{\mathcal{M}}$ of \acrshort{acr:mdp} $\mathcal{M}$ is expressed only in terms of $V_\mathit{DTP}$ and so no simulations are performed in this phase.
+This means the $\beta$ parameter is set to $\beta = 1.0$ such that the performance $V_{\mathcal{M}}$ of \acrshort{acr:mdp} $\mathcal{M}$ is expressed only in terms of $V_\mathit{DTP}$ and so no simulations are performed in this phase.
 Therefore, this first phase is relatively cost-cheap, and although it abstracts from the real-world the most, it may be used to identify the interesting area of the parameter space.
 Hence, the goal of this first phase is to narrow down the search space to a subspace of learning parameters more likely to yield high performance.
 
-The block diagram in \autoref{fig:phase-1} depicts the main steps of this first phase. The execution traces from the exploration are used to obtain \acrshortpl{acr:mdp} by applying the learning algorithms given a parameter-setting $\theta$.
-The value of a learned model $\mathcal{M}$ is then only based on the value functions $V$ for a set of tasks $T_\mathcal{M}$ the system is expected to perform.
+The block diagram in \autoref{fig:phase-1} depicts the main steps of this first phase, whose pseudo-code is presented in \autoref{alg:multi-phase-framework}, starting from \autoref{alg:line:phase1}.
+In each iteration of this first phase the execution traces $E$ from the exploration are used to obtain an \acrshort{acr:mdp} by applying the learning algorithms given a parameter-setting $\theta$.
+The value of the learned model $\mathcal{M}$ is then assessed based only on the value function $V$ for a set of tasks $T_\mathcal{M}$ the system is expected to perform.
 The value of model $\mathcal{M}$ is thus computed as:
-\begin{equation} 
+\begin{equation*} 
 V_{\mathcal{M}} = \frac{\sum_{t \in T_\mathcal{M}} V_{\mathit{DTP}, t}}{|T_\mathcal{M}|}
-\end{equation}
+\end{equation*}
 where each task $t \in T_\mathcal{M}$ is defined in terms of an initial state and reward function.
-Based on the gathered evidence new parameter-settings $\theta$ are sampled iteratively, which are those settings for which the utility is the highest in the acquisition function used for \acrshort{acr:bo}.
+
+Based on the gathered evidence new parameter-settings $\theta$ are sampled iteratively, which are those settings for which the utility is the highest in the acquisition function $a_1$ used for \acrshort{acr:bo}.
 This continues until a stopping condition has been met, where in this first phase stopping after a fixed number of iterations should be acceptable, as the goal is only to narrow down the search space.
-At the end of the first phase, the resulting posterior \acrshort{acr:gp} distribution is taken and used as a prior for the next optimization phase.
+At the end of the first phase, the resulting posterior \acrshort{acr:gp} distribution $\mathit{gp}_1$ is taken and used for the acquisition in the next optimization phase.
 
 %In practice this could be done by setting a threshold, say, $\eta \in [0, 1]$, that specifies the allowed deviation from the observed maximum in the evidence set $\mathcal{D}$, i.e. $\max_\mathcal{(x_i, y_i) \in D} y_i$, which can be used to define parameter bounds based on the posterior mean.
 
@@ -613,20 +616,53 @@ At the end of the first phase, the resulting posterior \acrshort{acr:gp} distrib
 
 %\blindtext
 
+\newpage
+
 \subsection{Phase 2: Simulation-Based Optimization}
 \label{sec:phase-2}
 
-The second phase exploits the knowledge gathered in the first phase by using it as a \acrshort{acr:gp} prior in a new optimization process such that it starts off in the part of the parameter space most likely to yield high value.
-In this phase the performance assessment becomes more cost-expensive, but is also made more accurate by performing simulations and weighing the observed $V_\mathit{SIM}$ in the performance measure.
-This means, we either fix the $\beta$ parameter to a value in $[0, 1)$, or alternatively, gradually decrease it over time so that $V_\mathit{SIM}$ plays a more significant role the more iterations have passed.
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=0.75\textwidth]{phase-2-illustration-idea.pdf}
+	\caption{An illustration of the idea behind the second phase of the multi-phase framework. }
+	\label{fig:phase-2-idea}
+\end{figure}%TODO New figure + remove white space (tight-layout?) + larger fonts
 
-The block diagram of \autoref{fig:phase-2} depicts the main steps of this second phase.
-The same execution traces from the exploration are again passed to model learning algorithms to obtain \acrshortpl{acr:mdp} given parameter-settings $\theta$.
-What is first of all different is that the acquisition of new samples is steered by the prior obtained from the first phase.
-Secondly, the value is now determined by simulations in which the policies emerging from a learned model $\mathcal{M}$ are followed for the tasks that the agent is expected to perform.
-This value $V_\mathcal{M}$ is thus computed as in \autoref{eq:vm} with a weight factor $\beta > 0$.
-The optimization process continues until a stop condition, which could be either reaching a fixed number of iterations, a fixed time or a stopping criterion (e.g., when potential improvement becomes negligible).
-At this point we can obtain an \acrshort{acr:mdp} most likely to yield high performance for the problem under consideration.
+In the second phase the performance is assessed solely based on simulations of the system under consideration.
+This means that, instead, the $\beta$ parameter is now fixed at $\beta = 0.0$ such that the performance $V_\mathcal{M}$ of \acrshort{acr:mdp} $\mathcal{M}$ is expressed only in terms of $V_\mathit{SIM}$.
+Therefore, the second phase is much more cost-expensive and so a desirable aim is to minimize the number of evaluations needed.
+In an attempt to do so, the second phase exploits the knowledge gathered in the first phase by utilizing the \acrshort{acr:gp} $\mathit{gp}_1$ in the acquisition of new samples in the optimization process.
+The idea is thus to first sample from those parts of the parameter space $\Theta$ expected to yield high value according to the observations in the first phase.
+
+The block diagram in \autoref{fig:phase-2} depicts the main steps of this second phase, whose pseudo-code is presented in \autoref{alg:multi-phase-framework}, starting from \autoref{alg:line:phase2}.
+The first thing that differs from the previous phase is that, in each iteration, the value of the learned model $\mathcal{M}$ is assessed based on cost-expensive simulations.
+The value of model $\mathcal{M}$ is thus computed as:
+\begin{equation*}
+V_\mathcal{M} = \frac{\sum_{t \in T_\mathcal{M}} V_{\mathit{SIM}, t}}{|T_\mathcal{M}|}
+\end{equation*}
+\noindent where each task $t \in T_\mathcal{M}$ is defined in terms of an initial state and reward function.
+
+The main difference, however, lies in how new parameter-settings $\theta$ are sampled in each iteration in this phase.
+The acquisition in this phase is based on the \textit{integrated acquisition function}, defined in \autoref{eq:integrated-acq}, as it uses the \acrshort{acr:gp} from the prior phase and the \acrshort{acr:gp} posterior based on the observations of this phase.
+That is, the acquisition function is defined as:
+$$\alpha\cdot\mathsf{EI}(x\vert\mathcal{D}_1, \mathit{gp}_1) + (1 - \alpha)\cdot\mathsf{EI}(x\vert\mathcal{D}_2, \mathit{gp}_2)$$
+\noindent where $\mathcal{D}_1$ and $\mathcal{D}_2$ are the evidence sets, and $\mathit{gp}_1$ and $\mathit{gp}_2$ the \acrshortpl{acr:gp} approximations of the first and second phase respectively, with the expected improvement $\mathsf{EI}$ at $x \in \Theta$ weighed by $\alpha$.
+
+The knowledge obtained in the first phase is utilized by weighing the expected improvement more heavily for selecting the first few samples (i.e., setting $\alpha$ to a high value).
+Over time, the influence of the first phase decreases by lowering the value of $\alpha$ as more observations are made.
+In this way, if the global maximum in the first phase lies close to that of the second phase, a performance-maximizing \acrshort{acr:mdp} may be found faster, as the sampling is initially steered by the approximation in the first phase.%TODO Refer to the example figure
+
+%The second phase exploits the knowledge gathered in the first phase by using it as a \acrshort{acr:gp} prior in a new optimization process such that it starts off in the part of the parameter space most likely to yield high value.
+%In this phase the performance assessment becomes more cost-expensive, but is also made more accurate by performing simulations and weighing the observed $V_\mathit{SIM}$ in the performance measure.
+%This means, we either fix the $\beta$ parameter to a value in $[0, 1)$, or alternatively, gradually decrease it over time so that $V_\mathit{SIM}$ plays a more significant role the more iterations have passed.
+%
+%The block diagram of \autoref{fig:phase-2} depicts the main steps of this second phase.
+%The same execution traces from the exploration are again passed to model learning algorithms to obtain \acrshortpl{acr:mdp} given parameter-settings $\theta$.
+%What is first of all different is that the acquisition of new samples is steered by the prior obtained from the first phase.
+%Secondly, the value is now determined by simulations in which the policies emerging from a learned model $\mathcal{M}$ are followed for the tasks that the agent is expected to perform.
+%This value $V_\mathcal{M}$ is thus computed as in \autoref{eq:vm} with a weight factor $\beta > 0$.
+%The optimization process continues until a stop condition, which could be either reaching a fixed number of iterations, a fixed time or a stopping criterion (e.g., when potential improvement becomes negligible).
+%At this point we can obtain an \acrshort{acr:mdp} most likely to yield high performance for the problem under consideration.
 
 %Second phase: $\beta$ decreases over time, which means $V_\mathit{SIM}$ starts to play a role, and assessment becomes more accurate, but also more cost-expensive.
 
@@ -634,6 +670,54 @@ At this point we can obtain an \acrshort{acr:mdp} most likely to yield high perf
 
 \subsection{Phase 3: Resolution Post-Processing}
 \label{sec:phase-3}
+
+\begin{algorithm}[t!]
+	\caption{\acrshort{acr:mdp} Optimization Multi-Phase Framework (Phase 3)}
+	\label{alg:multi-phase-fine-tuning}
+	\begin{algorithmic}[1]
+		\Require{\acrshort{acr:mdp} $\mathcal{M}_\mathsf{in} = (\mathcal{S}, s_0, A, \delta, R)$, Set of tasks $T$, Time-step $t$, Discount factor $\gamma \in [0, 1]$}
+		\Ensure{\acrshort{acr:mdp} $\mathcal{M}_\mathsf{out}$}
+		\Statex
+		\Function{Phase3}{}
+		\ForAll{$(\mathit{start}, \mathit{goal}) \in T$}
+		\State $(s_0, s_g) \gets \textproc{ToStates}(\{\mathit{start}, \mathit{goal}\})$
+		\State $R \gets \textproc{ToRewardFunction}(s_g)$
+		\State $\mathcal{M} \gets (\mathcal{S}, s_0, A, \delta, R)$
+		\State $V, \pi_t \gets \textproc{DTPPlanning}(\mathcal{M})$
+		\State $\mathsf{task\_status}, \mathit{steps} \gets \textproc{RunSim}(\mathcal{M}, \pi_t)$
+		\If{$\mathsf{task\_status} = \texttt{stuck}$}
+		\State Let $s_f$ be the state in which the system got stuck
+		\State $R \gets \textproc{ToRewardFunction}(s_f)$
+		\State $\mathcal{M} \gets (\mathcal{S}, s_0, A, \delta, R)$
+		\State $V, \pi_f \gets \textproc{DTPPlanning}(\mathcal{M})$
+		\State Let $E_\mathit{SIM}$ be a dictionary
+		\ForAll{$a \in A, s' \in \mathcal{S}$}
+			\State $E_\mathit{SIM}[a][s'] \gets \emptyset$
+		\EndFor
+		\ForAll{$i \in \{1, \ldots, 100\}, a \in A$} \Comment{Perform trials of all actions from state $s_f$}
+		\State Let $o$ be the current system state observations
+		\State Execute $a$ and let $s'$ be the resulting state
+		\State $E_\mathit{SIM}[a][s'] \gets E_\mathit{SIM}[a][s'] \cup \{o\}$	\Comment{Store the observed transition in $E_\mathit{SIM}$}
+		\While{$s' \neq s_f$} \Comment{Move back to state $s_f$}
+			\State Execute $\pi_f(s')$ and update $s'$ to the resulting state
+		\EndWhile
+		\EndFor
+		\State $\mathit{new\_centroids} \gets \emptyset$
+		\ForAll{$a \in A$}
+			\If{$|E_\mathit{SIM}[a]| > 1$}
+				\ForAll{$s' \in \mathcal{S}$}
+					\State $\mathit{new\_centroids} \gets \mathit{new\_centroids} \cup \{\textproc{Average}(E_\mathit{SIM}[a][s'])\}$
+				\EndFor
+			\EndIf
+		\EndFor
+		\State Split the state $s_f$ into new states based on $\mathit{new\_centroids}$
+		\State Update $\delta$ for the new states based on $E_\mathit{SIM}$
+		\EndIf
+		\EndFor
+		\State\Return $\mathcal{M}$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
 
 The last phase starts when the parameter space has been narrowed down sufficiently or the parameter search has converged to an optimum.
 In this phase, the goal is to further improve learned models by checking whether the transition probabilities are likely to match reality.

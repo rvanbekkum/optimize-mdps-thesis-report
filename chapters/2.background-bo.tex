@@ -67,7 +67,7 @@ This acquisition function should be defined such that it captures a correct bala
 			\Let{$x_t$}{$\argmax_{x \in \mathcal{X}} a(x \vert \mathcal{D}_{1:t-1})$} \Comment{Acquisition based on posterior $p(f \vert \mathcal{D}_{1:t})$}%\Comment{Retrieve the next sample}
 			\Let{$y_t$}{$f(x_t) + \varepsilon_t$}  %\Comment{Record a new observation of $f$}
 			\Let{$\mathcal{D}_{1:t}$}{$\mathcal{D}_{1:t-1} \cup \{(x_t, y_t)\}$} \Comment{Augment $\mathcal{D}$ with the new evidence}
-			\State Update the prior $p(f)$ and posterior $p(f \vert \mathcal{D}_{1:t})$
+			\State Update the posterior $p(f \vert \mathcal{D}_{1:t})$
 			\State \textit{Break} when satisfactory \Comment{Stop condition defined by implementation}
 		\EndFor
 		\State \Return{$\argmax_{(x_i, y_i) \in \mathcal{D}} y_i$}
@@ -177,7 +177,10 @@ However, this algorithm fails to account for valuable information gained through
 
 Finally, one can choose to blend the acquisition functions of a set of \acrshortpl{acr:gp} with varying hyper-parameter settings by computing the \textit{integrated acquisition function} \cite{snoek2012practical}:
 
-$$\hat{a}(x\vert\mathcal{D}) = \int a(x\vert\mathcal{D}, \theta_{\mathit{gp}})p(\theta_\mathit{gp}\vert\mathcal{D}) d\theta_{\mathit{gp}}$$
+\begin{equation}
+\label{eq:integrated-acq}
+\hat{a}(x\vert\mathcal{D}) = \int a(x\vert\mathcal{D}, \theta_{\mathit{gp}})p(\theta_\mathit{gp}\vert\mathcal{D}) d\theta_{\mathit{gp}} \approx \frac{1}{K} \sum_{k=1}^K a(x\vert\mathcal{D}, \theta_{\mathit{gp}}^{(k)})
+\end{equation}
 
 \noindent where $a(x)$ is the utility at $x \in \mathcal{X}$ in the \acrshort{acr:mei} function for the \acrshort{acr:gp} with hyper-parameters $\theta_\mathit{gp}$ given the evidence set $\mathcal{D}$.
 Computing $\hat{a}(x)$ is commonly realized by a Monte Carlo integration over the acquisition functions of the \acrshortpl{acr:gp}.
