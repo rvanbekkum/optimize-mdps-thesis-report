@@ -189,7 +189,7 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 		\Statex
 		\Function{LearningStep}{$\theta$}	\label{alg:line:learn}
 			\State $\mathcal{S} \gets \textproc{Quantization}(E, \theta)$
-			\State $\delta \gets \textproc{MaxLikelihood}(E, \mathcal{S}, A, \theta)$
+			\State $\delta \gets \textproc{LearnTransitionProbs}(E, \mathcal{S}, A, \theta)$ \Comment{For instance, a likelihood maximization approach}
 			\State $V_\mathit{DTP} \gets 0$
 			\State $V_\mathit{SIM} \gets 0$
 			\ForAll{$(\mathit{start}, \mathit{goal}) \in T$}
@@ -269,7 +269,7 @@ From the provided set of execution traces $E$, a state-space $\mathcal{S}$ is le
 For instance, in our running example, a $k$-means clustering can be applied on for instance, coordinates in the execution traces $E$ describing the reachable locations of the robot, where $k$ is specified by the setting of $\theta$.
 
 \subsubsection{Transition Function}
-In the learning step the transition function $\delta$ is obtained by applying a known model-learning algorithm, for which here a likelihood maximization approach is selected for learning the transition probabilities of a fully observable \acrshort{acr:mdp}.
+In the learning step the transition function $\delta$ is obtained by applying a known model-learning algorithm, for which a likelihood maximization approach may be selected for learning the transition probabilities of a fully observable \acrshort{acr:mdp}.
 The transition function is defined for the provided action space $A$ and earlier acquired state-space $\mathcal{S}$ and approximated from the transitions in the set $E$ of execution traces.
 %Depending on the application, one could choose to apply another algorithm
 
@@ -623,10 +623,10 @@ At the end of the first phase, the resulting posterior \acrshort{acr:gp} distrib
 
 \begin{figure}[t!]
 	\centering
-	\includegraphics[width=0.75\textwidth]{phase-2-illustration-idea.pdf}
-	\caption{An illustration of the idea behind the second phase of the multi-phase framework. }
+	\includegraphics[width=0.75\textwidth]{phase-2-illustration-idea2.pdf}
+	\caption{An illustration of the idea behind the second phase of the multi-phase framework. The plot shows two artificial functions, one being much cheaper to evaluate in comparison to the other. As the maxima are close, starting to sample around the maximizer of the cheap function may steer the optimization towards the maximum of the expensive function.}
 	\label{fig:phase-2-idea}
-\end{figure}%TODO New figure + remove white space (tight-layout?) + larger fonts
+\end{figure}
 
 In the second phase the performance is assessed solely based on simulations of the system under consideration.
 This means that, instead, the $\beta$ parameter is now fixed at $\beta = 0.0$ such that the performance $V_\mathcal{M}$ of \acrshort{acr:mdp} $\mathcal{M}$ is expressed only in terms of $V_\mathit{SIM}$.
@@ -650,7 +650,9 @@ $$\alpha\cdot\mathsf{EI}(x\vert\mathcal{D}_1, \mathit{gp}_1) + (1 - \alpha)\cdot
 
 The knowledge obtained in the first phase is utilized by weighing the expected improvement more heavily for selecting the first few samples (i.e., setting $\alpha$ to a high value).
 Over time, the influence of the first phase decreases by lowering the value of $\alpha$ as more observations are made.
-In this way, if the global maximum in the first phase lies close to that of the second phase, a performance-maximizing \acrshort{acr:mdp} may be found faster, as the sampling is initially steered by the approximation in the first phase.%TODO Refer to the example figure
+Our hypothesis is that, if the global maximum in the first phase lies close to that of the second phase (as illustrated in \autoref{fig:phase-2-idea}), a performance-maximizing \acrshort{acr:mdp} may be found faster, as the sampling is initially steered by the approximation of the first phase.
+
+
 
 %The second phase exploits the knowledge gathered in the first phase by using it as a \acrshort{acr:gp} prior in a new optimization process such that it starts off in the part of the parameter space most likely to yield high value.
 %In this phase the performance assessment becomes more cost-expensive, but is also made more accurate by performing simulations and weighing the observed $V_\mathit{SIM}$ in the performance measure.
@@ -668,7 +670,7 @@ In this way, if the global maximum in the first phase lies close to that of the 
 
 %\blindtext
 
-\subsection{Phase 3: Resolution Post-Processing}
+\subsection{Phase 3: Model Fine Tuning}
 \label{sec:phase-3}
 
 \begin{algorithm}[t!]
@@ -684,7 +686,7 @@ In this way, if the global maximum in the first phase lies close to that of the 
 		\State $R \gets \textproc{ToRewardFunction}(s_g)$
 		\State $\mathcal{M} \gets (\mathcal{S}, s_0, A, \delta, R)$
 		\State $V, \pi_t \gets \textproc{DTPPlanning}(\mathcal{M})$
-		\State $\mathsf{task\_status}, \mathit{steps} \gets \textproc{RunSim}(\mathcal{M}, \pi_t)$
+		\State $\mathsf{task\_status}, \mathit{steps} \gets \textproc{RunSim}(\mathcal{M}, \pi_t)$	\Comment{Execute  the policy in simulations or the real-world}
 		\If{$\mathsf{task\_status} = \texttt{stuck}$}
 		\State Let $s_f$ be the state in which the system got stuck
 		\State $R \gets \textproc{ToRewardFunction}(s_f)$
@@ -719,15 +721,26 @@ In this way, if the global maximum in the first phase lies close to that of the 
 	\end{algorithmic}
 \end{algorithm}
 
-The last phase starts when the parameter space has been narrowed down sufficiently or the parameter search has converged to an optimum.
-In this phase, the goal is to further improve learned models by checking whether the transition probabilities are likely to match reality.
+The last phase starts after the optimization process has reached its stop condition and has retrieved a performance-maximizing \acrshort{acr:mdp} $\mathcal{M}_\mathsf{max}$
+In this phase, the goal is to further improve the learned model by checking whether the transition probabilities are likely to match the real world environment.
 The identification of discrepancies in these probabilities happens by executing actions in those areas of the state-space that are visited most often and in which the agent tends to get stuck (according to the transition probabilities) and seeing if the observed transitions yield comparable probabilities.
 For those areas and their corresponding states for which mismatches are identified, higher resolution is provided to better reflect the system's dynamics in the real world.
 
+\newpage
+
 The illustration of \autoref{fig:phase-3} aims to clarify the goal of this third phase by means of an example for the context of mobile robot navigation.
 Although the model obtained in the previous phase, might yield high performance for most of the tasks used to assess model value, a situation as illustrated in this figure might occur.
-That is, in the figure the robot, depicted in blue, needs to move from its current position to the goal, indicated by the yellow shaded area.
+That is, the robot, depicted in blue, needs to move from its current position to the goal, indicated by the yellow shaded area.
 For the state space depicted on the left-side however, the robot might get stuck following the optimal policy from which the need for higher resolution in this area emerges.
+
+In \autoref{alg:multi-phase-fine-tuning}, it is shown how to accomplish the fine-tuning of an \acrshort{acr:mdp} $\mathcal{M}$ resulting from the previous phase.
+Given a set of tasks $T$ (possibly different from the tasks used in the prior phases), a policy $\pi$ is obtained based on this model, which is executed in a simulation or real-world environment.
+When the agent detects it is stuck in some state $s_f$, it starts to gather a set of new execution traces $E_\mathit{SIM}$ of transitions from this state.
+This set is augmented by iteratively selecting an action (in a round-robin fashion) and executing it from the state $s_f$ and recording the end-state $s'$.
+For our example, one entry of this set may express that starting from a location $(x, y)$ in state $s_2$, executing the action $\texttt{N}$ resulted in ending up in state $s_7$.
+%TODO Adapt
+
+
 % To identify these discrepancies we could check if the transition probabilities of the model match observed outcomes of actions from the different states of the model.
 
 %Third phase: Starts when the parameter-space has sufficiently been narrowed down. To further improve learned models we would like to see if the opportunity exists of having higher resolution in some areas of the state space to better reflect the data-set.

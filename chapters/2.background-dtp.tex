@@ -325,7 +325,7 @@ For this thesis, however, we limit ourselves to learning fully observable \acrsh
 \subsection{Learning Optimal Policies}
 \label{sec:planning}
 
-In \acrshort{acr:sdm} problems typically the aim is to determine a policy that maximizes the total expected value.
+In \acrshort{acr:sdm} problems, typically the aim is to determine a policy that maximizes the total expected value.
 In algorithmic planning techniques a probabilistic model of the environment, which includes estimates of the transition probabilities and rewards, is used to obtain an optimal policy by exploring its state-space towards a goal.
 On the other hand, in \acrfull{acr:rl} the optimal policy is learned while interacting with the environment and it is applied when one does not know the transition probabilities and rewards for the system in advance.
 Both techniques have in common that they iteratively update estimations of a value function to derive a policy.
@@ -448,7 +448,7 @@ Opposed to traditional \acrshort{acr:vi}, where solving \acrshortpl{acr:mdp} wit
 \end{algorithm}
 
 Another algorithm that is widely applied for obtaining policies from \acrshortpl{acr:mdp} is known as \textit{\acrfull{acr:pi}}. As shown in \autoref{alg:pi} \acrshort{acr:pi} starts off with an initial policy vector $\arr{\pi}_0$ which may be arbitrarily initialized, but preferably by an approximation of an optimal policy for the input MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$ to achieve faster convergence.
-Then in each iteration, first the value for each state is computed based on the latest policy $\arr{\pi}_t$, which comes down to solving a set of linear equations.
+Then, in each iteration, first the value for each state is computed based on the latest policy $\arr{\pi}_t$, which comes down to solving a set of linear equations.
 Solving this set of linear equations can be done by linear programming in (at most) $O(\lvert\mathcal{S}\rvert^3)$ time \cite{littman1995complexity}. 
 An alternative approach, known as \textit{modified policy iteration}, is to solve these by applying a simplified form of value iteration in which the actions to select are already known for each state from the policy (i.e., $\arr{\pi}_t(s)$ for each $s \in \mathcal{S}$).
 This step which is known as \textit{policy evaluation} is followed by a \textit{policy improvement} step in which the policy is greedily updated based on the latest value function $V_{\arr{\pi}}$.

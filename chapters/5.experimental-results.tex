@@ -293,8 +293,8 @@ First, given this parameter-setting a state-space $\mathcal{S}$ is now learned b
 Correspondingly, the transition function $\delta$ is fitted by maximum likelihood and the set of tasks $T$ are mapped to this state-space.
 To illustrate, let us take the task of moving from the position $(-1.9, 1.05)$ to $(2.0, -5.6)$, mapping to the states labeled with `$\mathsf{1}$' and `$\mathsf{51}$' respectively as shown in \autoref{fig:demo-clustering}.
 Translating this into an initial state $s_0$ and reward function $R$ as described in \autoref{sec:learning-step}, results in an \acrshort{acr:mdp} $(\mathcal{S}, s_0, A, \delta, R)$ that can be solved using the \acrshort{acr:vi} algorithm for a policy (and value function).
-Then to assess the performance in the simulator, this policy is employed, so that the robot will follow the trajectory as shown in \autoref{fig:demo-trajectory} (n.b., the robot might slip slightly in the simulation).
-Then, with $k$ being the total number of time-steps, a performance measure for this task is obtained through \autoref{eq:vsim}.
+Then, to assess the performance in the simulator, this policy is employed, so that the robot will follow the trajectory as shown in \autoref{fig:demo-trajectory} (n.b., the robot might slip slightly in the simulation).
+Then, with $k$ being the recorded total number of time-steps, a performance measure for this task is obtained through \autoref{eq:vsim}.
 
 %\begin{figure}[t!]
 %	\centering
