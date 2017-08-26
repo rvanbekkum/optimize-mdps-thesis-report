@@ -1,7 +1,7 @@
 \chapter{Experimental Setup and Results}
 \label{ch:experimental-results}
 
-%TODO Add a section illustrating the implementation; giving some examples of how clustering algorithms are used to define a state-space and learn an MDP based on likelihood maximization and how this MDP is used to navigate the robot in an environment.
+%vTODO Add a section illustrating the implementation; giving some examples of how clustering algorithms are used to define a state-space and learn an MDP based on likelihood maximization and how this MDP is used to navigate the robot in an environment.
 
 %\begin{itemize}
 %	\item Introduction about application and high-level explanation of what we'll be looking into
@@ -269,7 +269,8 @@ The resulting posterior of this first phase is then used in the acquisition of t
 		
 		\begin{subfigure}{\textwidth}
 			\centering
-			\includegraphics[width=\linewidth]{trajectory_v4}
+			%\includegraphics[width=\linewidth]{trajectory_v4}
+			\includegraphics[width=\linewidth]{tum_kitchen_render_trajectory_v5_2}
 			\caption{A MORSE simulation of the \texttt{tum\_kitchen} environment, showing the trajectory the SCITOS-A5 robot will follow to accomplish the task depicted in \autoref{fig:demo-clustering} according to the policy computed from the \acrshort{acr:mdp} using the \acrshort{acr:vi} algorithm.}
 			\label{fig:demo-trajectory}
 		\end{subfigure}
@@ -289,11 +290,11 @@ The resulting posterior of this first phase is then used in the acquisition of t
 To provide the reader with a better insight as to how the implementation utilizes execution traces to learn \acrshortpl{acr:mdp} and use these for path planning, a demonstration is given of a single iteration of the framework, supported by the illustrations in \autoref{fig:demonstration}.
 For this demonstration, let us assume that the optimization step provides us with a new parameter-setting $\theta = 112$, specifying the number of states of the \acrshort{acr:mdp}, to evaluate.
 
-First, given this parameter-setting a state-space $\mathcal{S}$ is now learned by a $k$-Means clustering on the execution traces $E$ as shown in \autoref{fig:demo-clustering}.
-Correspondingly, the transition function $\delta$ is fitted by maximum likelihood and the set of tasks $T$ are mapped to this state-space.
+First, given this parameter-setting, a state-space $\mathcal{S}$ is, in this case, learned by, a $k$-Means clustering on the execution traces $E$, with the result shown in \autoref{fig:demo-clustering}.
+Correspondingly, the transition function $\delta$ is fitted by maximum likelihood and a set of tasks $T$ are mapped to this state-space.
 To illustrate, let us take the task of moving from the position $(-1.9, 1.05)$ to $(2.0, -5.6)$, mapping to the states labeled with `$\mathsf{1}$' and `$\mathsf{51}$' respectively as shown in \autoref{fig:demo-clustering}.
-Translating this into an initial state $s_0$ and reward function $R$ as described in \autoref{sec:learning-step}, results in an \acrshort{acr:mdp} $(\mathcal{S}, s_0, A, \delta, R)$ that can be solved using the \acrshort{acr:vi} algorithm for a policy (and value function).
-Then, to assess the performance in the simulator, this policy is employed, so that the robot will follow the trajectory as shown in \autoref{fig:demo-trajectory} (n.b., the robot might slip slightly in the simulation).
+Translating this into an initial state $s_0$ and reward function $R$, as described in \autoref{sec:learning-step}, results in an \acrshort{acr:mdp} $(\mathcal{S}, s_0, A, \delta, R)$ that can be solved using the \acrshort{acr:vi} algorithm to obtain a policy (and value function).
+Then, to assess the performance in the simulator, this policy is employed, so that the robot will follow the trajectory as shown in \autoref{fig:demo-trajectory} (n.b., additionally, the robot might slip, so that it slightly deviates from this path).
 Then, with $k$ being the recorded total number of time-steps, a performance measure for this task is obtained through \autoref{eq:vsim}.
 
 %\begin{figure}[t!]

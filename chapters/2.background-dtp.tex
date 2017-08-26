@@ -233,7 +233,7 @@ This uncertainty is captured by defining a probabilistic transition function $\d
 %TODO Update this figure and refer to it in the text
 \begin{figure}
 	\centering
-	\includegraphics[width=0.5\textwidth]{mdp}
+	\includegraphics[width=0.6\textwidth]{mdp-2}
 	\caption{Schematic representation of an \acrshort{acr:mdp} agent which repeatedly selects an action $a \in A$ based on its current state $s \in \mathcal{S}$, after which it ends up in a state $s' \in \mathcal{S}$ and receives a reward $R(s, a, s')$ accordingly.}
 	\label{fig:mdp}
 \end{figure}
@@ -312,7 +312,7 @@ p(q_{t+1} = s_i\vert q_t = s_j) = \frac{n_{ij}}{\sum_j n_{ij}}
 \end{equation}
 
 The second-mentioned approach of Bayesian inference is more suitable for many real-life problems for which state sequences are incomplete, i.e. states are recorded only for certain stages, meaning there might be gaps in-between.
-This type of approach aims to make an estimation of the transition probabilities by adopting a prior for the transition matrix $\mat{A}$, a convenient choice being a factorized prior from the product of $n$ independent \textit{Dirichlet} distributions, one for each row $\mat{A}_j$ such that:
+This type of approach aims to make an estimation of the transition probabilities by adopting a prior for the transition matrix $\mat{A}$, a convenient choice being a factorized prior from the product of $n$ independent \textit{Dirichlet} distributions, one for each row $\mat{A}_j$, such that:
 \begin{equation}
 p(\mat{A}) = \prod_{j} \text{Dir}(\mat{A}_j \vert \alpha_j)
 \end{equation}
@@ -361,7 +361,8 @@ The routine that is typically followed in \acrshort{acr:mdp} planning is depicte
 The state space, transition function and action space are usually handcrafted, based on expertise or trial and error.
 The goal that should be fulfilled is translated into a reward model, mapping positive highly-valued rewards to desirable states and low rewards/costs to states that are not desirable or need to be avoided.
 These parts together form the \acrshort{acr:mdp} which is fed to a planning algorithm, often referred to as an \textit{\acrshort{acr:mdp} solver}.
-From this solver, a policy $\pi$ is obtained, which is usually evaluated through simulations or automated model checking tools to check if the policy will satisfy the set of goals.%usually evaluated by applying it in one or more simulations, rather than using it in a real-world environment.
+From this solver, a policy $\pi$ is obtained, which is usually evaluated through simulations or automated model checking tools to check if the policy will satisfy the set of goals.
+%usually evaluated by applying it in one or more simulations, rather than using it in a real-world environment.
 %Another option is to make use of automated model checking tools which can verify whether the policy will satisfy the set goals. %TODO Add citation to book about model checking from APS and Bruno?
 After evaluating the current policy, one may choose to stick with the current policy or adjust the parameter settings of the solver or \acrshort{acr:mdp} model and obtain a new policy.
 
@@ -392,7 +393,7 @@ After evaluating the current policy, one may choose to stick with the current po
 	\end{algorithmic}
 \end{algorithm}
 
-The most well-known algorithm for obtaining optimal policies from \acrshortpl{acr:mdp} is \textit{\acrfull{acr:vi}}, which is a synchronous dynamic programming solution which iteratively updates a value function $V: \mathcal{S} \mapsto \mathbb{R}$ until convergence given an MDP model $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$.
+The most well-known algorithm for obtaining optimal policies from \acrshortpl{acr:mdp} is \textit{\acrfull{acr:vi}}, which is a synchronous dynamic programming solution which iteratively updates a value function $V: \mathcal{S} \mapsto \mathbb{R}$ until convergence, given an \acrshort{acr:mdp} model $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$.
 The updates are performed through so-called \textit{Bellman backups} based on the following Bellman equation:
 \begin{align}
 V^*(s) &= max_{a \in A} \left[\sum_{s' \in \mathcal{S}} P(s' \vert s, a) \cdot \left[R(s, a, s') + \gamma \cdot V^*_{t}(s')\right]\right]	&\forall s \in \mathcal{S}

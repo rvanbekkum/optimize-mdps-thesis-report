@@ -245,7 +245,7 @@ The first of these two main steps will be referred to as the \textit{learning st
 This learning step starts off with a data-set of execution traces $E$ obtained beforehand as described in \autoref{sec:dataset-prerequisites}.
 As we can see in \autoref{alg:base-framework}, \autoref{alg:line:learn}, the step is parameterized by $\theta$, which represents the parameter-setting to be used for the employed model learning algorithm.
 Given a parameter-setting $\theta$, a state-space $\mathcal{S}$ is acquired by quantizing the execution traces $E$ using an unsupervised machine learning algorithm.
-Subsequently, a transition function $\delta$ is acquired by applying a known model-learning algorithm (such as one of those described in \autoref{sec:learning-probabilistic-models}) given the data-set $E$, state-space $\mathcal{S}$ and possible actions $A$.
+Subsequently, a transition function $\delta$ is acquired by applying a known model-learning algorithm (such as one of those described in \autoref{sec:learning-probabilistic-models}), given the data-set $E$, state-space $\mathcal{S}$ and possible actions $A$.
 The tasks to perform are each accordingly mapped to a reward function $R$ over the acquired state-space $\mathcal{S}$ (or alternatively over state-action pairs or state-action-state triplets).
 The state-space $\mathcal{S}$, transition function $\delta$, action set $A$, reward function $R$ and a configurable initial state $s_0$ are then combined into an \acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$.
 
@@ -596,7 +596,7 @@ Therefore, this first phase is relatively cost-cheap, and although it abstracts 
 Hence, the goal of this first phase is to narrow down the search space to a subspace of learning parameters more likely to yield high performance.
 
 The block diagram in \autoref{fig:phase-1} depicts the main steps of this first phase, whose pseudo-code is presented in \autoref{alg:multi-phase-framework}, starting from \autoref{alg:line:phase1}.
-In each iteration of this first phase the execution traces $E$ from the exploration are used to obtain an \acrshort{acr:mdp} by applying the learning algorithms given a parameter-setting $\theta$.
+In each iteration of this first phase the execution traces $E$ from the exploration are used to obtain an \acrshort{acr:mdp} by applying the learning algorithms, given a parameter-setting $\theta$.
 The value of the learned model $\mathcal{M}$ is then assessed based only on the value function $V$ for a set of tasks $T_\mathcal{M}$ the system is expected to perform.
 The value of model $\mathcal{M}$ is thus computed as:
 \begin{equation*} 
@@ -624,7 +624,7 @@ At the end of the first phase, the resulting posterior \acrshort{acr:gp} distrib
 \begin{figure}[t!]
 	\centering
 	\includegraphics[width=0.75\textwidth]{phase-2-illustration-idea2.pdf}
-	\caption{An illustration of the idea behind the second phase of the multi-phase framework. The plot shows two artificial functions, one being much cheaper to evaluate in comparison to the other. As the maxima are close, starting to sample around the maximizer of the cheap function may steer the optimization towards the maximum of the expensive function.}
+	\caption{An illustration of the idea behind the second phase of the multi-phase framework. The plot shows two artificial functions, one being much cheaper to evaluate compared to the other. As the maxima are close, starting to sample around the maximizer of the cheap function may steer the optimization towards the maximum of the expensive function.}
 	\label{fig:phase-2-idea}
 \end{figure}
 

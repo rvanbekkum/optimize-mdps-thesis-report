@@ -46,7 +46,7 @@ This posterior can be viewed as an estimation of the objective function $f$, som
 % It does so by applying Bayes' Theorem, which states that the posterior probability $P(M \vert E)$ of a model $M$ given evidence $E$ is proportional to the likelihood $P(E \vert M)$ of $E$ given $M$
 
 % Acquisition function
-To decide on which $x \in \mathcal{X}$ to sample and gather a new observation $f(x)$ from next, a so-called \textit{acquisition function} $a: \mathcal{X} \mapsto \mathbb{R}$ is used, which assigns a certain utility to evaluating $f$ at some particular $x \in \mathcal{X}$ given the evidence set $\mathcal{D}$ at that time.
+To decide on which $x \in \mathcal{X}$ to sample and gather a new observation $f(x)$ from next, a so-called \textit{acquisition function} $a: \mathcal{X} \mapsto \mathbb{R}$ is used, which assigns a certain utility to evaluating $f$ at some particular $x \in \mathcal{X}$, given the evidence set $\mathcal{D}$ at that time.
 This acquisition function should be defined such that it captures a correct balance between \textit{exploration} (to sample from areas with high uncertainty) and \textit{exploitation} (to sample from areas likely to improve on prior observations). For this reason many different classes of acquisition functions exist, which are discussed in detail in \autoref{sec:bayesian-optimization-prior-acquisition}.
 
 \begin{figure}
@@ -182,7 +182,7 @@ Finally, one can choose to blend the acquisition functions of a set of \acrshort
 \hat{a}(x\vert\mathcal{D}) = \int a(x\vert\mathcal{D}, \theta_{\mathit{gp}})p(\theta_\mathit{gp}\vert\mathcal{D}) d\theta_{\mathit{gp}} \approx \frac{1}{K} \sum_{k=1}^K a(x\vert\mathcal{D}, \theta_{\mathit{gp}}^{(k)})
 \end{equation}
 
-\noindent where $a(x)$ is the utility at $x \in \mathcal{X}$ in the \acrshort{acr:mei} function for the \acrshort{acr:gp} with hyper-parameters $\theta_\mathit{gp}$ given the evidence set $\mathcal{D}$.
+\noindent where $a(x)$ is the utility at $x \in \mathcal{X}$ in the \acrshort{acr:mei} function for the \acrshort{acr:gp} with hyper-parameters $\theta_\mathit{gp}$, given the evidence set $\mathcal{D}$.
 Computing $\hat{a}(x)$ is commonly realized by a Monte Carlo integration over the acquisition functions of the \acrshortpl{acr:gp}.
 This integrated function is typically used to account for uncertainty in the hyper-parameters of the underlying \acrshort{acr:gp} in the \acrshort{acr:bo} framework.
 A benefit of this Bayesian treatment of these hyper-parameters is that the number of choices to be made is reduced and leads to a more automated optimization solution.
