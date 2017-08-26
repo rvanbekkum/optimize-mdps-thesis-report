@@ -682,41 +682,53 @@ Our hypothesis is that, if the global maximum in the first phase lies close to t
 		\Statex
 		\Function{Phase3}{}
 		\ForAll{$(\mathit{start}, \mathit{goal}) \in T$}
-		\State $(s_0, s_g) \gets \textproc{ToStates}(\{\mathit{start}, \mathit{goal}\})$
-		\State $R \gets \textproc{ToRewardFunction}(s_g)$
-		\State $\mathcal{M} \gets (\mathcal{S}, s_0, A, \delta, R)$
-		\State $V, \pi_t \gets \textproc{DTPPlanning}(\mathcal{M})$
-		\State $\mathsf{task\_status}, \mathit{steps} \gets \textproc{RunSim}(\mathcal{M}, \pi_t)$	\Comment{Execute  the policy in simulations or the real-world}
-		\If{$\mathsf{task\_status} = \texttt{stuck}$}
-		\State Let $s_f$ be the state in which the system got stuck
-		\State $R \gets \textproc{ToRewardFunction}(s_f)$
-		\State $\mathcal{M} \gets (\mathcal{S}, s_0, A, \delta, R)$
-		\State $V, \pi_f \gets \textproc{DTPPlanning}(\mathcal{M})$
-		\State Let $E_\mathit{SIM}$ be a dictionary
-		\ForAll{$a \in A, s' \in \mathcal{S}$}
-			\State $E_\mathit{SIM}[a][s'] \gets \emptyset$
+			\State $\mathsf{task\_status}, \mathit{steps} \gets \textproc{RunTask}(\mathit{start}, \mathit{goal})$
+			\State $n \gets 1$
+			\While{$\mathsf{task\_status} = \texttt{stuck}$}
+				\State Let $s_f$ be the state in which the system got stuck
+				\State $E_\mathit{SIM} \gets \textproc{GatherEvidence}(s_f)$
+%			\State $\mathit{new\_centroids} \gets \emptyset$
+%			\ForAll{$a \in A$}
+%				\If{$|E_\mathit{SIM}[a]| > 1$}
+%					\ForAll{$s' \in \mathcal{S}$}
+%						\State $\mathit{new\_centroids} \gets \mathit{new\_centroids} \cup \{\textproc{Average}(E_\mathit{SIM}[a][s'])\}$
+%					\EndFor
+%				\EndIf
+%			\EndFor
+				\State Compute $n$ sub-clusters within $s_f$ using $E_\mathit{SIM}$ as training set
+				\State Learn a new transition function $\delta_f$ for the new states using $E_\mathit{SIM}$
+				\State $\mathsf{task\_status}, \mathit{steps} \gets \textproc{RunTask}(\mathit{start}, \mathit{goal})$
+				\State $n \gets n + 1$ \Comment{Increment $n$ only if the agent got stuck in the same state}
+			\EndWhile
 		\EndFor
-		\ForAll{$i \in \{1, \ldots, 100\}, a \in A$} \Comment{Perform trials of all actions from state $s_f$}
-		\State Let $o$ be the current system state observations
-		\State Execute $a$ and let $s'$ be the resulting state
-		\State $E_\mathit{SIM}[a][s'] \gets E_\mathit{SIM}[a][s'] \cup \{o\}$	\Comment{Store the observed transition in $E_\mathit{SIM}$}
-		\While{$s' \neq s_f$} \Comment{Move back to state $s_f$}
-			\State Execute $\pi_f(s')$ and update $s'$ to the resulting state
-		\EndWhile
-		\EndFor
-		\State $\mathit{new\_centroids} \gets \emptyset$
-		\ForAll{$a \in A$}
-			\If{$|E_\mathit{SIM}[a]| > 1$}
-				\ForAll{$s' \in \mathcal{S}$}
-					\State $\mathit{new\_centroids} \gets \mathit{new\_centroids} \cup \{\textproc{Average}(E_\mathit{SIM}[a][s'])\}$
-				\EndFor
-			\EndIf
-		\EndFor
-		\State Split the state $s_f$ into new states based on $\mathit{new\_centroids}$
-		\State Update $\delta$ for the new states based on $E_\mathit{SIM}$
-		\EndIf
-		\EndFor
-		\State\Return $\mathcal{M}$
+		\State\Return $\mathcal{M}_\mathsf{out} \gets (\mathcal{S}_f, s_0, A, \delta_f, R)$ \Comment{$\mathcal{S}_f$ being the updated state-space}
+		\EndFunction
+		\Statex
+		\Function{RunTask}{$\mathit{start}, \mathit{goal}$}
+			\State $(s_0, s_g) \gets \textproc{ToStates}(\{\mathit{start}, \mathit{goal}\})$
+			\State $R \gets \textproc{ToRewardFunction}(s_g)$
+			\State $\mathcal{M} \gets (\mathcal{S}, s_0, A, \delta, R)$
+			\State $V, \pi_t \gets \textproc{DTPPlanning}(\mathcal{M})$
+			\State\Return $\textproc{RunSim}(\mathcal{M}, \pi_t)$	\Comment{Execute  the policy in simulations or the real-world}
+		\EndFunction
+		\Statex
+		\Function{GatherExperience}{$s_f$}
+			\State $R \gets \textproc{ToRewardFunction}(s_f)$
+			\State $\mathcal{M} \gets (\mathcal{S}, s_0, A, \delta, R)$
+			\State $V, \pi_f \gets \textproc{DTPPlanning}(\mathcal{M})$
+			\State Let $E_\mathit{SIM}$ be a dictionary
+			\ForAll{$a \in A, s' \in \mathcal{S}$}
+				\State $E_\mathit{SIM}[a][s'] \gets \emptyset$
+			\EndFor
+				\ForAll{$i \in \{1, \ldots, 100\}, a \in A$} \Comment{Perform trials of all actions from state $s_f$}
+				\State Let $o$ be the current system state observations
+				\State Execute $a$ and let $s'$ be the resulting state
+				\State $E_\mathit{SIM}[a][s'] \gets E_\mathit{SIM}[a][s'] \cup \{o\}$	\Comment{Store the observed transition in $E_\mathit{SIM}$}
+				\While{$s' \neq s_f$} \Comment{Move back to state $s_f$}
+					\State Execute $\pi_f(s')$ and update $s'$ to the resulting state
+				\EndWhile
+			\EndFor
+			\State\Return $E_\mathit{SIM}$
 		\EndFunction
 	\end{algorithmic}
 \end{algorithm}
@@ -725,8 +737,6 @@ The last phase starts after the optimization process has reached its stop condit
 In this phase, the goal is to further improve the learned model by checking whether the transition probabilities are likely to match the real world environment.
 The identification of discrepancies in these probabilities happens by executing actions in those areas of the state-space that are visited most often and in which the agent tends to get stuck (according to the transition probabilities) and seeing if the observed transitions yield comparable probabilities.
 For those areas and their corresponding states for which mismatches are identified, higher resolution is provided to better reflect the system's dynamics in the real world.
-
-\newpage
 
 The illustration of \autoref{fig:phase-3} aims to clarify the goal of this third phase by means of an example for the context of mobile robot navigation.
 Although the model obtained in the previous phase, might yield high performance for most of the tasks used to assess model value, a situation as illustrated in this figure might occur.
