@@ -146,6 +146,7 @@ The \texttt{strands-desktop} meta-package (developed as part of the \textit{STRA
 In order to be able to learn \acrshortpl{acr:mdp} from data and establish the optimization, we should obtain a dataset that  describes the environment the robot will operate in.
 This dataset should describe possible robot poses and to what other poses the execution of the possible actions may lead to, in order to properly describe the dynamics of the system.
 
+\newpage
 For our implementation and the experiments that have been carried out, execution traces have been obtained by letting the robot follow a random action policy during which subsequent poses and actions are logged to a file.
 This exploration is performed inside the simulator both for a relatively small environment (i.e., \texttt{tum\_kitchen}, based on a university kitchen of the Technical University of M\"unchen) and  large environment (i.e., \texttt{uol\_bl}) obtained from a repository of the \textit{STRANDS} project.
 
@@ -171,16 +172,17 @@ In this section the relevant details of each part of the implementation are disc
 \subsubsection{Learning Step}
 
 For learning discrete-state \acrshortpl{acr:mdp} from the acquired execution traces, a likelihood maximization approach is applied based on a state space obtained from clustering algorithms.
-That is, the state-space is first obtained by applying a clustering algorithm (i.e., $k$-means, \acrshort{acr:gmm}) with the given $\theta$ as its parameter-setting and geometric positions of the execution traces as its training set.
+That is, the state-space is first obtained by applying a clustering algorithm (i.e., $k$-means, \acrshort{acr:gmm}) with $\theta$ defining the number of components and the geometric positions of the execution traces as its training set.
 Then, a transition probability distribution is fitted on the execution traces, such that an \acrshort{acr:mdp} may be obtained that comprehends the transitions that are possible when actions are performed from any of its states.
 
-As described in \autoref{sec:learning-step} our learning step first learns an \acrshort{acr:mdp} based on the provided parameter-settings and then assesses the corresponding performance/model value.
-The model value is assessed based on how fast (i.e., expressed by the number of time-steps) the agent would execute the tasks it is expected to perform when it is employed with the learned \acrshort{acr:mdp}.
+After having learned an \acrshort{acr:mdp}, the learning step next assesses the corresponding model value.
+The model value is assessed based on how fast (i.e., expressed by the number of discrete time-steps) the agent would execute the tasks it is expected to perform when it is employed with the learned \acrshort{acr:mdp}.
 
 For our domain we define each task as navigating from a start location to a goal location in the environment, each presented as a pair of coordinates, as fast as possible.
 We translate these tasks into something that can be fed to the learned \acrshort{acr:mdp}, first of all, by setting the initial state of the \acrshort{acr:mdp} to the state predicted by the selected clustering algorithm for the start coordinates.
-Similarly, a goal state is obtained, and accordingly a reward function for the \acrshort{acr:mdp} is defined by setting a one-time reward for this state.
-To avoid small state spaces (in which goal states do not map directly to true goals) yielding high value, a discrepancy factor is computed and used as described in \autoref{sec:learning-step}.
+Similarly, a goal state is obtained, and accordingly a reward function for the \acrshort{acr:mdp} is defined as prescribed in \autoref{sec:learning-step}.
+%by setting a one-time reward for this state.
+%To avoid small state spaces (in which goal states do not map directly to true goals) yielding high value, a discrepancy factor is computed and used as described in \autoref{sec:learning-step}.
 
 For each task, a value function and policy is computed for the \acrshort{acr:mdp} using the \acrshort{acr:vi} algorithm.
 Based on the computed value functions and simulations following the corresponding policies, the value $V_\mathcal{M}$ of the learned \acrshort{acr:mdp} $\mathcal{M}$ is computed as in \autoref{eq:vm} of \autoref{sec:learning-step}.
