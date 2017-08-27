@@ -733,7 +733,7 @@ Our hypothesis is that, if the global maximum in the first phase lies close to t
 	\end{algorithmic}
 \end{algorithm}
 
-The last phase starts after the optimization process has reached its stop condition and has retrieved a performance-maximizing \acrshort{acr:mdp} $\mathcal{M}_\mathsf{max}$
+The third phase starts after the optimization process has reached its stop condition and has retrieved a performance-maximizing \acrshort{acr:mdp} $\mathcal{M}_\mathsf{max}$
 In this phase, the goal is to further improve the learned model by checking whether the transition probabilities are likely to match the real world environment.
 The identification of discrepancies in these probabilities happens by executing actions in those areas of the state-space that are visited most often and in which the agent tends to get stuck (according to the transition probabilities) and seeing if the observed transitions yield comparable probabilities.
 For those areas and their corresponding states for which mismatches are identified, higher resolution is provided to better reflect the system's dynamics in the real world.
@@ -743,13 +743,21 @@ Although the model obtained in the previous phase, might yield high performance 
 That is, the robot, depicted in blue, needs to move from its current position to the goal, indicated by the yellow shaded area.
 For the state space depicted on the left-side however, the robot might get stuck following the optimal policy from which the need for higher resolution in this area emerges.
 
-In \autoref{alg:multi-phase-fine-tuning}, it is shown how to accomplish the fine-tuning of an \acrshort{acr:mdp} $\mathcal{M}$ resulting from the previous phase.
+In \autoref{alg:multi-phase-fine-tuning}, a proof-of-concept solution for this problem is shown which fine-tunes an \acrshort{acr:mdp} $\mathcal{M}$ resulting from the previous two phases.
 Given a set of tasks $T$ (possibly different from the tasks used in the prior phases), a policy $\pi$ is obtained based on this model, which is executed in a simulation or real-world environment.
 When the agent detects it is stuck in some state $s_f$, it starts to gather a set of new execution traces $E_\mathit{SIM}$ of transitions from this state.
 This set is augmented by iteratively selecting an action (in a round-robin fashion) and executing it from the state $s_f$ and recording the end-state $s'$.
-For our example, one entry of this set may express that starting from a location $(x, y)$ in state $s_2$, executing the action $\texttt{N}$ resulted in ending up in state $s_7$.
-%TODO Adapt
+For the example in \autoref{fig:phase-3}, one entry of this dataset $E_\mathit{SIM}$ may express that starting from a location $(x, y)$ in state $s_f = s_2$, choosing to execute the action $\texttt{N}$ of moving north resulted in ending up in state $s_7$.
+Then, another entry may express that starting from a location $(x', y')$ in state $s_f = s_2$, executing the same action resulted in ending up in state $s_2$.
 
+Based on the set $E_\mathit{SIM}$, the state $s_f$ in which the agent got stuck is split in a number of (sub-)states by clustering the observations.
+The transition function of the \acrshort{acr:mdp} is then updated accordingly for the resulting state-space.
+The agent then attempts to perform the task again with the updated \acrshort{acr:mdp}.
+If the agent then succeeds in executing the task, it moves on to the next task, and otherwise repeats the earlier steps with higher resolution in the clustering.
+
+Note that this third phase is a phase that is mostly independent of the prior phases of the framework.
+That is, in the first two phases the goal is to find the optimal parameters $\theta$ of an \acrshort{acr:mdp} model-learning algorithm, while the third phase is concerned with tuning the resulting \acrshortpl{acr:mdp}.
+As such, this last phase is rather an additional (and optional) step with the attempt of further improving the performance yielded by these system models.
 
 % To identify these discrepancies we could check if the transition probabilities of the model match observed outcomes of actions from the different states of the model.
 

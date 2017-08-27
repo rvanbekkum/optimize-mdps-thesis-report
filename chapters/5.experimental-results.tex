@@ -583,8 +583,8 @@ One can observe that the optima found after 20 steps are quite different, which 
 
 In \Crefrange{fig:exp13}{fig:exp16} one can see that optima are found within the same area of the parameter space as seen in the results for the base framework.
 
-\vspace{12pt}
-\noindent\fbox{\textbf{TODO:} Fix problems most likely in implementation for the multi-phase framework for more usable results.}
+\subsubsection{Tum Kitchen Environment}
+\blindtext
 
 % ID = 13
 \begin{figure}[t!]
@@ -597,11 +597,16 @@ In \Crefrange{fig:exp13}{fig:exp16} one can see that optima are found within the
 % ID = 14
 \begin{figure}[t!]
 	\centering
-	\includegraphics[width=0.495\textwidth]{plots/tum_multi/plot_b_00__alg_gmm_pct_100_acq_ei}
-	\includegraphics[width=0.485\textwidth]{plots/tum_multi/plot_b_00__alg_gmm_pct_100_acq_ei_maximum}
-	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 30 iterations of the multi-phase framework on the \texttt{tum\_kitchen} environment, \acrshort{acr:gmm}, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 14).}
+	\includegraphics[width=0.495\textwidth]{plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ucb}
+	\includegraphics[width=0.485\textwidth]{plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ucb_maximum}
+	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 30 iterations of the multi-phase framework on the \texttt{tum\_kitchen} environment, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 14).}
 	\label{fig:exp14}
-\end{figure}%TODO Update
+\end{figure}%vTODO Update
+
+\newpage
+
+\subsubsection{UOL BL Environment}
+\blindtext
 
 % ID = 15
 \begin{figure}[t!]
@@ -622,3 +627,55 @@ In \Crefrange{fig:exp13}{fig:exp16} one can see that optima are found within the
 
 % Small state-spaces: discrepancy between goal state and true goal is discounted
 % Large state-spaces overshooting + overfitting on limited training data
+
+\newpage
+\subsubsection{Phase 3: MDP Tuning}
+
+\begin{figure}
+	\centering
+	\captionsetup{font=small}
+	\captionsetup[subfigure]{font=footnotesize}
+	%\captionsetup[subfigure]{justification=centering}
+	\begin{subfigure}{0.475\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{uol_bl_phase_3_small}
+		\caption{One of the rooms in the (simulated) \texttt{uol\_bl} environment. The mobile robot, seen in the top-right, is presented the task of moving from its current location to a location in the main hall, outside the room.}
+		\label{fig:uol_bl_tuning_1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.475\textwidth}
+		\centering
+		\vspace{19.5pt}
+		\includegraphics[width=\linewidth]{uol_bl_phase_3_2_smallv6}
+		\caption{Illustration of the area of the earlier-learned state-space of interest. The resolution for the part of the state-space as shown is too low, particularly, considering the state $s_f$, which might cause the robot to get stuck. The third phase of the multi-phase framework therefore splits the state, as depicted by the dotted red line, based on new centroids.}
+		\label{fig:uol_bl_tuning_2}
+	\end{subfigure}
+	\bigskip
+	
+	\caption{Illustration of the third-phase of the multi-phase framework in a simulation of the \texttt{uol\_bl} environment. The phase starts off with the \acrshort{acr:mdp} model with $540$ states learned in the previous phase, and further fine-tunes this model after the robot gets stuck executing a new task.}
+	\label{fig:uol_bl_tuning}
+\end{figure}
+
+Finally, we get back at the third phase of our multi-phase framework, in which the \acrshort{acr:mdp} $\mathcal{M}$ obtained in the previous phase is further fine-tuned for a set of new tasks.
+To investigate the expediency of this third phase an implementation of the solution proposed in \autoref{alg:multi-phase-fine-tuning} for the mobile robot navigation application.
+
+Given a task to execute, the solution solves \acrshort{acr:mdp} $\mathcal{M}$ (with new initial state and reward function for this task) for a policy, which it uses to perform the task.
+Then, if the controlled robot gets stuck in a state $s_f$ in its attempt to complete the task, it starts to gather new experience about the transitions possible from this state in a collection $E_\mathit{SIM}$.
+Based on this new experience, the solution splits the state into a number of new (sub-)states through a clustering of the observations in $E_\mathit{SIM}$, and accordingly updates the transition probabilities based on the new data.
+The updated \acrshort{acr:mdp} is then used to compute a new policy for the task, after which the agent tries to perform the task again.
+If the agent gets stuck in the same state $s_f$ a clustering with higher resolution is applied to split the state.
+
+For our implementation of this proof-of-concept solution, the mobile robot executes and gathers new experience in a simulation environment.
+In gathering new experience, the mobile robot stores the observations (i.e., odometric readings) it makes and the state $s'$ it ends up in after executing an action $a$ from these observations.
+
+To evaluate the approach, we take the performance-maximizing \acrshort{acr:mdp} $\mathcal{M}$ of $540$ states learned in the second phase of our last experiment (i.e., see \autoref{fig:exp16}) for the \texttt{uol\_bl} environment.
+Then, a new task is presented, which requires the robot to move from the corner of a room in the environment, as shown in \autoref{fig:uol_bl_tuning_1}, to a location in the main hall outside the room.
+The problem, is that the resolution in the learned state-space $\mathcal{S}$ of $\mathcal{M}$ for this area is too low, as shown in \autoref{fig:uol_bl_tuning_2}, caused by the limited execution traces gathered for this area in the set $E$ used for learning the model.
+As a result, there is a considerable chance the robot gets stuck in the state labeled $s_f \in \mathcal{S}$ from its starting location.
+
+To take care of this, after the observation is made that he robot got stuck, the algorithm makes the robot gather new data about the transitions possible from the different locations within the state $s_f$ in which it got stuck.
+Based on this data, the algorithm clusters the data to effectively split the state in two, well-nigh as shown in \autoref{fig:uol_bl_tuning_2}.
+The resulting \acrshort{acr:mdp} with updated state-space and transition probabilities then allows the mobile robot to successfully accomplish the task (i.e., by the computed policy suggesting to move south and west subsequently).
+
+Although the algorithm works well for fixing small discrepancies like these in the model, caused by limited data about a certain area of the environment, it is not well-suited for learning major parts of the model from the ground up.
+For such scenarios, one is better off using existing \acrshort{acr:rl} solutions, such as continuous $Q$-learning or active learning approaches which use the learned \acrshort{acr:mdp} as a prior model (see \autoref{sec:active-learning}).
