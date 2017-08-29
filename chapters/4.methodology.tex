@@ -1,5 +1,6 @@
-\chapter{Model-Learning Framework}
+\chapter{Model Learning Framework}
 \label{ch:methodology}
+% Model Learning or Model Optimization, what should this be called?
 
 Our interest in this thesis lies in the development of probabilistic models for systems whose dynamics are stochastic.
 The objective is to use a dataset of execution traces of a system to attain an accurate system representation, which can be used to obtain plans for optimal automated control of a system involving uncertainty.
@@ -63,7 +64,7 @@ Finally and most importantly, a solution to this problem should take into accoun
 	\begin{subfigure}{.5\textwidth}
 		\centering
 		\includegraphics[width=.8\linewidth]{dummy-map-2-2v2}
-		\caption{Data-points of execution traces from exploration depicted.}
+		\caption{Datapoints of execution traces from exploration depicted.}
 		\label{fig:dummy-map-2}
 	\end{subfigure}
 	
@@ -72,7 +73,7 @@ Finally and most importantly, a solution to this problem should take into accoun
 	\begin{subfigure}{.5\textwidth}
 		\centering
 		\includegraphics[width=.8\linewidth]{dummy-map-2-3}
-		\caption{State-space of a learned \acrshort{acr:mdp} depicted.}
+		\caption{State space of a learned \acrshort{acr:mdp} depicted.}
 		\label{fig:dummy-map-3}
 	\end{subfigure}\hfill
 	\begin{subfigure}{.5\textwidth}
@@ -110,13 +111,13 @@ For now let us assume, the action space $A$ is defined as a finite set of moveme
 \end{align*}\newpage
 Before our model learning framework is applied to learn \acrshortpl{acr:mdp} for the system, the data about the environment could have been obtained in the form of execution traces that consist of logs of the robot's pose and the (next) action it is about to take.
 This could then give a set of datapoints, as depicted in \autoref{fig:dummy-map-2}, which can be used to learn the states and transition probabilities of an \acrshort{acr:mdp}.
-Quantizing this dataset of observed robot poses into $10$ symbols (e.g., using $k$-means clustering), might give us the state-space $\mathcal{S} = \{s_0, \ldots s_9\}$ depicted in \autoref{fig:dummy-map-3}.
+Quantizing this dataset of observed robot poses into $10$ symbols (e.g., using $k$-means clustering), might give us the state space $\mathcal{S} = \{s_0, \ldots s_9\}$ depicted in \autoref{fig:dummy-map-3}.
 %, such that:
 %$$
 %\mathcal{S} = \{s_0, \ldots s_9\}
 %$$
 %A potential state-space of an \acrshort{acr:mdp} that might be learned from this dataset is shown in \autoref{fig:dummy-map-3}.
-Accordingly, based on such a quantization into a state-space $\mathcal{S}$, one can learn a transition function $\delta: \mathcal{S} \times A \times \mathcal{S} \mapsto [0, 1]$ for an \acrshort{acr:mdp} applying the maximum-likelihood estimation as described in \autoref{sec:learning-markov-models}.
+Accordingly, based on such a quantization into a state space $\mathcal{S}$, one can learn a transition function $\delta: \mathcal{S} \times A \times \mathcal{S} \mapsto [0, 1]$ for an \acrshort{acr:mdp} applying the maximum-likelihood estimation as described in \autoref{sec:learning-markov-models}.
 Then, say that for instance, we define a task for the robot as moving from an initial position in state $s_0 \in \mathcal{S}$ to a goal area corresponding to the state $s_7 \in \mathcal{S}$ as depicted.
 This would make us define a reward function $R: \mathcal{S} \times A \times \mathcal{S} \mapsto \mathbb{R}$ for our \acrshort{acr:mdp} such that only a reward can be obtained from the `goal' state $s_7$, i.e.:
 \[
@@ -145,12 +146,12 @@ In the following sections we discuss how the proposed framework takes these aspe
 % Type of content
 Prior to describing the proposed framework for the problem as specified in \autoref{sec:problem-statement}, we are obliged to specify the expected format of the datasets to learn \acrshortpl{acr:mdp} from.
 A self-evident approach is making use of a dataset generated from execution traces, in which the system under consideration logged a set of readings/observations describing the system state accompanied by the actions selected in between at a fixed time interval.
-One should note that this means that the action space $A$ and time step $t$, that will be used for any \acrshort{acr:mdp} for the system, should already have been established at this point.
+One should note that this means that the action space $A$ and time-step $t$, that will be used for any \acrshort{acr:mdp} for the system, should already have been established at this point.
 When adding the auxiliary condition of needing to learn fully observable \acrshortpl{acr:mdp}, the need arises for the observations in these execution traces to be usable for distinguishing between the different system states.
 
 For our running example of mobile robot navigation such a dataset may be obtained by executing the robot in its real-world environment following a random action policy.
 That is, one could choose to let the robot record its location and orientation in terms of its sensor readings which are logged at a fixed time interval.
-In the exploration, the robot would then start from some position in the environment, choose an action (e.g., driving forward in some direction) at random and execute it according to the fixed time step.
+In the exploration, the robot would then start from some position in the environment, choose an action (e.g., driving forward in some direction) at random and execute it according to the fixed time-step.
 What would then be logged are the robot's sensor readings and selected action at each stage.
 Recording the action at each stage is appropriate as it allows us to observe the effect of the actions and identify actions that do not affect the robot's state (e.g., being unable to move because of a wall or other obstacle close to the robot).
 
@@ -158,7 +159,7 @@ Recording the action at each stage is appropriate as it allows us to observe the
 Further, one should ensure that the dataset obtained from the exploration at least holds observation-action pairs for the area of the observation/state space of interest for the tasks the system is expected to perform.
 For our running example, this would be covering most of the reachable parts of the environment and trying out actions in each area multiple times.
 Clearly, one could decide to exclude or limit exploration for those areas that are deemed not of interests for the tasks the system is expected to perform.
-All in all, the learning algorithm requires one to fix an action space $A$ and time step $t$ and gather a dataset consisting of a sufficient number of observation-action pairs to describe the dynamics of the system under consideration.
+All in all, the learning algorithm requires one to fix an action space $A$ and time-step $t$ and gather a dataset consisting of a sufficient number of observation-action pairs to describe the dynamics of the system under consideration.
 
 \newpage
 
@@ -247,7 +248,7 @@ As we can see in \autoref{alg:base-framework}, \autoref{alg:line:learn}, the ste
 Given a parameter setting $\theta$, a state space $\mathcal{S}$ is acquired by quantizing the execution traces $E$ using an unsupervised machine learning algorithm.
 Subsequently, a transition function $\delta$ is acquired by applying a known model learning algorithm (such as one of those described in \autoref{sec:learning-probabilistic-models}), given the dataset $E$, state space $\mathcal{S}$ and possible actions $A$.
 The tasks to perform are each accordingly mapped to a reward function $R$ over the acquired state space $\mathcal{S}$ (or alternatively over state-action pairs or state-action-state triplets).
-The state-space $\mathcal{S}$, transition function $\delta$, action set $A$, reward function $R$ and a configurable initial state $s_0$ are then combined into an \acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$.
+The state space $\mathcal{S}$, transition function $\delta$, action set $A$, reward function $R$ and a configurable initial state $s_0$ are then combined into an \acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$.
 
 To assess the performance yielded by $\mathcal{M}$, the \acrshort{acr:mdp} is solved by applying known \acrshort{acr:dtp} algorithms like \acrshort{acr:vi} or \acrshort{acr:pi} to obtain policies for a set of tasks the system is expected to perform.
 The value of the model $V_{\mathcal{M}}$ is then determined by checking how well the system is expected to perform by execution according to the derived policies (e.g., based on simulations and/or the value function obtained by a \acrshort{acr:dtp} algorithm).
@@ -258,19 +259,19 @@ The sections below describes each of the components of this algorithm in more de
 %vTODO Explain where each component of the MDP comes from
 %vTODO Devote a paragraph clearly on how the reward function is defined; multiply the reward with the discrepancy factor rather than the value 
 
-\subsubsection{Action-Space and Time Step}
+\subsubsection{Action-Space and Time-Step}
 The action space $A$ of the \acrshort{acr:mdp} to be learned is one of the input parameters for the framework and should match the actions used in obtaining the set $E$ of execution traces.
-Similarly, the time step $t$ is an input parameter as well, which specifies the time in between stages in which the agent selects an action, again matching the time step used in obtaining the set $E$ of execution traces.
+Similarly, the time-step $t$ is an input parameter as well, which specifies the time in between stages in which the agent selects an action, again matching the time-step used in obtaining the set $E$ of execution traces.
 In our running example, one possibility is to define the action space as the set of movements in the cardinal and inter-cardinal directions as seen earlier in \autoref{sec:application-mobile-robot}.
-The time step $t$ for the mobile robot would then correspond to the period of time it moves in one of these directions after it has selected an action $a \in A$.
+The time-step $t$ for the mobile robot would then correspond to the period of time it moves in one of these directions after it has selected an action $a \in A$.
 
-\subsubsection{State-Space}
-From the provided set of execution traces $E$, a state-space $\mathcal{S}$ is learned based on the current hyper-parameter setting $\theta$ in the learning step.
+\subsubsection{State Space}
+From the provided set of execution traces $E$, a state space $\mathcal{S}$ is learned based on the current hyperparameter setting $\theta$ in the learning step.
 For instance, in our running example, a $k$-means clustering can be applied on for instance, coordinates in the execution traces $E$ describing the reachable locations of the robot, where $k$ is specified by the setting of $\theta$.
 
 \subsubsection{Transition Function}
-In the learning step the transition function $\delta$ is obtained by applying a known model-learning algorithm, for which a likelihood maximization approach may be selected for learning the transition probabilities of a fully observable \acrshort{acr:mdp}.
-The transition function is defined for the provided action space $A$ and earlier acquired state-space $\mathcal{S}$ and approximated from the transitions in the set $E$ of execution traces.
+In the learning step the transition function $\delta$ is obtained by applying a known model learning algorithm, for which a likelihood maximization approach may be selected for learning the transition probabilities of a fully observable \acrshort{acr:mdp}.
+The transition function is defined for the provided action space $A$ and earlier acquired state space $\mathcal{S}$ and approximated from the transitions in the set $E$ of execution traces.
 %Depending on the application, one could choose to apply another algorithm
 
 \subsubsection{Tasks and Reward Functions}
@@ -701,7 +702,7 @@ Our hypothesis is that, if the global maximum in the first phase lies close to t
 				\State $n \gets n + 1$ \Comment{Increment $n$ only if the agent got stuck in the same state}
 			\EndWhile
 		\EndFor
-		\State\Return $\mathcal{M}_\mathsf{out} \gets (\mathcal{S}_f, s_0, A, \delta_f, R)$ \Comment{$\mathcal{S}_f$ being the updated state-space}
+		\State\Return $\mathcal{M}_\mathsf{out} \gets (\mathcal{S}_f, s_0, A, \delta_f, R)$ \Comment{$\mathcal{S}_f$ being the updated state space}
 		\EndFunction
 		\Statex
 		\Function{RunTask}{$\mathit{start}, \mathit{goal}$}

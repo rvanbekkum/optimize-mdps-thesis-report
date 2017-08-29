@@ -5,7 +5,7 @@ Motion and path planning in robotics are some of the many applications that requ
 A typical approach for planning in these domains involving uncertainty is to set up a probabilistic model of the environment, a typical choice being a \acrfull{acr:mdp}, and apply existing decision-theoretic planning techniques to obtain an optimal plan.
 However, devising these probabilistic models usually requires expert knowledge on the domain and might be a daunting and error-prone task.
 Therefore it is desirable to automate the process of obtaining probabilistic models through learning algorithms.
-Although some work has already been done on crafting such learning algorithms, the state of the art lacks an automated method of properly configuring the hyper-parameters for these algorithms.
+Although some work has already been done on crafting such learning algorithms, the state of the art lacks an automated method of properly configuring the hyperparameters for these algorithms.
 In this work we propose a method that autonomously learns \acrshortpl{acr:mdp} solely from execution traces obtained from an exploration phase.
 From these execution traces the state spaces of \acrshortpl{acr:mdp} are learned by applying unsupervised machine learning methods.
 The model quality is assessed by running simulations of the system using policies from standard \acrshort{acr:mdp} solvers, and in order to obtain the best \acrshort{acr:mdp} model, Bayesian Optimization is applied over the parameter space of the machine learning method.

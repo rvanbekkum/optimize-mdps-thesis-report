@@ -51,8 +51,8 @@ Therefore, this is followed by a discussion of the discrete-state Markov Models 
 \label{sec:markov-chains}
 % Markov Chains: States and Transitions
 
-The evolution of system or processes can be viewed as so-called \textit{time-series}, in which a set of data-points can be ordered using an underlying physical dimension, typically time \cite{barberBRML2012}.
-Formally, time-series can be defined as a series $x_{a:b}$ of data-points, with $x_{a:b} \equiv x_a, x_{a+1}, \ldots, x_b$.
+The evolution of system or processes can be viewed as so-called \textit{time-series}, in which a set of datapoints can be ordered using an underlying physical dimension, typically time \cite{barberBRML2012}.
+Formally, time-series can be defined as a series $x_{a:b}$ of datapoints, with $x_{a:b} \equiv x_a, x_{a+1}, \ldots, x_b$.
 By means of these time-series, probabilistic models can be devised for real-world systems or processes, by introducing the notion of \textit{states} as a description of the system at a particular point in time or \textit{stage}.
 
 On the basis of the class of Markov Models lies the simplifying assumption that each state is only dependent on a limited number of previous states.
@@ -326,7 +326,7 @@ For this thesis, however, we limit ourselves to learning fully observable \acrsh
 \label{sec:planning}
 
 In \acrshort{acr:sdm} problems, typically the aim is to determine a policy that maximizes the total expected value.
-In algorithmic planning techniques a probabilistic model of the environment, which includes estimates of the transition probabilities and rewards, is used to obtain an optimal policy by exploring its state-space towards a goal.
+In algorithmic planning techniques a probabilistic model of the environment, which includes estimates of the transition probabilities and rewards, is used to obtain an optimal policy by exploring its state space towards a goal.
 On the other hand, in \acrfull{acr:rl} the optimal policy is learned while interacting with the environment and it is applied when one does not know the transition probabilities and rewards for the system in advance.
 Both techniques have in common that they iteratively update estimations of a value function to derive a policy.
 The main difference though is that in planning this progress is carried out based on simulated experience from a model, while in learning techniques this is based on real experience from executing agents in an environment \cite{sutton1998reinforcement}.
@@ -409,7 +409,7 @@ As can be seen in \autoref{alg:vi}, convergence is reached as soon as the change
 After such convergence has been reached, the policy can be defined by selecting the action $a \in A$ for each state $s \in \mathcal{S}$ that is most likely to maximize the collected rewards based on the value of $V_t(s)$.
 All by all, the algorithm works well when the state space is relatively small, but for large state spaces more storage is required and it may take longer to reach convergence.
 
-Note that an alternative formulation of the \acrshort{acr:vi} algorithm can be given that makes use of a $Q$-table instead of a value-function $V$ \cite{singh2000convergence}.
+Note that an alternative formulation of the \acrshort{acr:vi} algorithm can be given that makes use of a $Q$-table instead of a value function $V$ \cite{singh2000convergence}.
 In this formulation the entries $Q(s, a)$ are updated in each iteration for each state-action pair.
 The optimal policy can then be obtained directly by selecting the action with the maximum value in the $Q$-table for each action, though it requires more storage compared to a value function.
 
@@ -541,7 +541,7 @@ A near-optimal policy can then be constructed by selecting the action with the h
 	\caption{SARSA}
 	\label{alg:sarsa}
 	\begin{algorithmic}[1]
-		\Require{State-space $\mathcal{S}$, action space $A$, learning rate $\alpha$, discount factor $\gamma$}
+		\Require{State space $\mathcal{S}$, action space $A$, learning rate $\alpha$, discount factor $\gamma$}
 		\Ensure{Optimal policy $\arr{\pi}^*: \mathcal{S} \mapsto A$}
 		\State Initialize $Q: \mathcal{S} \times A \mapsto \mathbb{R}$ arbitrarily
 		\Repeat

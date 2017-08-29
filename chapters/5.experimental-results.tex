@@ -150,7 +150,7 @@ This dataset should describe possible robot poses and to what other poses the ex
 For our implementation and the experiments that have been carried out, execution traces have been obtained by letting the robot follow a random action policy during which subsequent poses and actions are logged to a file.
 This exploration is performed inside the simulator both for a relatively small environment (i.e., \texttt{tum\_kitchen}, based on a university kitchen of the Technical University of M\"unchen) and  large environment (i.e., \texttt{uol\_bl}) obtained from a repository of the \textit{STRANDS} project.
 
-In the exploration a new entry is recorded in a file after each time step of $t = \SI{1.0}{\second}$, which each contain the robot's pose based on odometric readings with its location as $x$ and $y$ position and its orientation described by the $yaw$.
+In the exploration a new entry is recorded in a file after each time-step of $t = \SI{1.0}{\second}$, which each contain the robot's pose based on odometric readings with its location as $x$ and $y$ position and its orientation described by the $yaw$.
 Apart from that, each entry also stores the action that is executed next from the current pose.
 As a result, the next entry tells us the robot's pose after the action in the previous entry has been executed.
 
@@ -186,7 +186,7 @@ Similarly, a goal state is obtained, and accordingly a reward function for the \
 
 For each task, a value function and policy is computed for the \acrshort{acr:mdp} using the \acrshort{acr:vi} algorithm.
 Based on the computed value functions and simulations following the corresponding policies, the value $V_\mathcal{M}$ of the learned \acrshort{acr:mdp} $\mathcal{M}$ is computed as in \autoref{eq:vm} of \autoref{sec:learning-step}.
-In the simulations, for each task, the robot is first put at the start location defined by the task and then moves in the direction imposed by the computed policy at each discrete time step.
+In the simulations, for each task, the robot is first put at the start location defined by the task and then moves in the direction imposed by the computed policy at each discrete time-step.
 It repeats this until the goal state has been reached.
 At that point, however, the ``true'' goal might not have been reached by the robot.
 This is a problem, because if we would quit the simulation as soon as the goal state has been reached, then \acrshortpl{acr:mdp} with state spaces that are too simple would yield high value.
@@ -292,7 +292,7 @@ The resulting posterior of this first phase is then used in the acquisition of t
 To provide the reader with a better insight as to how the implementation utilizes execution traces to learn \acrshortpl{acr:mdp} and use these for path planning, a demonstration is given of a single iteration of the framework, supported by the illustrations in \autoref{fig:demonstration}.
 For this demonstration, let us assume that the optimization step provides us with a new parameter setting $\theta = 112$, specifying the number of states of the \acrshort{acr:mdp}, to evaluate.
 
-First, given this parameter-setting, a state space $\mathcal{S}$ is, in this case, learned by, a $k$-Means clustering on the execution traces $E$, with the result shown in \autoref{fig:demo-clustering}.
+First, given this parameter setting, a state space $\mathcal{S}$ is, in this case, learned by, a $k$-Means clustering on the execution traces $E$, with the result shown in \autoref{fig:demo-clustering}.
 Correspondingly, the transition function $\delta$ is fitted by maximum likelihood and a set of tasks $T$ are mapped to this state space.
 To illustrate, let us take the task of moving from the position $(-1.9, 1.05)$ to $(2.0, -5.6)$, mapping to the states labeled with `$\mathsf{1}$' and `$\mathsf{51}$' respectively as shown in \autoref{fig:demo-clustering}.
 Translating this into an initial state $s_0$ and reward function $R$, as described in \autoref{sec:learning-step}, results in an \acrshort{acr:mdp} $(\mathcal{S}, s_0, A, \delta, R)$ that can be solved using the \acrshort{acr:vi} algorithm to obtain a policy (and value function).
