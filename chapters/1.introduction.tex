@@ -142,15 +142,15 @@ Although various algorithms for learning \acrshortpl{acr:mdp} offline from a dat
 %To achieve this we pose the adjustment of the learning algorithm parameters as an optimization task to maximize the performance that follows from executing plans derived from learned \acrshortpl{acr:mdp}.
 To address this problem, the proposed framework poses the adjustment of the learning algorithm parameters as an optimization task of maximizing the performance that follows from executing plans derived from learned \acrshortpl{acr:mdp}.
 The optimization is performed by applying a technique known as \acrfull{acr:bo}, such that we define a probability distribution over functions to model the performance measure and iteratively sample parameter-settings towards a global maximizer of the performance.
-Although algorithms that employ the same framework for optimizing the parameters of probabilistic models \cite{ghavamzadeh2015bayesian, guez2012efficient} or policy search \cite{deisenroth2011pilco, wilson2014using} do exist, these are online approaches that do not utilise the available data prior to interacting with the real world environment.
+Although algorithms that employ the same framework for optimizing the parameters of probabilistic models \cite{ghavamzadeh2015bayesian, guez2012efficient} or policy search \cite{deisenroth2011pilco, wilson2014using} do exist, these are online approaches that do not utilize the available data prior to interacting with the real world environment.
 
 %To address model inadequacies that are due to incomplete data, we propose to incorporate the identification of insufficient exploration for the transitions from those states that are visited in the execution of obtained plans.
 %That is, for those learned models for which the data was observed to be incomplete, the observations of the performance for the corresponding parameter-settings are modeled as noisy or uncertain.
 %This serves the purpose of more cautious exploitation of those areas of the parameter space which mostly produce noisy observations of the performance measure.
 
-To achieve a more cost-effective optimization, the parameter search space is first narrowed down by a pre-processing step.
-In this step assessments of the model value are made on a more abstract level (i.e., based on the computed value function for an \acrshort{acr:mdp}).
-The posterior that follows from this step is then used to steer the acquisition in the main optimization step.
+To achieve a more cost-effective optimization, the parameter search space is first narrowed down by a pre-processing phase.
+In this phase assessments of the model value are made on a more abstract level (i.e., based on the computed value function for an \acrshort{acr:mdp}).
+The posterior that follows is then used to steer the acquisition in the main optimization phase.
 
 In attempt to further improve the learned models, a post-processing step is performed that aims to identify and fix discrepancies between the model and the real-world.
 This post-processing step increases the resolution for those areas of the state-space when it identifies the outcomes of actions in simulations do not match the learned transition probabilities.
@@ -180,7 +180,7 @@ Another motivation of this is that the framework is not solely intended for the 
 Finally, we focus on the domain of mobile robot navigation to evaluate and test our approach.
 One of the important aspects to consider, is which data should be collected to describe the dynamics of the system to learn models from this data.
 For our implementation we choose to collect data about the robot's poses from internal odometry, but for other applications we might not be able to describe the states and transitions of the system through a geometric model and may need other learning algorithms than the clustering algorithms we use for our application.
-An example of such applications might be that of learning \acrshortpl{acr:mdp} for traffic light control \cite{wiering2004intelligent, delgado2011efficient}, in which, for instance, lane-turn probabilities could be learned from a data-set.
+An example of such an application may be that of learning \acrshortpl{acr:mdp} for traffic light control \cite{wiering2004intelligent, delgado2011efficient}, in which, for instance, lane-turn probabilities are learned from a data-set.
 Note that this application seems particularly appropriate to be approached in combination with \acrshort{acr:rl} techniques, so that the system is able to adapt to changes that occur over time.
 
 % POMDPs: Restricted to MDPs, but could possible be extended to deal where the states are cannot be directly observed and should be inferred from observations.

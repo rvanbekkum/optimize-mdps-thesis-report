@@ -427,17 +427,6 @@ In the next section the obtained results for each of these configurations are sh
 %\vspace{12pt}
 %\noindent\fbox{\textbf{TODO:} Table to be added describing the configurations/scenarios for the experiments.}
 
-\section{Results and Discussion}
-\label{sec:results}
-%TODO Fix order of figures and update text
-
-From the experiments that have been performed according to the configurations presented in \autoref{sec:scenarios} results have been obtained that are discussed in this section.
-First, we present and review the results obtained for the experiments that follow the base framework in \autoref{sec:base-framework-results}.
-Then, in \autoref{sec:multiphase-framework-results} the results for the multi-phase extension of the framework are presented and discussed. Each of the plots presented in these sections show the resulting posterior that follows from the evidence gathered in the \acrshort{acr:bo} in which $\theta$ is the parameter-setting for model learning and $f$ is the (unknown) objective function mapping these to model values.
-
-\subsection{Base Framework}
-\label{sec:base-framework-results}
-
 \afterpage{
 	% ID = 1
 	\begin{figure}[t!]
@@ -466,13 +455,21 @@ Then, in \autoref{sec:multiphase-framework-results} the results for the multi-ph
 	\clearpage
 }
 
-\subsubsection{Tum Kitchen Environment}
+\section{Results and Discussion}
+\label{sec:results}
+%TODO Fix order of figures and update text
 
-First of all, let us consider the results obtained for the small \texttt{tum\_kitchen} environment.
-Overall, in \Crefrange{fig:exp1}{fig:exp9} one can see that the optimum $\theta_\mathsf{max}$ found lies mostly, with a few explainable exceptions, in the same area of the parameter space.
-In \Crefrange{fig:exp1}{fig:exp3} respectively 100\%, 75\% and 50\% of the dataset has been used in the corresponding experiments, and one can see here that with 50\% almost no distinction can be made in assessed performance.
-At the other hand, \autoref{fig:exp2} shows that with 75\% of the data the distinction becomes much more clear.
-What might explain this, is that this particular section of the dataset adds data based on which \acrshortpl{acr:mdp} with large state spaces overfit their corresponding transition function.
+From the experiments that have been performed according to the configurations presented in \autoref{sec:scenarios} results have been obtained that are discussed in this section.
+First, we present and review the results obtained for the experiments that follow the base framework in \autoref{sec:base-framework-results}.
+Then, in \autoref{sec:multiphase-framework-results} the results for the multi-phase extension of the framework are presented and discussed. 
+Each of the figures in these sections present plots for each of the experiments, showing the resulting posterior from the gathered evidence, and the value $V_\mathcal{M}$ of the learned model in each iteration of the \acrshort{acr:bo} optimization process.
+%In these plots $\theta$ is the parameter-setting for model learning and $f$ is the (unknown) objective function mapping these to model values.
+
+\subsection{Base Framework}
+\label{sec:base-framework-results}
+
+First off, we present and evaluate the results obtained from the experiments on the base framework.
+As shown in \autoref{tab:configurations-base}, experiments have been performed on two different simulation environments: the small \texttt{tum\_kitchen} environment and the, in comparison, large \texttt{uol\_bl} environment, for which the results are discussed in the following sections.
 
 	% ID = 4
 	\begin{figure}
@@ -491,44 +488,53 @@ What might explain this, is that this particular section of the dataset adds dat
 		\label{fig:exp5}
 	\end{figure}
 
+\subsubsection{Tum Kitchen Environment}
+
+First of all, let us consider the results obtained for the small \texttt{tum\_kitchen} environment.
+Overall, in \Crefrange{fig:exp1}{fig:exp9} one can see that the optimum $\theta_\mathsf{max}$ is mostly found within similar areas of the parameter space $\Theta$.
+In \Crefrange{fig:exp1}{fig:exp3} respectively 100\%, 75\% and 50\% of the dataset has been used in the corresponding experiments, and one can see in \autoref{fig:exp3} that with 50\% of the data employed, the observed model values $V_\mathcal{M}$ for different settings of $\theta$ are indiscernible.
+At the other hand, \autoref{fig:exp2} shows that with 75\% of the data the distinction becomes much more clear, even though there is still some bias, particularly for larger settings of $\theta$.
+This gives a clearly shows that sufficient data is needed to avoid under-fitting and obtaining more stable results with discernible performance measures.
+
+%What might explain this, is that this particular section of the dataset adds data based on which \acrshortpl{acr:mdp} with large state spaces overfit their corresponding transition function.
+
 Next, let us compare the results depicted in \autoref{fig:exp1}, \autoref{fig:exp4} and \autoref{fig:exp5} where different acquisition functions are used in the \acrshort{acr:bo} framework (i.e., \acrshort{acr:mei}, \acrshort{acr:gp-ucb} and \acrshort{acr:mei-ps} respectively).
-For this environment, we see the results are quite similar, and also in the logs made from the experiments it was seen that the maximum observation was done in the (exact) same number of steps (in the third step).
-The most clear difference is seen in the `behavior' of the acquisition functions from the logs, which show that \acrshort{acr:mei-ps} first samples the points for which model learning and planning is less expensive.
+First of all, we see that in each of these experiments a global maximum is found in the same area of the parameter space.
+%For this environment, we see the results are quite similar, and also in the logs made from the experiments it was seen that the maximum observation was done in the (exact) same number of steps (in the third step).
+The most clear difference is seen in the `behavior' of the \acrshort{acr:gp-ucb} acquisition function, being optimistic in the face of uncertainty, so that the confidence intervals are restricted for promising areas of the parameter space.
+On the other hand, the influence of the timing \acrshort{acr:gp} in the \acrshort{acr:mei-ps} acquisition  is absent for our experiments in the \texttt{tum\_kitchen} environment, as the difference in the required time for model learning and planning is minimal.
 
-Then, in \autoref{fig:exp6} and \autoref{fig:exp7} we see the plots for the experiments in which \acrshortpl{acr:gmm} are used for learning state spaces instead.
-In particular we notice the low model-values for a large number of components of the \acrshort{acr:gmm}, which makes us suspect that this particular algorithm is less suitable for learning state spaces for our domain.
+% ID = 6
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ei}
+	\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ei_maximum}
+	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, \acrshort{acr:gmm}, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 6).}
+	\label{fig:exp6}
+\end{figure}
+% ID = 7
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ucb}
+	\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ucb_maximum}
+	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, \acrshort{acr:gmm}, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 7).}
+	\label{fig:exp7}
+\end{figure}
 
-\afterpage{
-	% ID = 6
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ei}
-		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ei_maximum}
-		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, \acrshort{acr:gmm}, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 6).}
-		\label{fig:exp6}
-	\end{figure}
-	% ID = 7
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ucb}
-		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ucb_maximum}
-		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 7).}
-		\label{fig:exp7}
-	\end{figure}
-	% ID = 8
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_025__alg_kmeans_pct_100_acq_ei}
-		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_025__alg_kmeans_pct_100_acq_ei_maximum}
-		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.25$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 8).}
-		\label{fig:exp8}
-	\end{figure}
-	\clearpage
-}
+Then, in \autoref{fig:exp6} and \autoref{fig:exp7} we see the plots for the experiments in which instead \acrshortpl{acr:gmm} are used for learning state-spaces for our \acrshortpl{acr:mdp}.
+In particular, we observe a large bias and low model-values for a large number of components of the \acrshort{acr:gmm}, which makes us suspect that this particular algorithm is less suitable for learning state-spaces for our mobile robot navigation domain.
 
+% ID = 8
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_025__alg_kmeans_pct_100_acq_ei}
+	\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_025__alg_kmeans_pct_100_acq_ei_maximum}
+	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.25$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 8).}
+	\label{fig:exp8}
+\end{figure}
 
 % ID = 9
-\begin{figure}[t!]
+\begin{figure}[t]
 	\centering
 	\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_05__alg_kmeans_pct_100_acq_ei}
 	\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_05__alg_kmeans_pct_100_acq_ei_maximum}
@@ -537,15 +543,16 @@ In particular we notice the low model-values for a large number of components of
 \end{figure}
 	
 Finally, we look at the influence of the weight factor $\beta$ for the small environment considering the plots of \autoref{fig:exp1}, \autoref{fig:exp8} and \autoref{fig:exp9}.
-In this particular situation, one might benefit from weighing $V_\mathit{DTP}$ in the model-value, as it could make a clearer distinction between values for different settings for $\theta$.
-However, setting $\theta$ might also lead to a bias, which is that although $V_\mathit{DTP}$ may have high value, computed policies may not work well in the simulations or the real world.
-
-\newpage
+In this particular situation, one might benefit from weighing $V_\mathit{DTP}$ in the model-value, as it could make a clearer distinction between values for different settings of $\theta$, because it eliminates part of the uncertainty in the simulations.
+The intuition of why this works well for this particular environment can be elucidated by \autoref{fig:exp12} and \autoref{fig:exp13}, which show that the maxima of the $V_\mathit{DTP}$ and $V_\mathit{SIM}$ measures lie close together.
+However, setting $\theta$ might also lead to a bias in other environments, which is that, although $V_\mathit{DTP}$ may have high value, computed policies may not work well in the simulations or the real world.
 
 \subsubsection{UOL BL Environment}
 
-Then, let us next consider the results for the large \texttt{uol\_bl} environment. In \Crefrange{fig:exp10}{fig:exp12} plots are shown for the experiments in which different acquisitions were used in the \acrshort{acr:bo}.
-One can observe that the optima found after 20 steps are quite different, which might indicate that more steps are necessary to move towards a global optimum for each of these experiments.
+Let us next consider the results for the large \texttt{uol\_bl} environment. In \Crefrange{fig:exp10}{fig:exp12} plots are shown for the experiments in which different acquisitions were used in the \acrshort{acr:bo}.
+One can observe the optima found in each of these experiments lie close together.
+The experiment that employs the \acrshort{acr:mei} function, however, appears in-effective to find the same global maximum in multiple repetitions.
+All compared, the \acrshort{acr:gp-ucb} appears most effective in sampling parameter-settings that result in \acrshortpl{acr:mdp} yielding high performance.
 
 \afterpage{
 	% ID = 10
@@ -554,7 +561,7 @@ One can observe that the optima found after 20 steps are quite different, which 
 		\centering
 		\includegraphics[width=0.495\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ei}
 		\includegraphics[width=0.485\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ei_maximum}
-		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{uol\_bl} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 10).}
+		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 30 iterations of the base framework on the \texttt{uol\_bl} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 10).}
 		\label{fig:exp10}
 	\end{figure}
 	% ID = 11
@@ -581,10 +588,20 @@ One can observe that the optima found after 20 steps are quite different, which 
 \subsection{Multiphase Framework}
 \label{sec:multiphase-framework-results}
 
-In \Crefrange{fig:exp13}{fig:exp16} one can see that optima are found within the same area of the parameter space as seen in the results for the base framework.
+%In \Crefrange{fig:exp13}{fig:exp16} one can see that optima are found within the same area of the parameter space as seen in the results for the base framework.
+Next, we present and evaluate our results obtained in the experiments on the multi-phase framework, for which the configurations are presented in \autoref{tab:configurations-multi}.
+In these experiments, first an optimization takes place of the model value computed solely from the value functions for the tasks the system is expected perform.
+Only computing the value functions for \acrshortpl{acr:mdp} as is done in this first phase is relatively time-cheap (i.e., a matter of minutes) in comparison to performing time-costly simulations (i.e., taking multiple hours) as is done in the second phase.
+In the plots in \Crefrange{fig:exp13}{fig:exp16}, the prediction mean resulting from this first phase is depicted by a dotted line.
+In the second phase, the posterior from the first phase is utilized to steer the acquisition of the first few samples as described in \autoref{sec:multi-phase-framework}.
+The \acrshort{acr:bo} in both of these phases is preceded by collecting a set of $5$ random samples.
+Our hypothesis is that using the \acrshort{acr:gp-ucb} acquisition function in the first phase, may result in a better contribution of the expected improvement to the acquisition in the second phase.
+The third phase of the multi-phase framework will be covered separately, as it is mostly independent of the two prior phases, being concerned with fine-tuning a specific \acrshort{acr:mdp} model rather than searching for one.
 
 \subsubsection{Tum Kitchen Environment}
-\blindtext
+First, we consider the experiments that apply the multi-phase framework to find an \acrshort{acr:mdp} for path planning in the \texttt{tum\_kitchen} environment.
+In \autoref{fig:exp13} and \autoref{fig:exp14} one can see that there appears to be a correspondence between the maxima of the posterior of the first and second phase.
+Particularly, in \autoref{fig:exp14} we see a direct correspondence of the global maximums, so that a proper model is found in the first few iterations of the optimization process.
 
 % ID = 13
 \begin{figure}[t!]
@@ -606,7 +623,9 @@ In \Crefrange{fig:exp13}{fig:exp16} one can see that optima are found within the
 \newpage
 
 \subsubsection{UOL BL Environment}
-\blindtext
+Next, we consider the experiments that apply the multi-phase framework to the \texttt{uol\_bl} environment, for which the results are shown in \autoref{fig:exp15} and \autoref{fig:exp16}.
+As opposed to the experiments on the \texttt{tum\_kitchen} environment, the prediction mean from the first phase do not have an evident correspondence with the maxima of the posterior of the second phase.
+However, this does not prevent the \acrshort{acr:bo} of eventually finding a maximum for both of these experiments in the same area of the parameter space.
 
 % ID = 15
 \begin{figure}[t!]
@@ -656,8 +675,8 @@ In \Crefrange{fig:exp13}{fig:exp16} one can see that optima are found within the
 	\label{fig:uol_bl_tuning}
 \end{figure}
 
-Finally, we get back at the third phase of our multi-phase framework, in which the \acrshort{acr:mdp} $\mathcal{M}$ obtained in the previous phase is further fine-tuned for a set of new tasks.
-To investigate the expediency of this third phase an implementation of the solution proposed in \autoref{alg:multi-phase-fine-tuning} for the mobile robot navigation application.
+Finally, we get back at the third phase of our multi-phase framework, in which the \acrshort{acr:mdp} $\mathcal{M}$ obtained in the previous phase is further fine-tuned, given a set of new tasks.
+To investigate the expediency of this third phase, an implementation of the solution proposed in \autoref{alg:multi-phase-fine-tuning} has been made for the mobile robot navigation application.
 
 Given a task to execute, the solution solves \acrshort{acr:mdp} $\mathcal{M}$ (with new initial state and reward function for this task) for a policy, which it uses to perform the task.
 Then, if the controlled robot gets stuck in a state $s_f$ in its attempt to complete the task, it starts to gather new experience about the transitions possible from this state in a collection $E_\mathit{SIM}$.
