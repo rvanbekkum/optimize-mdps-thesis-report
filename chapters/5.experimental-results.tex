@@ -21,7 +21,7 @@ In, \autoref{sec:results} the results obtained for these different configuration
 
 For our experiments we made an implementation of the framework in the form of a module that can be used to learn an optimal \acrshort{acr:mdp} for the navigation of a mobile robot.
 This implementation allows the control of a mobile robot in simulations by an \acrshort{acr:mdp} and a corresponding policy.
-The model values assessed from these simulations are used to find a globally maximizing parameter-settings of the learning algorithm used.
+The model values assessed from these simulations are used to find a globally maximizing parameter settings of the learning algorithm used.
 In this section we will describe the implementation in detail and how it is used in our experiments to find performance-maximizing \acrshortpl{acr:mdp} for a mobile robot in an office environment.
 
 \subsection{Software}
@@ -172,7 +172,7 @@ In this section the relevant details of each part of the implementation are disc
 \subsubsection{Learning Step}
 
 For learning discrete-state \acrshortpl{acr:mdp} from the acquired execution traces, a likelihood maximization approach is applied based on a state space obtained from clustering algorithms.
-That is, the state-space is first obtained by applying a clustering algorithm (i.e., $k$-means, \acrshort{acr:gmm}) with $\theta$ defining the number of components and the geometric positions of the execution traces as its training set.
+That is, the state space is first obtained by applying a clustering algorithm (i.e., $k$-Means, \acrshort{acr:gmm}) with $\theta$ defining the number of components and the geometric positions of the execution traces as its training set.
 Then, a transition probability distribution is fitted on the execution traces, such that an \acrshort{acr:mdp} may be obtained that comprehends the transitions that are possible when actions are performed from any of its states.
 
 After having learned an \acrshort{acr:mdp}, the learning step next assesses the corresponding model value.
@@ -200,7 +200,7 @@ Finally, there is a \textit{global time-out}, that defines the maximum time the 
 
 The output of each learning step is the value of the learned model $V_\mathcal{M}$ and the time spent on model learning and planning.
 The last being used when the \acrshort{acr:mei-ps} acquisition function is employed in the optimization.
-Further, additional data is logged in each iteration, which is the total iteration time, simulation time, model learning time, total planning time and the parameter-setting $\theta$ used.
+Further, additional data is logged in each iteration, which is the total iteration time, simulation time, model learning time, total planning time and the parameter setting $\theta$ used.
 
 %% IMPLEMENTATION LEARNING STEP
 % Learning algorithm
@@ -235,7 +235,7 @@ Further, additional data is logged in each iteration, which is the total iterati
 \subsubsection{Optimization Step}
 
 For the implementation of the framework for this domain we make use of the \acrshort{acr:bo} framework for optimization based on a \acrshort{acr:gp} with a Mat\'ern 3/2 kernel.
-As initially there is no knowledge about the model value given a parameter-setting $\theta$, first, a number of random settings are selected for which yielded performance is assessed and stored in an evidence set.
+As initially there is no knowledge about the model value given a parameter setting $\theta$, first, a number of random settings are selected for which yielded performance is assessed and stored in an evidence set.
 In the following iterations new settings for $\theta$ are chosen with maximum utility in the selected acquisition function, which is repeated for a fixed number of iterations.
 
 The first phase of the multi-phase framework described in \autoref{sec:multi-phase-framework} is executed as an individual optimization procedure, where the model values $V_\mathcal{M}$ are solely based on computed value functions and no simulations are performed.
@@ -278,7 +278,7 @@ The resulting posterior of this first phase is then used in the acquisition of t
 		\end{subfigure}
 		\bigskip
 		
-		\caption{Demonstration of the implementation learning the state-space of an \acrshort{acr:mdp} and using it for path planning for a task in the \texttt{tum\_kitchen} environment.}
+		\caption{Demonstration of the implementation learning the state space of an \acrshort{acr:mdp} and using it for path planning for a task in the \texttt{tum\_kitchen} environment.}
 		\label{fig:demonstration}
 	\end{figure}
 	\clearpage
@@ -290,10 +290,10 @@ The resulting posterior of this first phase is then used in the acquisition of t
 \label{sec:demonstration}
 
 To provide the reader with a better insight as to how the implementation utilizes execution traces to learn \acrshortpl{acr:mdp} and use these for path planning, a demonstration is given of a single iteration of the framework, supported by the illustrations in \autoref{fig:demonstration}.
-For this demonstration, let us assume that the optimization step provides us with a new parameter-setting $\theta = 112$, specifying the number of states of the \acrshort{acr:mdp}, to evaluate.
+For this demonstration, let us assume that the optimization step provides us with a new parameter setting $\theta = 112$, specifying the number of states of the \acrshort{acr:mdp}, to evaluate.
 
-First, given this parameter-setting, a state-space $\mathcal{S}$ is, in this case, learned by, a $k$-Means clustering on the execution traces $E$, with the result shown in \autoref{fig:demo-clustering}.
-Correspondingly, the transition function $\delta$ is fitted by maximum likelihood and a set of tasks $T$ are mapped to this state-space.
+First, given this parameter-setting, a state space $\mathcal{S}$ is, in this case, learned by, a $k$-Means clustering on the execution traces $E$, with the result shown in \autoref{fig:demo-clustering}.
+Correspondingly, the transition function $\delta$ is fitted by maximum likelihood and a set of tasks $T$ are mapped to this state space.
 To illustrate, let us take the task of moving from the position $(-1.9, 1.05)$ to $(2.0, -5.6)$, mapping to the states labeled with `$\mathsf{1}$' and `$\mathsf{51}$' respectively as shown in \autoref{fig:demo-clustering}.
 Translating this into an initial state $s_0$ and reward function $R$, as described in \autoref{sec:learning-step}, results in an \acrshort{acr:mdp} $(\mathcal{S}, s_0, A, \delta, R)$ that can be solved using the \acrshort{acr:vi} algorithm to obtain a policy (and value function).
 Then, to assess the performance in the simulator, this policy is employed, so that the robot will follow the trajectory as shown in \autoref{fig:demo-trajectory} (n.b., additionally, the robot might slip, so that it slightly deviates from this path).
@@ -494,7 +494,7 @@ First of all, let us consider the results obtained for the small \texttt{tum\_ki
 Overall, in \Crefrange{fig:exp1}{fig:exp9} one can see that the optimum $\theta_\mathsf{max}$ is mostly found within similar areas of the parameter space $\Theta$.
 In \Crefrange{fig:exp1}{fig:exp3} respectively 100\%, 75\% and 50\% of the dataset has been used in the corresponding experiments, and one can see in \autoref{fig:exp3} that with 50\% of the data employed, the observed model values $V_\mathcal{M}$ for different settings of $\theta$ are indiscernible.
 At the other hand, \autoref{fig:exp2} shows that with 75\% of the data the distinction becomes much more clear, even though there is still some bias, particularly for larger settings of $\theta$.
-This gives a clearly shows that sufficient data is needed to avoid under-fitting and obtaining more stable results with discernible performance measures.
+This gives a clearly shows that sufficient data is needed to avoid underfitting and obtaining more stable results with discernible performance measures.
 
 %What might explain this, is that this particular section of the dataset adds data based on which \acrshortpl{acr:mdp} with large state spaces overfit their corresponding transition function.
 
@@ -521,8 +521,8 @@ On the other hand, the influence of the timing \acrshort{acr:gp} in the \acrshor
 	\label{fig:exp7}
 \end{figure}
 
-Then, in \autoref{fig:exp6} and \autoref{fig:exp7} we see the plots for the experiments in which instead \acrshortpl{acr:gmm} are used for learning state-spaces for our \acrshortpl{acr:mdp}.
-In particular, we observe a large bias and low model-values for a large number of components of the \acrshort{acr:gmm}, which makes us suspect that this particular algorithm is less suitable for learning state-spaces for our mobile robot navigation domain.
+Then, in \autoref{fig:exp6} and \autoref{fig:exp7} we see the plots for the experiments in which instead \acrshortpl{acr:gmm} are used for learning state spaces for our \acrshortpl{acr:mdp}.
+In particular, we observe a large bias and low model values for a large number of components of the \acrshort{acr:gmm}, which makes us suspect that this particular algorithm is less suitable for learning state spaces for our mobile robot navigation domain.
 
 % ID = 8
 \begin{figure}[t!]
@@ -543,7 +543,7 @@ In particular, we observe a large bias and low model-values for a large number o
 \end{figure}
 	
 Finally, we look at the influence of the weight factor $\beta$ for the small environment considering the plots of \autoref{fig:exp1}, \autoref{fig:exp8} and \autoref{fig:exp9}.
-In this particular situation, one might benefit from weighing $V_\mathit{DTP}$ in the model-value, as it could make a clearer distinction between values for different settings of $\theta$, because it eliminates part of the uncertainty in the simulations.
+In this particular situation, one might benefit from weighing $V_\mathit{DTP}$ in the model value, as it could make a clearer distinction between values for different settings of $\theta$, because it eliminates part of the uncertainty in the simulations.
 The intuition of why this works well for this particular environment can be elucidated by \autoref{fig:exp12} and \autoref{fig:exp13}, which show that the maxima of the $V_\mathit{DTP}$ and $V_\mathit{SIM}$ measures lie close together.
 However, setting $\theta$ might also lead to a bias in other environments, which is that, although $V_\mathit{DTP}$ may have high value, computed policies may not work well in the simulations or the real world.
 
@@ -551,8 +551,8 @@ However, setting $\theta$ might also lead to a bias in other environments, which
 
 Let us next consider the results for the large \texttt{uol\_bl} environment. In \Crefrange{fig:exp10}{fig:exp12} plots are shown for the experiments in which different acquisitions were used in the \acrshort{acr:bo}.
 One can observe the optima found in each of these experiments lie close together.
-The experiment that employs the \acrshort{acr:mei} function, however, appears in-effective to find the same global maximum in multiple repetitions.
-All compared, the \acrshort{acr:gp-ucb} appears most effective in sampling parameter-settings that result in \acrshortpl{acr:mdp} yielding high performance.
+The experiment that employs the \acrshort{acr:mei} function, however, appears ineffective to find the same global maximum in multiple repetitions.
+All compared, the \acrshort{acr:gp-ucb} appears most effective in sampling parameter settings that result in \acrshortpl{acr:mdp} yielding high performance.
 
 \afterpage{
 	% ID = 10
@@ -666,12 +666,12 @@ However, this does not prevent the \acrshort{acr:bo} of eventually finding a max
 		\centering
 		\vspace{19.5pt}
 		\includegraphics[width=\linewidth]{uol_bl_phase_3_2_smallv6}
-		\caption{Illustration of the area of the earlier-learned state-space of interest. The resolution for the part of the state-space as shown is too low, particularly, considering the state $s_f$, which might cause the robot to get stuck. The third phase of the multi-phase framework therefore splits the state, as depicted by the dotted red line, based on new centroids.}
+		\caption{Illustration of the area of the earlier-learned state space of interest. The resolution for the part of the state space as shown is too low, particularly, considering the state $s_f$, which might cause the robot to get stuck. The third phase of the multi-phase framework therefore splits the state, as depicted by the dotted red line, based on new centroids.}
 		\label{fig:uol_bl_tuning_2}
 	\end{subfigure}
 	\bigskip
 	
-	\caption{Illustration of the third-phase of the multi-phase framework in a simulation of the \texttt{uol\_bl} environment. The phase starts off with the \acrshort{acr:mdp} model with $540$ states learned in the previous phase, and further fine-tunes this model after the robot gets stuck executing a new task.}
+	\caption{Illustration of the third phase of the multi-phase framework in a simulation of the \texttt{uol\_bl} environment. The phase starts off with the \acrshort{acr:mdp} model with $540$ states learned in the previous phase, and further fine-tunes this model after the robot gets stuck executing a new task.}
 	\label{fig:uol_bl_tuning}
 \end{figure}
 
@@ -689,12 +689,12 @@ In gathering new experience, the mobile robot stores the observations (i.e., odo
 
 To evaluate the approach, we take the performance-maximizing \acrshort{acr:mdp} $\mathcal{M}$ of $540$ states learned in the second phase of our last experiment (i.e., see \autoref{fig:exp16}) for the \texttt{uol\_bl} environment.
 Then, a new task is presented, which requires the robot to move from the corner of a room in the environment, as shown in \autoref{fig:uol_bl_tuning_1}, to a location in the main hall outside the room.
-The problem, is that the resolution in the learned state-space $\mathcal{S}$ of $\mathcal{M}$ for this area is too low, as shown in \autoref{fig:uol_bl_tuning_2}, caused by the limited execution traces gathered for this area in the set $E$ used for learning the model.
+The problem, is that the resolution in the learned state space $\mathcal{S}$ of $\mathcal{M}$ for this area is too low, as shown in \autoref{fig:uol_bl_tuning_2}, caused by the limited execution traces gathered for this area in the set $E$ used for learning the model.
 As a result, there is a considerable chance the robot gets stuck in the state labeled $s_f \in \mathcal{S}$ from its starting location.
 
 To take care of this, after the observation is made that he robot got stuck, the algorithm makes the robot gather new data about the transitions possible from the different locations within the state $s_f$ in which it got stuck.
 Based on this data, the algorithm clusters the data to effectively split the state in two, well-nigh as shown in \autoref{fig:uol_bl_tuning_2}.
-The resulting \acrshort{acr:mdp} with updated state-space and transition probabilities then allows the mobile robot to successfully accomplish the task (i.e., by the computed policy suggesting to move south and west subsequently).
+The resulting \acrshort{acr:mdp} with updated state space and transition probabilities then allows the mobile robot to successfully accomplish the task (i.e., by the computed policy suggesting to move south and west subsequently).
 
-Although the algorithm works well for fixing small discrepancies like these in the model, caused by limited data about a certain area of the environment, it is not well-suited for learning major parts of the model from the ground up.
+Although the algorithm works well for fixing small discrepancies like these in the model, caused by limited data about a certain area of the environment, it is not well suited for learning major parts of the model from the ground up.
 For such scenarios, one is better off using existing \acrshort{acr:rl} solutions, such as continuous $Q$-learning or active learning approaches which use the learned \acrshort{acr:mdp} as a prior model (see \autoref{sec:active-learning}).

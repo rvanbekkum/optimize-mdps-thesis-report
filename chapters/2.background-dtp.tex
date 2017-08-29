@@ -22,7 +22,7 @@ In addition, the agent(s) might be uncertain about the system's current state, i
 Typically the problems under consideration involve certain objectives to be achieved (e.g., tasks to be fulfilled) or properties to be satisfied (e.g., avoiding certain system states). 
 Therefore, the agent should decide on an optimal plan or \textit{policy} which makes it most likely for the system to reach its targets, while minimizing the risk of producing undesirable states and the accompanied costs of the policy.
 To find such a policy for \acrlong{acr:sdm} problems, a typical approach is to first setup a probabilistic model of the system and then apply a \acrshort{acr:dtp} algorithm on this model.
-This probabilistic model comprises a system representation which defines the state space in terms of a set of multi-valued features, the set of actions the agent may select together with the associated uncertainty defined by transition-probabilities, and a goal specification or performance metric typically expressed by means of a reward structure.
+This probabilistic model comprises a system representation which defines the state space in terms of a set of multi-valued features, the set of actions the agent may select together with the associated uncertainty defined by transition probabilities, and a goal specification or performance metric typically expressed by means of a reward structure.
 
 Overall \acrshort{acr:dtp} aims to devise planning algorithms for planning under uncertainty, a problem that is addressed in numerous different fields of research such as AI planning and control theory.
 In particular difficulties arise when planning techniques are applied to determine courses of action for real-world settings, such as motion or path planning in robotics which both involve the possibility of action failures and disturbances caused by exogenous events.
@@ -258,7 +258,7 @@ That is, in each decision epoch, the agent selects an action $a \in A$ and execu
 In the context of \acrshort{acr:dtp}, \acrshortpl{acr:mdp} are used to find an optimal course of action, often referred to as a plan or \textit{policy} $\pi: \mathcal{S} \mapsto A$.
 For an \acrshort{acr:mdp} the optimal policy typically means the policy that when applied by an agent, maximizes the expected value.
 However, one can also choose to express goals in alternative ways which do not require the specification of a reward function.
-An example of this can be seen in \cite{bhatia2010sampling, lacerda2015optimal}, which replace the reward function of the classic \acrshort{acr:mdp}-framework by a (co-safe) Linear Temporal Logic (LTL) formula to be satisfied.
+An example of this can be seen in \cite{bhatia2010sampling, lacerda2015optimal}, which replace the reward function of the classic \acrshort{acr:mdp} framework by a (co-safe) Linear Temporal Logic (LTL) formula to be satisfied.
 
 \subsubsection{Partially Observable MDPs}
 \label{sec:pomdps}
@@ -278,7 +278,7 @@ As such a \acrshort{acr:pomdp} can be defined as in \autoref{def:pomdp} below.
 
 %As such, a \acrshort{acr:pomdp} can be defined as a 7-tuple $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, \mathcal{O}, \Omega, R)$ with $\mathcal{S}$ as state space, $s_0 \in \mathcal{S}$ as the initial state, $A$ as finite set of possible actions, $\delta$ the transition function, $\mathcal{O}$ the observation space, $\Omega$ an emission or observation probability function and $R$ as reward function.
 As the true state of a \acrshort{acr:pomdp} is unknown, the transition function $\delta$ is defined over beliefs of states, and accordingly a policy $\pi$ maps beliefs to actions.
-The observation function $\Omega$ defines the probability of observations from state-action pairs in the \acrshort{acr:pomdp} and is used to iteratively update the belief-state of an agent.
+The observation function $\Omega$ defines the probability of observations from state-action pairs in the \acrshort{acr:pomdp} and is used to iteratively update the belief state of an agent.
 
 %TODO Check if we can put this somewhere else, or should just leave it out
 %\subsubsection{Other Markov Models and Related State-Space Models}
@@ -443,7 +443,7 @@ Opposed to traditional \acrshort{acr:vi}, where solving \acrshortpl{acr:mdp} wit
 		\ForAll{$s \in \mathcal{S}$}
 		\State $\arr{\pi}_t(s) \gets \argmax_{a \in A} \left[\sum_{s' \in \mathcal{S}} \delta(s, a, s') \cdot \left[R(s, a, s') + \gamma \cdot V_{\arr{\pi}_{t - 1}}(s')\right]\right]$
 		\EndFor
-		\Until{$\arr{\pi}_{t} = \arr{\pi}_{t-1}$}
+		\Until{$\arr{\pi}_{t} = \arr{\pi}_{t - 1}$}
 		\State\Return $\arr{\pi}_t$
 	\end{algorithmic}
 \end{algorithm}

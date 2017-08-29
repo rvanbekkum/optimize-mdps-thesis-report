@@ -3,12 +3,12 @@
 
 Our interest in this thesis lies in the development of probabilistic models for systems whose dynamics are stochastic.
 The objective is to use a dataset of execution traces of a system to attain an accurate system representation, which can be used to obtain plans for optimal automated control of a system involving uncertainty.
-In this chapter we describe our proposed framework that applies learning algorithms to obtain probabilistic models in the form of \acrshortpl{acr:mdp} and optimizes for a performance-maximizing model by sampling multiple hyper-parameter settings for these learning algorithms.
+In this chapter we describe our proposed framework that applies learning algorithms to obtain probabilistic models in the form of \acrshortpl{acr:mdp} and optimizes for a performance-maximizing model by sampling multiple hyperparameter settings for these learning algorithms.
 
 First off, in \autoref{sec:problem-statement} we define the problem at hand that the proposed framework aims to deal with.
 Then, in \autoref{sec:application-mobile-robot}, the application of mobile robot navigation is introduced, which is one of the possible applications of the framework and is used as a running example in this chapter.
 This application is also used for evaluating the proposed framework through the experiments that were carried out and are documented in \autoref{ch:experimental-results}.
-Next, \autoref{sec:dataset-prerequisites} describes the prerequisites for the dataset serving as the input of the proposed model-learning framework.
+Next, \autoref{sec:dataset-prerequisites} describes the prerequisites for the dataset serving as the input of the proposed model learning framework.
 Subsequently, in \autoref{sec:model-learning-routine}, a detailed description of the learning and optimization routine is provided which forms our \textit{base framework} for learning optimal \acrshortpl{acr:mdp}.
 Finally, in \autoref{sec:multi-phase-framework}, we define our extension of this base framework in the form of a \textit{multi-phase framework} consisting of three phases whose aim is to further improve on the effectiveness of the framework.
 %In \autoref{sec:model-learning-routine} a detailed explanation is provided of the learning and optimization routine which forms the basis of our framework.
@@ -27,19 +27,19 @@ As mentioned in \autoref{ch:introduction}, the problem this thesis is concerned 
 The development of such probabilistic models tend to be a difficult and time-costly process for a human designer.
 Therefore, an appealing idea is to automate the model development process by applying learning algorithms on a dataset of execution traces of the system in need of automated control.
 However, to achieve effective planning in a real-world environment, the models that are learned should accurately reflect the dynamics of the system, such that derived plans account for the uncertainty that is present in the execution of actions, observations and exogenous events.
-Although algorithms for learning \acrshortpl{acr:mdp} from a dataset do already exist, the state of the art lacks a method of setting the hyper-parameters $\theta$ of these algorithms such that a model is retrieved that best reflects the underlying system and maximizes the performance in its execution of derived plans.
+Although algorithms for learning \acrshortpl{acr:mdp} from a dataset do already exist, the state of the art lacks a method of setting the hyperparameters $\theta$ of these algorithms such that a model is retrieved that best reflects the underlying system and maximizes the performance in its execution of derived plans.
 Besides, although \acrfull{acr:rl} allows us to bypass the development of a model, it often turns out to be quite slow for finding optimal policies in complex environments.
 %Therefore, when one is able get a hold on a dataset describing the dynamics of the system under consideration, it may be better to take advantage of this by developing a probabilistic model.% and possibly further adjust it based on new experience as seen in \autoref{sec:active-learning}.
 More formally, summarizing the above, the problem can be formulated as follows:
 
 \begin{problem}
-	Given a set $E$ of execution traces describing the dynamics of a system that involves uncertainty, an \acrshort{acr:mdp} $\mathcal{M}$ needs to be developed, utilizing learning algorithms parameterized by a set of hyper-parameters $\theta$ configured in such way to maximize the performance yielded by following the policies computed from this model $\mathcal{M}$ in a real-world setting.
+	Given a set $E$ of execution traces describing the dynamics of a system that involves uncertainty, an \acrshort{acr:mdp} $\mathcal{M}$ needs to be developed, utilizing learning algorithms parameterized by a set of hyperparameters $\theta$ configured in such way to maximize the performance yielded by following the policies computed from this model $\mathcal{M}$ in a real-world setting.
 \end{problem}
 
 All in all, the problem we deal with is that of automating the task of learning a performance-maximizing \acrshort{acr:mdp} that generalizes well over multiple tasks for a system involving uncertainty.
 This involves the need for a proper performance measure to express the value of a learned \acrshort{acr:mdp} and allow for a fair comparison of different \acrshortpl{acr:mdp}.
-That is, depending on the parameter-settings of the learning algorithm used, an \acrshort{acr:mdp} may yield low performance in its execution for two major reasons.
-First of all, the learned model may be too complicated for the amount of available data, which leads to model over-fitting.
+That is, depending on the parameter settings of the learning algorithm used, an \acrshort{acr:mdp} may yield low performance in its execution for two major reasons.
+First of all, the learned model may be too complicated for the amount of available data, which leads to model overfitting.
 On the other hand, one could acquire a model that is too simple to explain the available data and so does not accurately reflect the underlying system in that situation.
 Therefore, the parameters of the learning algorithm should be properly adjusted in order to obtain accurate probabilistic models.
 Finally and most importantly, a solution to this problem should take into account the costs of learning and evaluating these system models.
@@ -109,7 +109,7 @@ For now let us assume, the action space $A$ is defined as a finite set of moveme
 		  \texttt{N}, \texttt{NW}, \texttt{W}, \texttt{SW}  \}
 \end{align*}\newpage
 Before our model learning framework is applied to learn \acrshortpl{acr:mdp} for the system, the data about the environment could have been obtained in the form of execution traces that consist of logs of the robot's pose and the (next) action it is about to take.
-This could then give a set of data-points, as depicted in \autoref{fig:dummy-map-2}, which can be used to learn the states and transition probabilities of an \acrshort{acr:mdp}.
+This could then give a set of datapoints, as depicted in \autoref{fig:dummy-map-2}, which can be used to learn the states and transition probabilities of an \acrshort{acr:mdp}.
 Quantizing this dataset of observed robot poses into $10$ symbols (e.g., using $k$-means clustering), might give us the state-space $\mathcal{S} = \{s_0, \ldots s_9\}$ depicted in \autoref{fig:dummy-map-3}.
 %, such that:
 %$$
@@ -146,7 +146,7 @@ In the following sections we discuss how the proposed framework takes these aspe
 Prior to describing the proposed framework for the problem as specified in \autoref{sec:problem-statement}, we are obliged to specify the expected format of the datasets to learn \acrshortpl{acr:mdp} from.
 A self-evident approach is making use of a dataset generated from execution traces, in which the system under consideration logged a set of readings/observations describing the system state accompanied by the actions selected in between at a fixed time interval.
 One should note that this means that the action space $A$ and time step $t$, that will be used for any \acrshort{acr:mdp} for the system, should already have been established at this point.
-When adding the auxiliary condition of needing to learn fully-observable \acrshortpl{acr:mdp}, the need arises for the observations in these execution traces to be usable for distinguishing between the different system states.
+When adding the auxiliary condition of needing to learn fully observable \acrshortpl{acr:mdp}, the need arises for the observations in these execution traces to be usable for distinguishing between the different system states.
 
 For our running example of mobile robot navigation such a dataset may be obtained by executing the robot in its real-world environment following a random action policy.
 That is, one could choose to let the robot record its location and orientation in terms of its sensor readings which are logged at a fixed time interval.
@@ -170,7 +170,7 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 	\caption{\acrshort{acr:mdp}-Optimization Base Framework}
 	\label{alg:base-framework}
 	\begin{algorithmic}[1]
-		\Require{Set of execution traces $E$, Parameter space $\Theta$, Set of tasks $T$, Action space $A$, Time-step $t$, Discount factor $\gamma \in [0, 1]$, Weight factor $\beta \in [0, 1]$, Acquisition function $a: \Theta \mapsto \mathbb{R}$}%Training set $\mathcal{O} = \{O_1, \ldots, O_k\}$, Clustering algorithm, hyper-parameter(s) $\theta$, actions $A$}
+		\Require{Set of execution traces $E$, Parameter space $\Theta$, Set of tasks $T$, Action space $A$, Time-step $t$, Discount factor $\gamma \in [0, 1]$, Weight factor $\beta \in [0, 1]$, Acquisition function $a: \Theta \mapsto \mathbb{R}$}%Training set $\mathcal{O} = \{O_1, \ldots, O_k\}$, Clustering algorithm, hyperparameter(s) $\theta$, actions $A$}
 		\Ensure{\acrshort{acr:mdp} $\mathcal{M}_\mathsf{max}$, Evidence set $\mathcal{D}$}%\acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$} \Comment{$s_0$ and $R$ are here irrelevant}
 		\State $\mathcal{M}_\mathsf{max} \gets \texttt{NULL}$
 		\State $V_{\mathcal{M}_\mathsf{max}} \gets 0$
@@ -215,7 +215,7 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 		\Statex
 		\Function{OptimizationStep}{$\theta, V_{\mathcal{M}}, \mathcal{D}, \mathit{gp}$}
 			\State $\mathcal{D} \gets \mathcal{D} \cup \{(\theta, V_\mathcal{M})\}$
-			\State $\mathit{gp}.\textproc{fit}(\mathcal{D})$	\Comment{Fit a \acrshort{acr:gp} given $\mathcal{D}$, maximizing the log-marginal-likelihood}
+			\State $\mathit{gp}.\textproc{fit}(\mathcal{D})$	\Comment{Fit a \acrshort{acr:gp} given $\mathcal{D}$, maximizing the log-marginal likelihood}
 			\State\Return $\argmax_{x \in \mathcal{\Theta}} a(x \vert \mathcal{D}, \mathit{gp})$	\Comment{Suggest a sample $\theta$ to evaluate next}
 		\EndFunction
 	\end{algorithmic}
@@ -229,9 +229,9 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 \end{figure}
 
 The learning and optimization routine described in this section forms the \textit{base framework} for the problem dealt with.
-This routine, schematically depicted in \autoref{fig:learning-routine-complete}, aims to properly adjust the hyper-parameters $\theta$ of the employed model learning algorithm by posing it as an optimization task.
+This routine, schematically depicted in \autoref{fig:learning-routine-complete}, aims to properly adjust the hyperparameters $\theta$ of the employed model learning algorithm by posing it as an optimization task.
 The objective is then to obtain an \acrshort{acr:mdp} that maximizes the performance of executing the plans that are derived from it.
-In the remainder of this section we explain the working of this routine of which the corresponding pseudo-code is presented in \autoref{alg:base-framework}.
+In the remainder of this section we explain the working of this routine of which the corresponding pseudocode is presented in \autoref{alg:base-framework}.
 
 %The learning and optimization routine described in this section, depicted in \autoref{fig:learning-routine-complete}, aims to achieve this by posing the adjustment of these parameters as an optimization task, with the objective of obtaining an \acrshort{acr:mdp} model that maximizes the performance of executing the plans that are derived from it.
 
@@ -242,11 +242,11 @@ In the remainder of this section we explain the working of this routine of which
 The routine can be viewed as consisting of two subsequent steps which are repeated until an \acrshort{acr:mdp} model that yields satisfactory performance is obtained.
 The first of these two main steps will be referred to as the \textit{learning step}, in which an \acrshort{acr:mdp} model is learned and its value is assessed.
 
-This learning step starts off with a data-set of execution traces $E$ obtained beforehand as described in \autoref{sec:dataset-prerequisites}.
-As we can see in \autoref{alg:base-framework}, \autoref{alg:line:learn}, the step is parameterized by $\theta$, which represents the parameter-setting to be used for the employed model learning algorithm.
-Given a parameter-setting $\theta$, a state-space $\mathcal{S}$ is acquired by quantizing the execution traces $E$ using an unsupervised machine learning algorithm.
-Subsequently, a transition function $\delta$ is acquired by applying a known model-learning algorithm (such as one of those described in \autoref{sec:learning-probabilistic-models}), given the data-set $E$, state-space $\mathcal{S}$ and possible actions $A$.
-The tasks to perform are each accordingly mapped to a reward function $R$ over the acquired state-space $\mathcal{S}$ (or alternatively over state-action pairs or state-action-state triplets).
+This learning step starts off with a dataset of execution traces $E$ obtained beforehand as described in \autoref{sec:dataset-prerequisites}.
+As we can see in \autoref{alg:base-framework}, \autoref{alg:line:learn}, the step is parameterized by $\theta$, which represents the parameter setting to be used for the employed model learning algorithm.
+Given a parameter setting $\theta$, a state space $\mathcal{S}$ is acquired by quantizing the execution traces $E$ using an unsupervised machine learning algorithm.
+Subsequently, a transition function $\delta$ is acquired by applying a known model learning algorithm (such as one of those described in \autoref{sec:learning-probabilistic-models}), given the dataset $E$, state space $\mathcal{S}$ and possible actions $A$.
+The tasks to perform are each accordingly mapped to a reward function $R$ over the acquired state space $\mathcal{S}$ (or alternatively over state-action pairs or state-action-state triplets).
 The state-space $\mathcal{S}$, transition function $\delta$, action set $A$, reward function $R$ and a configurable initial state $s_0$ are then combined into an \acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$.
 
 To assess the performance yielded by $\mathcal{M}$, the \acrshort{acr:mdp} is solved by applying known \acrshort{acr:dtp} algorithms like \acrshort{acr:vi} or \acrshort{acr:pi} to obtain policies for a set of tasks the system is expected to perform.
@@ -308,12 +308,12 @@ The goal for the class of problems of interest is to obtain a well-generalizing 
 Therefore, an estimate of the value of a model is assessed over a set $T$ of tasks provided as input to the framework, where each task is presented as the combination of a starting and goal configuration.
 %To achieve this, let us first define multiple starting configurations and multiple goals for the system.
 
-The starting configurations are each mapped to corresponding states in the \acrshort{acr:mdp}, matching the quantization to state-space $\mathcal{S}$, so that one can define $\mathcal{S}_0 \subseteq \mathcal{S}$ as a set of initial states.
+The starting configurations are each mapped to corresponding states in the \acrshort{acr:mdp}, matching the quantization to state space $\mathcal{S}$, so that one can define $\mathcal{S}_0 \subseteq \mathcal{S}$ as a set of initial states.
 Similarly, the goals are each mapped to states, such that one can define $\mathcal{S}_G \subseteq \mathcal{S}$ as a set of goals.
 One problem that emerges, however, is that there might not be a one-to-one correspondence between learned and true (goal) states, which leads to the possibility of small state spaces yielding high value while the goal states might not map well to the true goal states.
 To take care of this, we introduce a discrepancy factor $\xi \in [0, 1]$, which corresponds to the fraction of entries from the set $E$ within the goal state that map to the true goal.
 
-Let us then define $R_G$ as the set of reward functions $R_i$ for each $i \in \mathcal{S}_G$ in which a one-time reward (which is realized as depicted in \autoref{fig:goal-trap-state}) is received only in goal-state $i$.
+Let us then define $R_G$ as the set of reward functions $R_i$ for each $i \in \mathcal{S}_G$ in which a one-time reward (which is realized as depicted in \autoref{fig:goal-trap-state}) is received only in goal state $i$.
 Note that as such, an equivalent formulation can be given as a \textit{stochastic shortest path} problem \cite{GuillotS17} for the resulting \acrshortpl{acr:mdp}.
 The reason the reward needs to be only obtainable once is to ensure that the expressions $V_\mathit{DTP}$ and $V_\mathit{SIM}$ are in the same range and can be used together as discussed in the next section.
 %The reward function $R_i: \mathcal{S} \mapsto \mathbb{R}$ for some task with goal state $i \in \mathcal{S}_G$ is then defined as follows:
@@ -388,15 +388,15 @@ where $T_\mathcal{M}$ is the set consisting of the pairs of initial states and r
 \subsection{Optimization Step}
 \label{sec:optimization-step}
 
-The second main step of the routine will be referred to as the \textit{optimization step}, in which a parameter-setting $\theta$ is selected for the next learning step in such way that yielded performance converges to a global maximum as quickly as possible.
-As initially there is no knowledge of the performance given the settings of the learning parameter(s) $\theta$, in the first few routine-iterations parameter-settings are selected at random from the designer-specified domain $\Theta$ (i.e., the parameter-space).
+The second main step of the routine will be referred to as the \textit{optimization step}, in which a parameter setting $\theta$ is selected for the next learning step in such way that yielded performance converges to a global maximum as quickly as possible.
+As initially there is no knowledge of the performance given the settings of the learning parameter(s) $\theta$, in the first few routine-iterations parameter settings are selected at random from the designer-specified domain $\Theta$ (i.e., the parameter space).
 Together with the value $V_{\mathcal{M}}$ of the corresponding model obtained in the learning step for each of these parameters $\theta$, they are stored in an evidence set $\mathcal{D}$.
-The objective function $f$ in our case is the $\texttt{LearningStep}$ function which maps parameter-settings $\theta \in \Theta$ to real-valued performance yielded by \acrshortpl{acr:mdp}.
+The objective function $f$ in our case is the $\texttt{LearningStep}$ function which maps parameter settings $\theta \in \Theta$ to real-valued performance yielded by \acrshortpl{acr:mdp}.
 
 As discussed earlier in  \autoref{sec:bayesian-optimization-problem}, the objective functions for the class of \acrshort{acr:sdm} problems tend to be expensive to evaluate as proper estimations can only be made through expensive simulations.
 Therefore, \acrlong{acr:bo} emerges as an attractive method to find a global maximizer $\theta^\ast \in \Theta$ for our objective function.
 After each iteration the evidence set $\mathcal{D}$ is augmented with a new observation, based on which the posterior $p(f\vert \mathcal{D})$ of the objective function $f$ is updated accordingly.
-A new parameter-setting for the next learning step is then sampled at the point with maximum utility in the selected acquisition function $a: \Theta \mapsto \mathbb{R}$.
+A new parameter setting for the next learning step is then sampled at the point with maximum utility in the selected acquisition function $a: \Theta \mapsto \mathbb{R}$.
 This procedure is repeated until some criterium is reached, which can be a fixed number of iterations, a fixed time or a custom stopping criterion, e.g., observing no improvement for some number of iterations.
 
 %\begin{itemize}
@@ -595,8 +595,8 @@ This means the $\beta$ parameter is set to $\beta = 1.0$ such that the performan
 Therefore, this first phase is relatively cost-cheap, and although it abstracts from the real-world the most, it may be used to identify the interesting area of the parameter space.
 Hence, the goal of this first phase is to narrow down the search space to a subspace of learning parameters more likely to yield high performance.
 
-The block diagram in \autoref{fig:phase-1} depicts the main steps of this first phase, whose pseudo-code is presented in \autoref{alg:multi-phase-framework}, starting from \autoref{alg:line:phase1}.
-In each iteration of this first phase the execution traces $E$ from the exploration are used to obtain an \acrshort{acr:mdp} by applying the learning algorithms, given a parameter-setting $\theta$.
+The block diagram in \autoref{fig:phase-1} depicts the main steps of this first phase, whose pseudocode is presented in \autoref{alg:multi-phase-framework}, starting from \autoref{alg:line:phase1}.
+In each iteration of this first phase the execution traces $E$ from the exploration are used to obtain an \acrshort{acr:mdp} by applying the learning algorithms, given a parameter setting $\theta$.
 The value of the learned model $\mathcal{M}$ is then assessed based only on the value function $V$ for a set of tasks $T_\mathcal{M}$ the system is expected to perform.
 The value of model $\mathcal{M}$ is thus computed as:
 \begin{equation*} 
@@ -604,7 +604,7 @@ V_{\mathcal{M}} = \frac{\sum_{t \in T_\mathcal{M}} V_{\mathit{DTP}, t}}{|T_\math
 \end{equation*}
 where each task $t \in T_\mathcal{M}$ is defined in terms of an initial state and reward function.
 
-Based on the gathered evidence new parameter-settings $\theta$ are sampled iteratively, which are those settings for which the utility is the highest in the acquisition function $a_1$ used for \acrshort{acr:bo}.
+Based on the gathered evidence new parameter settings $\theta$ are sampled iteratively, which are those settings for which the utility is the highest in the acquisition function $a_1$ used for \acrshort{acr:bo}.
 This continues until a stopping condition has been met, where in this first phase stopping after a fixed number of iterations should be acceptable, as the goal is only to narrow down the search space.
 At the end of the first phase, the resulting posterior \acrshort{acr:gp} distribution $\mathit{gp}_1$ is taken and used for the acquisition in the next optimization phase.
 
@@ -612,7 +612,7 @@ At the end of the first phase, the resulting posterior \acrshort{acr:gp} distrib
 
 %\fbox{\textbf{TODO:} Update threshold to prior.}
 
-%First phase: Performance assessment solely based on $V_\mathit{DTP}$ (i.e., initially $\beta = 1$). No simulations. $\gamma$ parameter starts off low and increases over time. This means this first phase is relatively cost-cheap, but might give us a global idea of the interesting area of the parameter-space so that we could narrow this space down.
+%First phase: Performance assessment solely based on $V_\mathit{DTP}$ (i.e., initially $\beta = 1$). No simulations. $\gamma$ parameter starts off low and increases over time. This means this first phase is relatively cost-cheap, but might give us a global idea of the interesting area of the parameter space so that we could narrow this space down.
 
 %\blindtext
 
@@ -634,7 +634,7 @@ Therefore, the second phase is much more cost-expensive and so a desirable aim i
 In an attempt to do so, the second phase exploits the knowledge gathered in the first phase by utilizing the \acrshort{acr:gp} $\mathit{gp}_1$ in the acquisition of new samples in the optimization process.
 The idea is thus to first sample from those parts of the parameter space $\Theta$ expected to yield high value according to the observations in the first phase.
 
-The block diagram in \autoref{fig:phase-2} depicts the main steps of this second phase, whose pseudo-code is presented in \autoref{alg:multi-phase-framework}, starting from \autoref{alg:line:phase2}.
+The block diagram in \autoref{fig:phase-2} depicts the main steps of this second phase, whose pseudocode is presented in \autoref{alg:multi-phase-framework}, starting from \autoref{alg:line:phase2}.
 The first thing that differs from the previous phase is that, in each iteration, the value of the learned model $\mathcal{M}$ is assessed based on cost-expensive simulations.
 The value of model $\mathcal{M}$ is thus computed as:
 \begin{equation*}
@@ -642,7 +642,7 @@ V_\mathcal{M} = \frac{\sum_{t \in T_\mathcal{M}} V_{\mathit{SIM}, t}}{|T_\mathca
 \end{equation*}
 \noindent where each task $t \in T_\mathcal{M}$ is defined in terms of an initial state and reward function.
 
-The main difference, however, lies in how new parameter-settings $\theta$ are sampled in each iteration in this phase.
+The main difference, however, lies in how new parameter settings $\theta$ are sampled in each iteration in this phase.
 The acquisition in this phase is based on the \textit{integrated acquisition function}, defined in \autoref{eq:integrated-acq}, as it uses the \acrshort{acr:gp} from the prior phase and the \acrshort{acr:gp} posterior based on the observations of this phase.
 That is, the acquisition function is defined as:
 $$\alpha\cdot\mathsf{EI}(x\vert\mathcal{D}_1, \mathit{gp}_1) + (1 - \alpha)\cdot\mathsf{EI}(x\vert\mathcal{D}_2, \mathit{gp}_2)$$
@@ -735,7 +735,7 @@ Our hypothesis is that, if the global maximum in the first phase lies close to t
 
 The third phase starts after the optimization process has reached its stop condition and has retrieved a performance-maximizing \acrshort{acr:mdp} $\mathcal{M}_\mathsf{max}$
 In this phase, the goal is to further improve the learned model by checking whether the transition probabilities are likely to match the real world environment.
-The identification of discrepancies in these probabilities happens by executing actions in those areas of the state-space that are visited most often and in which the agent tends to get stuck (according to the transition probabilities) and seeing if the observed transitions yield comparable probabilities.
+The identification of discrepancies in these probabilities happens by executing actions in those areas of the state space that are visited most often and in which the agent tends to get stuck (according to the transition probabilities) and seeing if the observed transitions yield comparable probabilities.
 For those areas and their corresponding states for which mismatches are identified, higher resolution is provided to better reflect the system's dynamics in the real world.
 
 The illustration of \autoref{fig:phase-3} aims to clarify the goal of this third phase by means of an example for the context of mobile robot navigation.
@@ -746,22 +746,22 @@ For the state space depicted on the left-side however, the robot might get stuck
 In \autoref{alg:multi-phase-fine-tuning}, a proof-of-concept solution for this problem is shown which fine-tunes an \acrshort{acr:mdp} $\mathcal{M}$ resulting from the previous two phases.
 Given a set of tasks $T$ (possibly different from the tasks used in the prior phases), a policy $\pi$ is obtained based on this model, which is executed in a simulation or real-world environment.
 When the agent detects it is stuck in some state $s_f$, it starts to gather a set of new execution traces $E_\mathit{SIM}$ of transitions from this state.
-This set is augmented by iteratively selecting an action (in a round-robin fashion) and executing it from the state $s_f$ and recording the end-state $s'$.
+This set is augmented by iteratively selecting an action (in a round-robin fashion) and executing it from the state $s_f$ and recording the end state $s'$.
 For the example in \autoref{fig:phase-3}, one entry of this dataset $E_\mathit{SIM}$ may express that starting from a location $(x, y)$ in state $s_f = s_2$, choosing to execute the action $\texttt{N}$ of moving north resulted in ending up in state $s_7$.
 Then, another entry may express that starting from a location $(x', y')$ in state $s_f = s_2$, executing the same action resulted in ending up in state $s_2$.
 
 Based on the set $E_\mathit{SIM}$, the state $s_f$ in which the agent got stuck is split in a number of (sub-)states by clustering the observations.
-The transition function of the \acrshort{acr:mdp} is then updated accordingly for the resulting state-space.
+The transition function of the \acrshort{acr:mdp} is then updated accordingly for the resulting state space.
 The agent then attempts to perform the task again with the updated \acrshort{acr:mdp}.
 If the agent then succeeds in executing the task, it moves on to the next task, and otherwise repeats the earlier steps with higher resolution in the clustering.
 
 Note that this third phase is a phase that is mostly independent of the prior phases of the framework.
-That is, in the first two phases the goal is to find the optimal parameters $\theta$ of an \acrshort{acr:mdp} model-learning algorithm, while the third phase is concerned with tuning the resulting \acrshortpl{acr:mdp}.
+That is, in the first two phases the goal is to find the optimal parameters $\theta$ of an \acrshort{acr:mdp} model learning algorithm, while the third phase is concerned with tuning the resulting \acrshortpl{acr:mdp}.
 As such, this last phase is rather an additional (and optional) step with the attempt of further improving the performance yielded by these system models.
 
 % To identify these discrepancies we could check if the transition probabilities of the model match observed outcomes of actions from the different states of the model.
 
-%Third phase: Starts when the parameter-space has sufficiently been narrowed down. To further improve learned models we would like to see if the opportunity exists of having higher resolution in some areas of the state space to better reflect the data-set.
+%Third phase: Starts when the parameter space has sufficiently been narrowed down. To further improve learned models we would like to see if the opportunity exists of having higher resolution in some areas of the state space to better reflect the data-set.
 
 %\blindtext
 

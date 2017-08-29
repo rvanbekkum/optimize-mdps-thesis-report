@@ -9,7 +9,7 @@ Therefore, this chapter aims to provide some insight into the existing approache
 
 First \autoref{sec:learning-probabilistic-models} gives an overview of the existing algorithms for learning models from execution traces of the system.
 Then, in \autoref{sec:active-learning} a number of approaches are examined, which combine offline methods for learning (initial) models with \acrshort{acr:rl} algorithms which update the model parameters online.
-Finally, \autoref{sec:mdp-uncertain-probabilities} looks into approaches that extend the traditional \acrshort{acr:mdp} framework by accounting for uncertainty in the transition probabilities, with the aim to overcome the in-feasibility of obtaining completely accurate probabilistic models.
+Finally, \autoref{sec:mdp-uncertain-probabilities} looks into approaches that extend the traditional \acrshort{acr:mdp} framework by accounting for uncertainty in the transition probabilities, with the aim to overcome the infeasibility of obtaining completely accurate probabilistic models.
 
 %\section{Problem Formulation}
 %\label{sec:problem-formulation}
@@ -41,13 +41,13 @@ Informally, this is done by first providing manual estimates of the model parame
 For a more detailed explanation of the Baum-Welch algorithm one may refer to the tutorial by \citeauthor{bilmes1998gentle} in \cite{bilmes1998gentle}.
 
 Although the approach turns out to work quite well for learning \acrshortpl{acr:hmm} for recognition purposes, some problems emerge when applying the algorithm to learn \acrshortpl{acr:pomdp} for planning under uncertainty.
-That is, the algorithm is well-known to be sensitive to its initialization (particularly in the case of continuous observations) and depending on the choice of the initial model parameters it may result in local maxima.
-However, to some extent this problem can be overcome by segmenting the observation sequences using $k$-means clustering to restrict the model to a discrete \acrshort{acr:hmm} or \acrshort{acr:pomdp} (e.g., see \cite{calinon2007learning}).
-This discretization however, depending on the choice of the hyper-parameter(s) of the clustering algorithm, might neglect some valuable distinctions between observations or states of the system.
+That is, the algorithm is well known to be sensitive to its initialization (particularly in the case of continuous observations) and depending on the choice of the initial model parameters it may result in local maxima.
+However, to some extent this problem can be overcome by segmenting the observation sequences using $k$-Means clustering to restrict the model to a discrete \acrshort{acr:hmm} or \acrshort{acr:pomdp} (e.g., see \cite{calinon2007learning}).
+This discretization however, depending on the choice of the hyperparameter(s) of the clustering algorithm, might neglect some valuable distinctions between observations or states of the system.
 
 A particularly relevant work is that of \citeauthor{shatkay1997learning} \cite{shatkay1997learning} in which the algorithm is applied to learn \acrshort{acr:pomdp} models in the context of mobile robot navigation.
 In their work they make the assumption of a finite set of states whose size is known, and associate each state with a point in some metric space derived from the odometric ability of the robot.
-Based on a set of gathered odometric readings an initial \textit{topological} model is learned by applying $k$-means clustering, taking the clusters as the states in which the observations were made, and based on state and observation counts make initial estimates of the model parameters.
+Based on a set of gathered odometric readings an initial \textit{topological} model is learned by applying $k$-Means clustering, taking the clusters as the states in which the observations were made, and based on state and observation counts make initial estimates of the model parameters.
 Then, an adapted version of Baum-Welch is applied which takes into account odometric informaton to iteratively update the model.
 The obtained results are compared to those that emerge from the traditional Baum-Welch algorithm, which is used to demonstrate that exploiting odometric information can reduce the number of iterations and improve the final model.
 
@@ -69,7 +69,7 @@ In this way the amount of required training data is restricted and updating the 
 A completely different class of algorithms is based on the merging of states to acquire probabilistic models.
 The type of algorithms that are considered here are based on a method called \textit{Best-First Model Merging} which was first proposed by \citeauthor{stolcke1994best} in \cite{stolcke1994best} to learn \acrshortpl{acr:hmm} for the purpose of speech recognition.
 
-Given a training set $\mathcal{O}$ of i.i.d. observation sequences, this algorithm starts from an initial \acrshort{acr:hmm} whose state-space consists of separate states for each time-step in the sequences.
+Given a training set $\mathcal{O}$ of i.i.d. observation sequences, this algorithm starts from an initial \acrshort{acr:hmm} whose state space consists of separate states for each time-step in the sequences.
 The entries of the transition and emission matrix are thus initialized with probability one for each of the transitions between subsequent states and each percept in the observation sequence respectively.
 Although this \acrshort{acr:hmm} explains the data perfectly it is usually not efficient and therefore the model is iteratively updated by merging those pairs of states that decrease the likelihood the least.
 This repeats itself until a stop criterion is reached, such as the likelihood falling below a certain value or reaching a predefined number of states.
@@ -94,8 +94,8 @@ This means that the approach is prone to local maxima, although this can be avoi
 
 A variation of the algorithm is a method seen in \cite{nikovski1999learning} that goes under the name of \textit{State Merging by Trajectory Clustering}, which makes the state merging approach more resilient to \textit{perceptual aliasing}.
 In this approach the merging criterion is changed such that in each iteration those pairs of states are merged whose prior and posterior trajectories in the training set are most similar.
-The pseudo-code of this method is shown in \autoref{alg:trajectory-clustering} where the similarity of states is thus defined by the length of the common trajectories from and towards the states. 
-In case the observations have an underlying metric space, one can choose to apply algorithms like $k$-means clustering to cluster the most similar time-states, or alternatively turn to clustering methods that work on similarity matrices.
+The pseudocode of this method is shown in \autoref{alg:trajectory-clustering} where the similarity of states is thus defined by the length of the common trajectories from and towards the states. 
+In case the observations have an underlying metric space, one can choose to apply algorithms like $k$-Means clustering to cluster the most similar time-states, or alternatively turn to clustering methods that work on similarity matrices.
 
 
 %One of the main issues faced in learning \acrshort{acr:mdp} models is that of deciding on the state space, while one typically does not know the size of the true state space of the real-world process that generated the training data.
@@ -160,7 +160,7 @@ An example is the $E^3$ algorithm \cite{kearns2002near} which explicitly chooses
 Its exploration is based on \textit{balanced wandering}, which means that the agent will prefer the action that has been executed the least from its current state (breaking ties randomly) until the state has been visited a sufficient number of times.
 Another algorithm is the $R$-Max algorithm \cite{Brafman2002}, which has a built-in mechanism for switching between exploitation and exploration and differs in its exploration by letting the agent make the assumption that a maximum possible reward can be obtained from unexplored state-action pairs.
 
-Another issue that should be taken care of in model-based \acrshort{acr:rl} is when and how to update the \acrshort{acr:mdp} and its plan based on acquired experience. A simple approach would be to update the plan on each model update applying well-known algorithm like \acrshort{acr:vi}, although this is computationally expensive.
+Another issue that should be taken care of in model-based \acrshort{acr:rl} is when and how to update the \acrshort{acr:mdp} and its plan based on acquired experience. A simple approach would be to update the plan on each model update applying a well-known algorithm like \acrshort{acr:vi}, although this is computationally expensive.
 To gain efficiency, frameworks like \textsc{RTMBA} \cite{hester2012rtmba} or \textsc{DYNA} and its various extensions \cite{silver2008sample}, aim to update their plans more intelligently (e.g., by updating value functions only for a subset of state-action pairs).
 A different approach could be to limit exhaustive exploration of states in the first place, exemplified by the \textsc{RL-DT} algorithm proposed in \cite{hester2010generalized}, which generalizes the effects of actions across states.
 This however, is particularly useful for these domains that require sample-efficient learning and for which the available time for exploration is limited.
@@ -171,7 +171,7 @@ This however, is particularly useful for these domains that require sample-effic
 An appealing approach to overcome inaccuracies of offline learned probabilistic models is to use them as prior models for the model-based \acrshort{acr:rl} algorithms shown in \autoref{sec:model-based-reinforcement-learning}.
 In \cite{epshteyn2008active} an approach referred to as \textit{Active \acrlong{acr:rl}} is presented which uses a provided \acrshort{acr:mdp} specification as prior knowledge for exploration through model-based \acrshort{acr:rl}.
 Rather than using this \acrshort{acr:mdp} for planning, its model parameters are used as a blueprint for exploration in the actual environment.
-The algorithm guides the exploration by selecting these actions for which is known that the `prior' \acrshort{acr:mdp} is most-sensitive to changes in the corresponding transition probabilities and rewards.
+The algorithm guides the exploration by selecting these actions for which is known that the `prior' \acrshort{acr:mdp} is most sensitive to changes in the corresponding transition probabilities and rewards.
 
 
 %\showoutline{
@@ -204,9 +204,9 @@ The algorithm guides the exploration by selecting these actions for which is kno
 Considerable work has been conducted on investigating the application of Bayesian methods to \acrshort{acr:rl} motivated by their close relation to decision theory for making decisions under uncertainty. 
 In \textit{\acrfull{acr:brl}} \cite{ghavamzadeh2015bayesian} the idea is to learn a model of the environment by considering the unknown parameters of the model as random variables.
 Over these random variables a prior distribution $p(\theta)$ is defined corresponding to the prior beliefs over the unknown parameters $\theta$ of the model.
-A common choice for discrete-state and action \acrshortpl{acr:mdp} is a multinomial \textit{Dirichlet} prior, which is parameterized by a count-vector $\Phi = (\phi_1, \ldots, \phi_k)$ which defines the number of observations of all possible transitions.
+A common choice for discrete-state and action \acrshortpl{acr:mdp} is a multinomial \textit{Dirichlet} prior, which is parameterized by a count vector $\Phi = (\phi_1, \ldots, \phi_k)$ which defines the number of observations of all possible transitions.
 Then, as evidence is gathered, the posterior on $\theta$ (which quantifies the uncertainty over the parameters) is updated based on Bayes' rule from which an estimation of the model parameters can be obtained.
-A framework that is accordingly used in model-based \acrshort{acr:brl} is the \textit{Bayes-Adaptive \acrshort{acr:mdp}} \cite{guez2012efficient}, which augments the original state space $\mathcal{S}$, transition function $\delta$ and reward function $R$ by jointly combining them with the posterior's hyper-parameters $\Phi$.
+A framework that is accordingly used in model-based \acrshort{acr:brl} is the \textit{Bayes-Adaptive \acrshort{acr:mdp}} \cite{guez2012efficient}, which augments the original state space $\mathcal{S}$, transition function $\delta$ and reward function $R$ by jointly combining them with the posterior's hyperparameters $\Phi$.
 A general formulation of the steps of model-based \acrshort{acr:brl} is shown in \autoref{alg:bayesian-reinforcement-learning} \cite{png2011bayesian}.
 
 A major drawback of model-based \acrshort{acr:brl} is that obtaining exact solutions appears computationally intractable.
@@ -236,7 +236,7 @@ Still, a major challenge is scaling \acrshort{acr:brl} methods to large-scale \a
 \section{MDP Models with Transition Probability Uncertainty}
 \label{sec:mdp-uncertain-probabilities}
 
-Another method to overcome the in-feasibility of obtaining completely accurate specifications of transition probabilities is to extend the models and planning algorithms to take imprecise probabilities into account.
+Another method to overcome the infeasibility of obtaining completely accurate specifications of transition probabilities is to extend the models and planning algorithms to take imprecise probabilities into account.
 Over the years various frameworks have been introduced that utilize this idea, such as the \textit{\acrfull{acr:mdpip}} first introduced in \cite{satia1973markovian} which describes the transition probabilities as a set of linear inequalities to represent incomplete, ambiguous or conflicting beliefs over these probabilities.
 That is, in this framework the probability of moving from a state $s_i$ to $s_j$ with action $a$ could for instance be expressed by a variable $p_{ij}$ s.t. a constraint $0 \leq p_{ij} \leq 0.5$.
 An illustrative example of a possible application of such a framework would be that of \acrshortpl{acr:mdp} for traffic light control, for which the estimation of lane-turning probabilities for all traffic lanes is problematic, especially as they may be different over the day or throughout the year \cite{delgado2011efficient}.

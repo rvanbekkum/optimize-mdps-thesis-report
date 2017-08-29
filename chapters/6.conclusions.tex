@@ -13,11 +13,11 @@ Finally, this chapter concludes this thesis with recommendations and suggestions
 \label{sec:summary}
 
 Previous work in the field of probabilistic model learning for planning under uncertainty has already presented us with various algorithms for (offline) learning \acrfullpl{acr:mdp} from a dataset describing the dynamics of some system.
-The state of the art however lacks an automated method of setting the hyper-parameters of these learning algorithms so to best reflect the underlying system and maximize its performance in the execution of the tasks it is expected to perform.
+The state of the art however lacks an automated method of setting the hyperparameters of these learning algorithms so to best reflect the underlying system and maximize its performance in the execution of the tasks it is expected to perform.
 To address this issue, we pose the adjustment of the parameters of such learning algorithms as an optimization task.
-In this optimization task, the goal is to find the setting of the hyper-parameters $\theta$ which maximizes the performance yielded by executing the plans or \textit{policies} derived from the learned \acrshort{acr:mdp}.
+In this optimization task, the goal is to find the setting of the hyperparameters $\theta$ which maximizes the performance yielded by executing the plans or \textit{policies} derived from the learned \acrshort{acr:mdp}.
 
-In this thesis, we present a solution (which we refer to as the \textit{\acrshort{acr:mdp} optimization framework}) that employs the \acrfull{acr:bo} framework for this optimization task, defining a probability distribution over functions which maps parameter-settings $\theta$ to an assessment of the value $V_\mathcal{M}$ of a learned \acrshort{acr:mdp}.
+In this thesis, we present a solution (which we refer to as the \textit{\acrshort{acr:mdp} optimization framework}) that employs the \acrfull{acr:bo} framework for this optimization task, defining a probability distribution over functions which maps parameter settings $\theta$ to an assessment of the value $V_\mathcal{M}$ of a learned \acrshort{acr:mdp}.
 Although algorithms that employ the \acrshort{acr:bo} framework for \acrshort{acr:sdm} problems do already exist, all of them are online \acrshortpl{acr:rl} approaches that do not utilize an available dataset prior to interacting with the real-world environment.
 The model value $V_\mathcal{M}$ of an \acrshort{acr:mdp}, used as a relative performance measure in the optimization, is assessed based on computed value functions and simulations of the tasks the system is expected to perform.
 
@@ -26,10 +26,10 @@ That is, we define a first phase in which a \acrshort{acr:bo} is performed to ma
 The posterior resulting from this phase is then used to steer the acquisition in a second optimization phase, in which the performance in simulations over a set of tasks is being optimized.
 
 Then, finally, we present a solution to further fine-tune the parameters of the \acrshort{acr:mdp} resulting from this optimization.
-This is done by increasing the resolution of the state-space and updating the transition probabilities where necessary, e.g., when the agent gets stuck in a certain state.
+This is done by increasing the resolution of the state space and updating the transition probabilities where necessary, e.g., when the agent gets stuck in a certain state.
 
-An implementation of the afore-mentioned framework has been made for path planning in a mobile robot navigation domain, in which a robot needs to move from one location to another in an office environment.
-A dataset of execution traces with odometric readings has been gathered based on which our implementation learns \acrshortpl{acr:mdp} by clustering the data into a state-space, with the number of states defined by $\theta$.
+An implementation of the aforementioned framework has been made for path planning in a mobile robot navigation domain, in which a robot needs to move from one location to another in an office environment.
+A dataset of execution traces with odometric readings has been gathered based on which our implementation learns \acrshortpl{acr:mdp} by clustering the data into a state space, with the number of states defined by $\theta$.
 The implementation thus optimizes for an \acrshort{acr:mdp} that can produce policies for a mobile robot offline, so that it can move from one location to another as fast as possible.
 
 The results of the experiments show that our framework can effectively be used to obtain an \acrshort{acr:mdp} for the path planning of a mobile robot.
@@ -52,8 +52,8 @@ First off, the following research question is mostly concerned with getting a go
 \vspace{0pt}
 
 As seen in \autoref{sec:learning-markov-models}, one of the most straightforward methods can be deducted from methods for fitting Markov Chains, i.e. by maximum likelihood or Bayesian inference.
-The difference is in the addition of actions, so that a transition probability matrix needs to be learned for each possible action, given some user-defined state-space.
-For various domains, such as that of mobile robot navigation, defining the state-space may not be a trivial task, although there are approaches for this, such as $k$-means clustering or (time-)state merging approaches, which are parameterized by the number of states.
+The difference is in the addition of actions, so that a transition probability matrix needs to be learned for each possible action, given some user-defined state space.
+For various domains, such as that of mobile robot navigation, defining the state space may not be a trivial task, although there are approaches for this, such as $k$-Means clustering or (time-)state merging approaches, which are parameterized by the number of states.
 Then, when one needs to learn partially observable models one needs to consider other approaches, as shown in \autoref{sec:learning-probabilistic-models} to account for emission probabilities as well.
 
 \vspace{16pt}
@@ -64,7 +64,7 @@ Then, when one needs to learn partially observable models one needs to consider 
 
 The value $V_\mathcal{M}$ of an \acrshort{acr:mdp} $\mathcal{M}$ should be defined in terms of how well the agent performs tasks based on the policies computed from the model.
 Therefore, first of all, the performance can be estimated using the expected value in the initial state from the value function for multiple tasks.
-However, as a model abstracts from the real-world, using the value function to express model value is not always sufficient.
+However, as a model abstracts from the real world, using the value function to express model value is not always sufficient.
 Therefore, a more accurate estimation can be made through simulations of the tasks the system is expected to perform, discounting the obtained reward based on the number of steps made.
 Combining these estimations results in the expression shown in \autoref{eq:vm} in \autoref{sec:learning-step}, which can be used as a relative performance measure of different \acrshortpl{acr:mdp} for the same environments.
 
@@ -75,8 +75,8 @@ Combining these estimations results in the expression shown in \autoref{eq:vm} i
 \vspace{12pt}
 
 We have seen that making an accurate assessment of the value of an \acrshort{acr:mdp} requires time-expensive simulations to be performed.
-Therefore, it is important to limit the number of evaluations of a parameter-setting for the used model-learning algorithm, with \acrshort{acr:bo} emerging as an attractive framework for optimization.
-As we have seen in our experiments, \acrshort{acr:bo} could effectively be employed to explore the parameter search-space with a limited number of evaluations.
+Therefore, it is important to limit the number of evaluations of a parameter setting for the used model learning algorithm, with \acrshort{acr:bo} emerging as an attractive framework for optimization.
+As we have seen in our experiments, \acrshort{acr:bo} could effectively be employed to explore the parameter space with a limited number of evaluations.
 
 \vspace{16pt}
 \noindent%\fbox{\parbox{\textwidth}{
@@ -94,8 +94,8 @@ In our experiments we have seen that it is possible to use the first phase to su
 \section{Recommendations and Future Work}
 \label{sec:recommendations-future-work}
 
-As this thesis has only limited itself to learning and optimizing fully-observable \acrshortpl{acr:mdp}, one direction for proposed future work is to explore the possibilities of optimizing for \acrshortpl{acr:pomdp}.
-This would require one to make use of other model-learning algorithms, such as the \textit{Baum-Welch} algorithm and state merging algorithms seen in \autoref{sec:learning-probabilistic-models}.
+As this thesis has only limited itself to learning and optimizing fully observable \acrshortpl{acr:mdp}, one direction for proposed future work is to explore the possibilities of optimizing for \acrshortpl{acr:pomdp}.
+This would require one to make use of other model learning algorithms, such as the \textit{Baum-Welch} algorithm and state merging algorithms seen in \autoref{sec:learning-probabilistic-models}.
 Apart from this, another recommendation for future work would be to implement and test the solution on applications different other than path planning for mobile robot navigation.
 Further, one could consider to explore and investigate alternative global optimization algorithms (e.g., see \cite{bergstra2011algorithms}) to address the problem statement of this thesis.
 %A final suggestion is to investigate the 
