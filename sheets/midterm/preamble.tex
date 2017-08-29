@@ -1,0 +1,124 @@
+\usepackage[export]{adjustbox}
+\usepackage{beamerTUDelft}
+\setbeamercovered{invisible}
+\usefonttheme[onlymath]{serif}
+\usepackage{scrextend}
+
+
+\usepackage{tikz}
+\usetikzlibrary{automata,arrows,shapes}
+
+% Begin beamer configuration
+\setbeamercolor{block title}{use=structure,fg=white,bg=tudblue!100!black}
+\setbeamercolor{block body}{use=structure,fg=black,bg=tudblue!20!white}
+\setbeamerfont{block body}{size=\small}
+
+\setbeamertemplate{footline}{
+	\colorbox{tudblue}{\begin{minipage}{\hsize}
+	\vspace{0.0cm}		
+	{
+	\hspace{0.1cm}
+	    \includegraphics[height=0.4cm]{figures/tudelftLogo}
+	\textcolor{white}{\textbf{
+			\hfill
+			\insertframenumber/\inserttotalframenumber
+	}}
+	\hspace{0.2cm}
+	}
+	\vspace{0.1cm}
+\end{minipage}}
+}
+
+\addtobeamertemplate{headline}{\hypersetup{linkcolor=white}}{}
+\setbeamertemplate{headline}{%
+\leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.25ex]{palette tertiary}%
+    \insertsectionnavigationhorizontal{\paperwidth}{\hskip0pt plus1fill}{\hskip0pt plus1fill}
+    \end{beamercolorbox}%
+  }
+}
+
+\setbeamertemplate{itemize item}{\color{tudblue}$\bullet$}
+\setbeamertemplate{enumerate items}[circle]
+
+\setbeamertemplate{blocks}[rounded][]
+\setbeamertemplate{items}[circle]
+\setbeamertemplate{sections/subsections in toc}[circle]
+
+\usesubitemizeitemtemplate{%
+    \raise1.5pt\hbox{\color{beamerstructure}$\blacktriangleright$}%
+}
+\usesubsubitemizeitemtemplate{%
+    \raise1.5pt\hbox{\color{beamerstructure}$\bigstar$}%
+}
+
+%\AtBeginSection[]
+%{
+%\begingroup
+%\setbeamertemplate{headline}{%
+%\leavevmode%
+%  \hbox{%
+%    \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.25ex]{palette tertiary}%
+%    \end{beamercolorbox}%
+%  }
+%}
+% \begin{frame}
+%    \frametitle{Auction Design}
+%    \tableofcontents[currentsection]
+% \end{frame}
+%\endgroup
+%}
+
+\newtheoremstyle{named}{}{}{\itshape}{}{\bfseries}{.}{.5em}{\thmnote{#3's }#1}
+\theoremstyle{named}
+\newtheorem*{namedtheorem}{Theorem}
+
+\makeatletter
+\def\th@questionstyle{%
+    \normalfont % body font
+    \setbeamercolor{block title example}{bg=tudLavender,fg=white}
+    \setbeamercolor{block body example}{bg=tudLavender!20,fg=black}
+    \def\inserttheoremblockenv{exampleblock}
+  }
+\makeatother
+\theoremstyle{questionstyle}
+\newtheorem*{question}{Question}
+
+\definecolor{darkerblue}{RGB}{0,125,222}
+
+% End beamer configuration
+
+\usepackage[many]{tcolorbox}
+\tcbset{highlight math style={enhanced,
+  colframe=tudblue,colback=tudblue!20!white,arc=4pt,boxrule=1pt
+  }}
+
+%\usepackage{ifthen}
+\usepackage{graphicx}
+%\usepackage{booktabs}
+%\usepackage{algorithm}
+%\usepackage{calrsfs}
+%\usepackage[noend]{algpseudocode}
+\usepackage[english]{babel}
+%\usepackage{setspace}
+%\usepackage{wrapfig,lipsum}
+%\usepackage{empheq}
+%\usepackage[gen]{eurosym}
+%
+%\usepackage{algorithmicx}
+%\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+%\renewcommand{\algorithmicensure}{\textbf{Output:}}
+%\algnewcommand{\algorithmicgoto}{\textbf{go to}}%
+%\algnewcommand{\Goto}{\algorithmicgoto\xspace}%
+%\algnewcommand{\GotoNum}[1]{\algorithmicgoto~\ref{#1}}%
+%\algnewcommand{\Label}{\State\unskip}
+
+\newcommand{\bigO}[1]{\ensuremath{\mathop{}\mathopen{}\mathcal{O}\mathopen{}\left(#1\right)}}
+
+\usefonttheme{structurebold}
+\setbeamerfont{title}{series=\bfseries,parent=structure,size=\large}
+%\setbeamerfont{subtitle}{size=\scriptsize,series=\bfseries,parent=structure}
+\setbeamerfont{author}{size=\small}
+%\setbeamerfont{institute}{size=\scriptsize,series=\bfseries,parent=structure}
+\setbeamerfont{date}{size=\footnotesize}
