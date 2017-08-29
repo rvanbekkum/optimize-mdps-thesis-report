@@ -48,7 +48,7 @@ This discretization however, depending on the choice of the hyperparameter(s) of
 A particularly relevant work is that of \citeauthor{shatkay1997learning} \cite{shatkay1997learning} in which the algorithm is applied to learn \acrshort{acr:pomdp} models in the context of mobile robot navigation.
 In their work they make the assumption of a finite set of states whose size is known, and associate each state with a point in some metric space derived from the odometric ability of the robot.
 Based on a set of gathered odometric readings an initial \textit{topological} model is learned by applying $k$-Means clustering, taking the clusters as the states in which the observations were made, and based on state and observation counts make initial estimates of the model parameters.
-Then, an adapted version of Baum-Welch is applied which takes into account odometric informaton to iteratively update the model.
+Then, an adapted version of Baum-Welch is applied which takes into account odometric information to iteratively update the model.
 The obtained results are compared to those that emerge from the traditional Baum-Welch algorithm, which is used to demonstrate that exploiting odometric information can reduce the number of iterations and improve the final model.
 
 Similarly, an adaptation of the Baum-Welch algorithm is applied in \cite{koenig1996unsupervised} to learn \acrshortpl{acr:pomdp} which exploits prior knowledge of map symmetry and does not adjust probabilities that are assumed to be approximately correct since the sensor and actuator models are expected to be similar in different environments.
