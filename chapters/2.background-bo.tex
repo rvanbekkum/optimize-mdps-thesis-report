@@ -110,19 +110,11 @@ The mean function $\mu$ is typically initialized by a constant mean, usually zer
 The choice of the kernel or covariance function of the \acrshort{acr:gp} determines the smoothness of the estimations on the performance and confidence intervals of unexplored samples in the parameter space.
 According to the various literature in the field of \acrlong{acr:bo} the most common kernels are said to be the \textit{squared exponential} (also known as \textit{radial basis function (RBF)} or Gaussian) kernel and Mat\'ern kernel.
 However, the squared exponential kernel turns out unrealistically smooth for practical applications \cite{snoek2012practical} and therefore would require properly selecting its hyperparameters.
-The Mat\'ern kernel serves as a more flexible class, where the hyperparameters allow tweaking the distance at which there are almost no effects from previous samples and the rate at which these effects decrease, for which a reoccurring kernel appears to be an automatic relevance determination (ARD) Mat\'ern 5/2 kernel for machine learning applications \cite{snoek2012practical, kawaguchi2015bayesian}.
-
-
-%\begin{itemize}
-%	\item \acrfull{acr:gp}
-%	\item Wiener Process
-%\end{itemize}
-
+The Mat\'ern kernel serves as a more flexible class, which is parameterized by the hyperparameter $\nu$ specifying the expected smoothness of the approximated function, i.e., which can be used to tweak the distance at which there are almost no effects from previous samples and the rate at which these effects decrease. As concluded in \cite{rasmussen2006gaussian, lizotte2008practical, shahriari2016taking} the most interesting and most commonly used for machine learning applications are the Mat\'ern kernels with $\nu = 3/2$ and $\nu = 5/2$, as can be seen being applied in various works \cite{snoek2012practical, kawaguchi2015bayesian, turchetta2016safe}.  %for which a reoccurring kernel appears to be an automatic relevance determination (ARD) Mat\'ern 5/2 kernel for machine learning applications \cite{snoek2012practical, kawaguchi2015bayesian}.
 
 \subsubsection*{Acquisition Functions}
 \label{sec:bayesian-optimization-acquisition}
 % Examples acquisition function: PMAX, IEMAX, MPI, MEI, (GP-)UCB, GP-Hedge
-% TODO Introduction
 The next step is defining an acquisition function which is used in the optimization process to efficiently sample observations towards the global optimum.
 Typically, high utility in the acquisition functions corresponds to potentially high objective function values.
 However, to avoid getting stuck in local optima, acquisition functions are defined such that a trade-off is made between exploration and exploitation.

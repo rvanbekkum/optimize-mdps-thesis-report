@@ -184,7 +184,7 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 		\State $V_{\mathcal{M}_\mathsf{max}} \gets V_\mathcal{M}$
 		\State $\mathcal{M}_\mathsf{max} \gets \mathcal{M}$
 		\EndIf
-		\State $\theta \gets \textproc{OptimizationStep}(\theta, V_\mathcal{M}, \mathcal{D}, \mathit{gp})$
+		\State $\theta \gets \textproc{OptimizationStep}(\theta, V_\mathcal{M})$
 		\Until{convergence}
 		\State\Return $\mathcal{M}_\mathsf{max}, \mathcal{D}$
 		\Statex
@@ -214,7 +214,7 @@ All in all, the learning algorithm requires one to fix an action space $A$ and t
 			\State\Return $\mathcal{M}, V_\mathcal{M}$
 		\EndFunction
 		\Statex
-		\Function{OptimizationStep}{$\theta, V_{\mathcal{M}}, \mathcal{D}, \mathit{gp}$}
+		\Function{OptimizationStep}{$\theta, V_{\mathcal{M}}$}
 			\State $\mathcal{D} \gets \mathcal{D} \cup \{(\theta, V_\mathcal{M})\}$
 			\State $\mathit{gp}.\textproc{fit}(\mathcal{D})$	\Comment{Fit a \acrshort{acr:gp} given $\mathcal{D}$, maximizing the log-marginal likelihood}
 			\State\Return $\argmax_{x \in \mathcal{\Theta}} a(x \vert \mathcal{D}, \mathit{gp})$	\Comment{Suggest a sample $\theta$ to evaluate next}
@@ -647,7 +647,7 @@ The main difference, however, lies in how new parameter settings $\theta$ are sa
 The acquisition in this phase is based on the \textit{integrated acquisition function}, defined in \autoref{eq:integrated-acq}, as it uses the \acrshort{acr:gp} from the prior phase and the \acrshort{acr:gp} posterior based on the observations of this phase.
 That is, the acquisition function is defined as:
 $$\alpha\cdot\mathsf{EI}(x\vert\mathcal{D}_1, \mathit{gp}_1) + (1 - \alpha)\cdot\mathsf{EI}(x\vert\mathcal{D}_2, \mathit{gp}_2)$$
-\noindent where $\mathcal{D}_1$ and $\mathcal{D}_2$ are the evidence sets, and $\mathit{gp}_1$ and $\mathit{gp}_2$ the \acrshortpl{acr:gp} approximations of the first and second phase respectively, with the expected improvement $\mathsf{EI}$ at $x \in \Theta$ weighed by $\alpha$.
+\noindent where $\mathcal{D}_1$ and $\mathcal{D}_2$ are the evidence sets, and $\mathit{gp}_1$ and $\mathit{gp}_2$ the \acrshort{acr:gp} approximations of the first and second phase respectively, with the expected improvement $\mathsf{EI}$ at $x \in \Theta$ weighed by $\alpha$.
 
 The knowledge obtained in the first phase is utilized by weighing the expected improvement more heavily for selecting the first few samples (i.e., setting $\alpha$ to a high value).
 Over time, the influence of the first phase decreases by lowering the value of $\alpha$ as more observations are made.
