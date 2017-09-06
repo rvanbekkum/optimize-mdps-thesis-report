@@ -1,15 +1,23 @@
 \chapter*{Abstract}
 \label{ch:abstract}
 
-Motion and path planning in robotics are some of the many applications that require agents that account for uncertainty in the form of action failures or disturbances caused by endogenous and exogenous events.
-A typical approach for planning in these domains involving uncertainty is to set up a probabilistic model of the environment, a typical choice being a \acrfull{acr:mdp}, and apply existing decision-theoretic planning techniques to obtain an optimal plan.
-However, devising these probabilistic models usually requires expert knowledge on the domain and might be a daunting and error-prone task.
-Therefore it is desirable to automate the process of obtaining probabilistic models through learning algorithms.
-Although some work has already been done on crafting such learning algorithms, the state of the art lacks an automated method of properly configuring the hyperparameters for these algorithms.
-In this work we propose a method that autonomously learns \acrshortpl{acr:mdp} solely from execution traces obtained from an exploration phase.
-From these execution traces the state spaces of \acrshortpl{acr:mdp} are learned by applying unsupervised machine learning methods.
-The model quality is assessed by running simulations of the system using policies from standard \acrshort{acr:mdp} solvers, and in order to obtain the best \acrshort{acr:mdp} model, Bayesian Optimization is applied over the parameter space of the machine learning method.
-The approach is tested for mobile robot navigation, as the robots in this domain oft to operate under significant uncertainty in their actions.
+Decision-theoretic planning techniques are increasingly being used to obtain (optimal) plans for domains involving uncertainty, which may be present in the form of the controlling agent's actions, its percepts, or exogenous factors in the domain.
+These techniques build on detailed probabilistic models of the underlying system, for which Markov Decision Processes (MDPs) have become the \textit{de facto} standard formalism.
+However, handcrafting these probabilistic models is usually a daunting and error-prone task, requiring expert knowledge on the domain under consideration.
+Therefore, it is desirable to automate the process of obtaining these models by means of learning algorithms, presented a set of execution traces from the system.
+Although some work has already been done on crafting such learning algorithms, the state of the art lacks an automated method of configuring their hyperparameters, so to maximize the performance yielded from executing the derived plans.
+In this work we present a method that employs the Bayesian Optimization (BO) framework to learn MDPs autonomously from a set of execution traces, optimizing the expected value and performance in simulations over a set of tasks the underlying system is expected to perform.
+The approach has been tested on learning MDPs for mobile robot navigation, motivated by the significant uncertainty accompanying the robots' actions in this domain.
+
+%Motion and path planning in robotics are some of the many applications that require agents that account for uncertainty in the form of action failures or disturbances caused by endogenous and exogenous events.
+%A typical approach for planning in these domains involving uncertainty is to set up a probabilistic model of the environment, a typical choice being a \acrfull{acr:mdp}, and apply existing decision-theoretic planning techniques to obtain an optimal plan.
+%However, devising these probabilistic models usually requires expert knowledge on the domain and might be a daunting and error-prone task.
+%Therefore it is desirable to automate the process of obtaining probabilistic models through learning algorithms.
+%Although some work has already been done on crafting such learning algorithms, the state of the art lacks an automated method of properly configuring the hyperparameters for these algorithms.
+%In this work we propose a method that autonomously learns \acrshortpl{acr:mdp} solely from execution traces obtained from an exploration phase.
+%From these execution traces the state spaces of \acrshortpl{acr:mdp} are learned by applying unsupervised machine learning methods.
+%The model quality is assessed by running simulations of the system using policies from standard \acrshort{acr:mdp} solvers, and in order to obtain the best \acrshort{acr:mdp} model, Bayesian Optimization is applied over the parameter space of the machine learning method.
+%The approach is tested for mobile robot navigation, as the robots in this domain oft to operate under significant uncertainty in their actions.
 
 %
 %\vspace{12pt}
