@@ -1,12 +1,42 @@
 \usepackage[export]{adjustbox}
 \usepackage{beamerTUDelft}
+\usepackage[font=footnotesize]{caption}
 \setbeamercovered{invisible}
 \usefonttheme[onlymath]{serif}
 \usepackage{scrextend}
-
+\usepackage{copyrightbox}
 
 \usepackage{tikz}
 \usetikzlibrary{automata,arrows,shapes}
+
+\defbeamertemplate*{title page}{mystyle}[1][]
+{
+	\vbox{}
+	\vfill
+	\begingroup
+	\centering
+	\begin{beamercolorbox}[sep=8pt,center,#1]{title}
+		\usebeamerfont{title}\inserttitle\par%
+		\ifx\insertsubtitle\@empty%
+		\else%
+		\vskip0.25em%
+		{\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+		\fi%
+	\end{beamercolorbox}%
+	{\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+	\vskip1em\par
+	\begin{beamercolorbox}[sep=8pt,center,#1]{author}
+		\usebeamerfont{author}\insertauthor
+	\end{beamercolorbox}
+	\begin{beamercolorbox}[sep=8pt,center,#1]{institute}
+		\usebeamerfont{institute}\insertinstitute
+	\end{beamercolorbox}
+	\begin{beamercolorbox}[sep=8pt,center,#1]{date}
+		\usebeamerfont{date}\insertdate
+	\end{beamercolorbox}%
+	\endgroup
+	\vfill
+}
 
 % Begin beamer configuration
 \setbeamercolor{block title}{use=structure,fg=white,bg=tudblue!100!black}
@@ -122,3 +152,35 @@
 \setbeamerfont{author}{size=\small}
 %\setbeamerfont{institute}{size=\scriptsize,series=\bfseries,parent=structure}
 \setbeamerfont{date}{size=\footnotesize}
+
+% Image Source
+\usepackage{xparse}
+
+\makeatletter
+\gdef\@imgsrcnavigation{}
+\setbeamertemplate{navigation symbols}{%
+	\makebox[\paperwidth]{%
+		\hspace*{1.5em}
+		\@imgsrcnavigation
+		\hfill}%
+}
+\DeclareDocumentCommand \imgsrc { s O {Image credit} +m }{%
+	\IfBooleanTF{#1}{%
+		\def\tempa{off}%
+		\def\tempb{#3}%
+		\ifx\tempa\tempb
+		\gdef\@imgsrcnavigation{}%
+		\else
+		\gdef\@imgsrcnavigation{{\color{tudblue}{\tiny #2:\thinspace #3}}}%
+		\fi
+	}{%
+	{\tiny #2:\thinspace #3}%
+}%
+}
+\defbeamertemplate{navigation symbols}{dim byd}{%
+	\parbox{\paperwidth}{%
+		\hspace*{1.5em}%
+		\@imgsrcnavigation
+		\hfill\par\vskip .5em}}
+\newcommand*\navigationoff{\setbeamertemplate{navigation symbols}[dim byd]{}}
+\makeatother
