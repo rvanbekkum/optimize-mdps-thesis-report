@@ -139,7 +139,7 @@ The \texttt{strands-desktop} meta-package (developed as part of the \textit{STRA
 		\hline
 		\texttt{tum\_kitchen}& \num{100}              &   \num{4370}                                    \\
 		\hline
-		\texttt{uol\_bl}& \numrange[range-phrase = --]{800}{1000}               & \num{8616}           						\\ \hline          
+		\texttt{uol\_bl}& \numrange[range-phrase = --]{800}{1000}               & \num{17245}           						\\ \hline          
 	\end{tabular}
 \end{table}
 
@@ -234,7 +234,7 @@ Further, additional data is logged in each iteration, which is the total iterati
 
 \subsubsection{Optimization Step}
 
-For the implementation of the framework for this domain we make use of the \acrshort{acr:bo} framework for optimization based on a \acrshort{acr:gp} with a Mat\'ern 3/2 kernel.
+For the implementation of the framework for this domain we make use of the \acrshort{acr:bo} framework for optimization based on a \acrshort{acr:gp} with a Mat\'ern 3/2 kernel where the noise in the simulations is approximated by adding Gaussian white noise through a White kernel with estimated noise level of $10^{-4}$.
 As initially there is no knowledge about the model value given a parameter setting $\theta$, first, a number of random settings are selected for which yielded performance is assessed and stored in an evidence set.
 In the following iterations new settings for $\theta$ are chosen with maximum utility in the selected acquisition function, which is repeated for a fixed number of iterations.
 
@@ -292,12 +292,12 @@ The resulting posterior of this first phase is then used in the acquisition of t
 To provide the reader with a better insight as to how the implementation utilizes execution traces to learn \acrshortpl{acr:mdp} and use these for path planning, a demonstration is given of a single iteration of the framework, supported by the illustrations in \autoref{fig:demonstration}.
 For this demonstration, let us assume that the optimization step provides us with a new parameter setting $\theta = 112$, specifying the number of states of the \acrshort{acr:mdp}, to evaluate.
 
-First, given this parameter setting, a state space $\mathcal{S}$ is, in this case, learned by, a $k$-Means clustering on the execution traces $E$, with the result shown in \autoref{fig:demo-clustering}.
+First, given this parameter setting, a state space $\mathcal{S}$ is, in this case, learned by a $k$-Means clustering on the execution traces $E$, with the result shown in \autoref{fig:demo-clustering}.
 Correspondingly, the transition function $\delta$ is fitted by maximum likelihood and a set of tasks $T$ are mapped to this state space.
 To illustrate, let us take the task of moving from the position $(-1.9, 1.05)$ to $(2.0, -5.6)$, mapping to the states labeled with `$\mathsf{1}$' and `$\mathsf{51}$' respectively as shown in \autoref{fig:demo-clustering}.
 Translating this into an initial state $s_0$ and reward function $R$, as described in \autoref{sec:learning-step}, results in an \acrshort{acr:mdp} $(\mathcal{S}, s_0, A, \delta, R)$ that can be solved using the \acrshort{acr:vi} algorithm to obtain a policy (and value function).
 Then, to assess the performance in the simulator, this policy is employed, so that the robot will follow the trajectory as shown in \autoref{fig:demo-trajectory} (n.b., additionally, the robot might slip, so that it slightly deviates from this path).
-Then, with $k$ being the recorded total number of time-steps, a performance measure for this task is obtained through \autoref{eq:vsim}.
+Then, with $n$ being the recorded total number of time-steps, a performance measure for this task is obtained through \autoref{eq:vsim}.
 
 %\begin{figure}[t!]
 %	\centering
@@ -494,15 +494,17 @@ First of all, let us consider the results obtained for the small \texttt{tum\_ki
 Overall, in \Crefrange{fig:exp1}{fig:exp9} one can see that the optimum $\theta_\mathsf{max}$ is mostly found within similar areas of the parameter space $\Theta$.
 In \Crefrange{fig:exp1}{fig:exp3} respectively 100\%, 75\% and 50\% of the dataset has been used in the corresponding experiments, and one can see in \autoref{fig:exp3} that with 50\% of the data employed, the observed model values $V_\mathcal{M}$ for different settings of $\theta$ are indiscernible.
 At the other hand, \autoref{fig:exp2} shows that with 75\% of the data the distinction becomes much more clear, even though there is still some bias, particularly for larger settings of $\theta$.
-This gives a clearly shows that sufficient data is needed to avoid underfitting and obtaining more stable results with discernible performance measures.
+This clearly shows that sufficient data is needed to avoid underfitting and obtaining more stable results with discernible performance measures.
 
 %What might explain this, is that this particular section of the dataset adds data based on which \acrshortpl{acr:mdp} with large state spaces overfit their corresponding transition function.
 
 Next, let us compare the results depicted in \autoref{fig:exp1}, \autoref{fig:exp4} and \autoref{fig:exp5} where different acquisition functions are used in the \acrshort{acr:bo} framework (i.e., \acrshort{acr:mei}, \acrshort{acr:gp-ucb} and \acrshort{acr:mei-ps} respectively).
 First of all, we see that in each of these experiments a global maximum is found in the same area of the parameter space.
 %For this environment, we see the results are quite similar, and also in the logs made from the experiments it was seen that the maximum observation was done in the (exact) same number of steps (in the third step).
-The most clear difference is seen in the `behavior' of the \acrshort{acr:gp-ucb} acquisition function, being optimistic in the face of uncertainty, so that the confidence intervals are restricted for promising areas of the parameter space.
-On the other hand, the influence of the timing \acrshort{acr:gp} in the \acrshort{acr:mei-ps} acquisition  is absent for our experiments in the \texttt{tum\_kitchen} environment, as the difference in the required time for model learning and planning is minimal.
+%The most clear difference is seen in the `behavior' of the \acrshort{acr:gp-ucb} acquisition function, being optimistic in the face of uncertainty, so that the confidence intervals are restricted for promising areas of the parameter space.
+%On the other hand, the influence of the timing \acrshort{acr:gp} in the \acrshort{acr:mei-ps} acquisition  is absent for our experiments in the \texttt{tum\_kitchen} environment, as the difference in the required time for model learning and planning is minimal.
+For this environment the \acrshort{acr:gp-ucb} and \acrshort{acr:mei-ps} lead to a more clear convergence to the area of the parameter space with the global optimum.
+The benefits of the timing \acrshort{acr:gp} in the \acrshort{acr:mei-ps} is only limited for this environment as the time for model learning and planning are closer together than for the \texttt{uol\_bl} environment.
 
 % ID = 6
 \begin{figure}[t!]
@@ -522,7 +524,9 @@ On the other hand, the influence of the timing \acrshort{acr:gp} in the \acrshor
 \end{figure}
 
 Then, in \autoref{fig:exp6} and \autoref{fig:exp7} we see the plots for the experiments in which instead \acrshortpl{acr:gmm} are used for learning state spaces for our \acrshortpl{acr:mdp}.
-In particular, we observe a large bias and low model values for a large number of components of the \acrshort{acr:gmm}, which makes us suspect that this particular algorithm is less suitable for learning state spaces for our mobile robot navigation domain.
+We observe that again for this algorithm, the optima are found within the same areas of the parameter space for both experiments with different acquisition functions.
+The main thing we observe is that, the observed model values $V_\mathcal{M}$ is overall lower with the \acrshort{acr:gmm} employed in comparison to the values observed with $k$-Means employed.
+Therefore, employing the $k$-Means appears more suitable to learn the state space for \acrshortpl{acr:mdp} in our application of mobile robot navigation.
 
 % ID = 8
 \begin{figure}[t!]
@@ -543,16 +547,16 @@ In particular, we observe a large bias and low model values for a large number o
 \end{figure}
 	
 Finally, we look at the influence of the weight factor $\beta$ for the small environment considering the plots of \autoref{fig:exp1}, \autoref{fig:exp8} and \autoref{fig:exp9}.
-In this particular situation, one might benefit from weighing $V_\mathit{DTP}$ in the model value, as it could make a clearer distinction between values for different settings of $\theta$, because it eliminates part of the uncertainty in the simulations.
+In this particular situation, one might benefit from weighing $V_\mathit{DTP}$ in the model value, as it could make a clearer distinction between values for different settings of $\theta$, because it cancels out part of the uncertainty from the simulations.
 The intuition of why this works well for this particular environment can be elucidated by \autoref{fig:exp12} and \autoref{fig:exp13}, which show that the maxima of the $V_\mathit{DTP}$ and $V_\mathit{SIM}$ measures lie close together.
-However, setting $\theta$ might also lead to a bias in other environments, which is that, although $V_\mathit{DTP}$ may have high value, computed policies may not work well in the simulations or the real world.
+However, setting $\beta > 0$ might also lead to a bias in other environments, which is that, although $V_\mathit{DTP}$ may have high value, computed policies may not work well in the simulations or the real world.
 
 \subsubsection{UOL BL Environment}
 
 Let us next consider the results for the large \texttt{uol\_bl} environment. In \Crefrange{fig:exp10}{fig:exp12} plots are shown for the experiments in which different acquisitions were used in the \acrshort{acr:bo}.
 One can observe the optima found in each of these experiments lie close together.
 The experiment that employs the \acrshort{acr:mei} function, however, appears ineffective to find the same global maximum in multiple repetitions.
-All compared, the \acrshort{acr:gp-ucb} appears most effective in sampling parameter settings that result in \acrshortpl{acr:mdp} yielding high performance.
+All in all, the \acrshort{acr:gp-ucb} appears most effective in sampling parameter settings that result in \acrshortpl{acr:mdp} yielding high performance.
 
 \afterpage{
 	% ID = 10
@@ -624,8 +628,11 @@ Particularly, in \autoref{fig:exp14} we see a direct correspondence of the globa
 
 \subsubsection{UOL BL Environment}
 Next, we consider the experiments that apply the multi-phase framework to the \texttt{uol\_bl} environment, for which the results are shown in \autoref{fig:exp15} and \autoref{fig:exp16}.
-As opposed to the experiments on the \texttt{tum\_kitchen} environment, the prediction mean from the first phase do not have an evident correspondence with the maxima of the posterior of the second phase.
+As opposed to the experiments on the \texttt{tum\_kitchen} environment, the prediction mean from the first phase has a less evident correspondence with the maxima of the posterior of the second phase.
 However, this does not prevent the \acrshort{acr:bo} of eventually finding a maximum for both of these experiments in the same area of the parameter space.
+
+\vspace{12pt}
+\noindent\minibox[frame]{\textbf{Note:} For the final version of the report, I also plan to include a comparison of the time costs \\of the base framework and the multi-phase framework.}
 
 % ID = 15
 \begin{figure}[t!]
@@ -671,7 +678,7 @@ However, this does not prevent the \acrshort{acr:bo} of eventually finding a max
 	\end{subfigure}
 	\bigskip
 	
-	\caption{Illustration of the third phase of the multi-phase framework in a simulation of the \texttt{uol\_bl} environment. The phase starts off with the \acrshort{acr:mdp} model with $540$ states learned in the previous phase, and further fine-tunes this model after the robot gets stuck executing a new task.}
+	\caption{Illustration of the third phase of the multi-phase framework in a simulation of the \texttt{uol\_bl} environment. The phase starts off with the \acrshort{acr:mdp} model learned in the previous phase, and further fine-tunes this model after the robot gets stuck executing a new task.}
 	\label{fig:uol_bl_tuning}
 \end{figure}
 

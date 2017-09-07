@@ -111,7 +111,7 @@ For now let us assume, the action space $A$ is defined as a finite set of moveme
 \end{align*}\newpage
 Before our model learning framework is applied to learn \acrshortpl{acr:mdp} for the system, the data about the environment could have been obtained in the form of execution traces that consist of logs of the robot's pose and the (next) action it is about to take.
 This could then give a set of datapoints, as depicted in \autoref{fig:dummy-map-2}, which can be used to learn the states and transition probabilities of an \acrshort{acr:mdp}.
-Quantizing this dataset of observed robot poses into $10$ symbols (e.g., using $k$-means clustering), might give us the state space $\mathcal{S} = \{s_0, \ldots s_9\}$ depicted in \autoref{fig:dummy-map-3}.
+Quantizing this dataset of observed robot poses into $10$ symbols (e.g., using $k$-Means clustering), might give us the state space $\mathcal{S} = \{s_0, \ldots s_9\}$ depicted in \autoref{fig:dummy-map-3}.
 %, such that:
 %$$
 %\mathcal{S} = \{s_0, \ldots s_9\}
@@ -267,7 +267,7 @@ The time-step $t$ for the mobile robot would then correspond to the period of ti
 
 \subsubsection{State Space}
 From the provided set of execution traces $E$, a state space $\mathcal{S}$ is learned based on the current hyperparameter setting $\theta$ in the learning step.
-For instance, in our running example, a $k$-means clustering can be applied on for instance, coordinates in the execution traces $E$ describing the reachable locations of the robot, where $k$ is specified by the setting of $\theta$.
+For instance, in our running example, a $k$-Means clustering can be applied on for instance, coordinates in the execution traces $E$ describing the reachable locations of the robot, where $k$ is specified by the setting of $\theta$.
 
 \subsubsection{Transition Function}
 In the learning step the transition function $\delta$ is obtained by applying a known model learning algorithm, for which a likelihood maximization approach may be selected for learning the transition probabilities of a fully observable \acrshort{acr:mdp}.
@@ -357,9 +357,9 @@ Although performing simulations is more cost-expensive, it yields a better appro
 Accordingly, let us express the performance on some task in simulations as:
 \begin{equation}
 \label{eq:vsim}
-V_{\mathit{SIM}, t=(s_0, R)} = \gamma^{k} \cdot R[i]
+V_{\mathit{SIM}, t=(s_0, R)} = \gamma^{n} \cdot R[i]
 \end{equation}
-where $s_0 \in \mathcal{S}$ is the initial state, $R$ the reward function, $\gamma$ the discount factor, $i \in \mathcal{S}$ the goal state and $k$ the number of steps taken to reach the goal.
+where $s_0 \in \mathcal{S}$ is the initial state, $R$ the reward function, $\gamma$ the discount factor, $i \in \mathcal{S}$ the goal state and $n$ the number of steps taken to reach the goal.
 
 Combining the expressions of \autoref{eq:vdtp} and \autoref{eq:vsim} yields the following expression of the performance on some task $t \in T_\mathcal{M}$:
 \begin{equation}

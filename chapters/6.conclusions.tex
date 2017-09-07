@@ -95,9 +95,13 @@ In our experiments we have seen that it is possible to use the first phase to su
 \label{sec:recommendations-future-work}
 
 As this thesis has only limited itself to learning and optimizing fully observable \acrshortpl{acr:mdp}, one direction for proposed future work is to explore the possibilities of optimizing for \acrshortpl{acr:pomdp}.
+That is, we should acknowledge that our experiments make the simplifying assumption that the state is directly observable from odometric readings, while in practice this does not hold up and would require execution traces with other sensor readings.
 This would require one to make use of other model learning algorithms, such as the \textit{Baum-Welch} algorithm and state merging algorithms seen in \autoref{sec:learning-probabilistic-models}.
-Apart from this, another recommendation for future work would be to implement and test the solution on applications different other than path planning for mobile robot navigation.
+Apart from this, another recommendation for future work would be to implement and test the solution on applications other than path planning for mobile robot navigation.
 Further, one could consider to explore and investigate alternative global optimization algorithms (e.g., see \cite{bergstra2011algorithms}) to address the problem statement of this thesis.
+
+\vspace{12pt}
+\noindent\minibox[frame]{\textbf{Note:} This section will be updated and extended for the final version of the report.}
 %A final suggestion is to investigate the 
 
 %\section{Concluding Remarks}
