@@ -40,7 +40,6 @@ In the remainder of this section, we briefly explain for what part of the implem
 	\hline
 	\texttt{bayesian-optimization} & 0.4.0 & Bayesian optimization \\
 	\texttt{matplotlib} & 1.3.1 & Plotting and visualizing robot actions \\
-	\texttt{numpy} & 1.12.1 & Array data storage and manipulation\\ 
 	\texttt{pymdptoolbox} & 4.0\_b3 & \acrshort{acr:mdp} planning algorithms \\
 	\texttt{ros-indigo-strands-desktop} & 0.0.14 & Simulation software and environments\\
 	\texttt{scikit-learn} & 0.18.1 & Machine learning algorithms \\ \hline
@@ -50,57 +49,69 @@ In the remainder of this section, we briefly explain for what part of the implem
 \subsubsection{Python Libraries}
 
 The module has been implemented in Python 2.7, due to its easily usable libraries for machine learning and plotting and other widely available packages, but also because of its convenient capability of interacting with the simulation software used.
+An overview of the main software packages used for the implementation is shown in \autoref{tab:software-packages}.
+
+\newpage
 
 For \acrshort{acr:mdp} planning, the \texttt{pymdptoolbox} library \cite{cordwellpymdptoolbox}, is used, which implements various planning algorithms for discrete-time \acrshortpl{acr:mdp}. 
 To solve for optimal policies in learned \acrshortpl{acr:mdp} we rely on this library and apply the \acrshort{acr:vi} algorithm with a discount factor of $\gamma = 0.95$.
 %Given the matrices with the transition probabilities and rewards and algorithm-parameters like a discount factor $\gamma$, these planning algorithms can produce a policy vector and a corresponding value function.
 
-For the machine learning algorithms used, we employ the \texttt{scikit-learn} library. These algorithms include $k$-Means clustering and \acrfull{acr:gmm}.
+For the machine learning algorithms used, we employ the \texttt{scikit-learn} library.
+This library includes the implementations of $k$-Means clustering and the \acrshort{acr:em} algorithm for fitting \acrfullpl{acr:gmm}.
 
-For \acrlong{acr:bo} the \texttt{bayesian-optimization} library \cite{nogueirabayesianoptimization} has been employed. This library offers an implementation of the \acrshort{acr:bo} procedure based on a \acrshort{acr:gp} prior including the implementation of the most-used acquisition functions such as \acrshort{acr:mpi}, \acrshort{acr:mei} and \acrshort{acr:gp-ucb}.
+For \acrlong{acr:bo} the \texttt{bayesian-optimization} library \cite{nogueirabayesianoptimization} has been employed.
+This library offers an implementation of the \acrshort{acr:bo} procedure based on a \acrshort{acr:gp} prior including the implementation of the most-used acquisition functions such as \acrshort{acr:mpi}, \acrshort{acr:mei} and \acrshort{acr:gp-ucb}.
 
-The further main Python packages used, have been listed in \autoref{tab:software-packages} and include \texttt{numpy} for the storage and manipulation of arrays and matrices used in the implementation and \texttt{matplotlib} for creating the various plots shown in this chapter.
+%The further main Python packages used, have been listed in \autoref{tab:software-packages} and include \texttt{numpy} for the storage and manipulation of arrays and matrices used in the implementation and \texttt{matplotlib} for creating the various plots shown in this chapter.
 
 \subsubsection{Simulator and Mobile Robot}
 
 %vTODO Maybe remove these figures and rather show a figure of the simulator with the SCITOS robot?
 % Make figure with two subfigures
+%\begin{figure}[t]
+%\centering
+%\begin{minipage}{0.4\textwidth}
+%	\centering
+%	\vspace{21pt}
+%	\includegraphics[width=0.3\linewidth]{scitosa5_1_model}
+%	\vspace{4pt}
+%	\captionof{figure}{The SCITOS-A5, mobile service robot by Metralabs GmbH \cite{Metralabs}}
+%	\label{fig:scitosa5}
+%\end{minipage}
+%\qquad
+%%%\begin{minipage}{0.4\textwidth}
+%%%	\centering
+%%%	\vspace{23pt}
+%%%	\includegraphics[width=1.1\linewidth]{scitosa5_2_TIM}
+%%%	\vspace{-10pt}
+%%%	\captionof{figure}{The SCITOS-A5 in one of its application environments. Shown here is robot \textit{TIM}, used for leading visitors of the German Technical Museum in Berlin through the exhibits \cite{Metralabs}.}
+%%%	\label{fig:scitosa5_2}
+%%%\end{minipage}
+%\begin{minipage}{0.525\textwidth}
+%	\centering
+%	\vspace{10pt}
+%	\includegraphics[width=1\linewidth]{simulator}
+%	\vspace{-10pt}
+%	\captionof{figure}{The SCITOS-A5 robot in a running MORSE simulation of the \texttt{tum\_kitchen} environment.}
+%	\label{fig:simulator}
+%\end{minipage}
+%\quad
+%\end{figure}
+
 \begin{figure}[t]
-\centering
-\begin{minipage}{0.4\textwidth}
 	\centering
-	\vspace{21pt}
-	\includegraphics[width=0.3\linewidth]{scitosa5_1_model}
-	\vspace{4pt}
-	\captionof{figure}{The SCITOS-A5, mobile service robot by Metralabs GmbH \cite{Metralabs}}
-	\label{fig:scitosa5}
-\end{minipage}
-\qquad
-%%\begin{minipage}{0.4\textwidth}
-%%	\centering
-%%	\vspace{23pt}
-%%	\includegraphics[width=1.1\linewidth]{scitosa5_2_TIM}
-%%	\vspace{-10pt}
-%%	\captionof{figure}{The SCITOS-A5 in one of its application environments. Shown here is robot \textit{TIM}, used for leading visitors of the German Technical Museum in Berlin through the exhibits \cite{Metralabs}.}
-%%	\label{fig:scitosa5_2}
-%%\end{minipage}
-\begin{minipage}{0.525\textwidth}
-	\centering
-	\vspace{10pt}
-	\includegraphics[width=1\linewidth]{simulator}
-	\vspace{-10pt}
-	\captionof{figure}{The SCITOS-A5 robot in a running MORSE simulation of the \texttt{tum\_kitchen} environment.}
+	\includegraphics[width=0.65\linewidth]{simulator}
+	\caption{The SCITOS-A5 mobile service robot in a running Morse simulation of the \texttt{tum\_kitchen} environment.}
 	\label{fig:simulator}
-\end{minipage}
-\quad
 \end{figure}
 
 For performing simulations the \textit{MORSE} simulator \cite{morse_simpar_2012}, a generic simulator for academic robots, has been used in combination with the \textit{ROS} middleware to control the robot in an environment.
-The simulations are performed with the Metralabs GmbH \textit{SCITOS-A5} \cite{Metralabs}, depicted in \autoref{fig:scitosa5}, an industry-standard mobile service robot designed specifically for interacting with humans and guiding them to products or exhibits.
+The simulations are performed with the Metralabs GmbH \textit{SCITOS-A5} \cite{Metralabs}, an industry-standard mobile service robot designed specifically for interacting with humans and guiding them to products or exhibits.
 This robot is equipped with several sensors which can be used for navigation and \acrfull{acr:hri}, such as an omni-directional camera, 24 ultrasonic sensors, a collision sensor and a SICK laser range finder \cite{gross2008shopbot}.
 As described in \autoref{sec:datasets} we are particularly interested in the odometric capabilities of the robot for the implementation that has been used in our experiments.
 \autoref{fig:simulator} shows this robot in a MORSE simulation of one of the office environments used for our experiments.
-The \texttt{strands-desktop} meta-package (developed as part of the \textit{STRANDS} project \cite{hawes2016strands}) was used to obtain all required simulation software mentioned above with ease, in which the environments used in the simulations of our experiments are contained as well.
+The \texttt{strands-desktop} meta-package (developed as part of the \textit{STRANDS} project \cite{hawes2017strands}) was used to obtain all required simulation software mentioned above with ease, in which the environments used in the simulations of our experiments are contained as well.
 
 %Software used for the implementation:
 %\begin{itemize}
@@ -148,7 +159,7 @@ This dataset should describe possible robot poses and to what other poses the ex
 
 \newpage
 For our implementation and the experiments that have been carried out, execution traces have been obtained by letting the robot follow a random action policy during which subsequent poses and actions are logged to a file.
-This exploration is performed inside the simulator both for a relatively small environment (i.e., \texttt{tum\_kitchen}, based on a university kitchen of the Technical University of M\"unchen) and  large environment (i.e., \texttt{uol\_bl}) obtained from a repository of the \textit{STRANDS} project.
+This exploration is performed inside the simulator both for a relatively small environment (i.e., \texttt{tum\_kitchen}, based on a university kitchen of the Technical University of M\"unchen) and  large environment (i.e., \texttt{uol\_bl}, based on a floor in a faculty of the University of Lincoln) obtained from a repository of the \textit{STRANDS} project.
 
 In the exploration a new entry is recorded in a file after each time-step of $t = \SI{1.0}{\second}$, which each contain the robot's pose based on odometric readings with its location as $x$ and $y$ position and its orientation described by the $yaw$.
 Apart from that, each entry also stores the action that is executed next from the current pose.
@@ -156,7 +167,7 @@ As a result, the next entry tells us the robot's pose after the action in the pr
 
 In \autoref{tab:datasets-excerpt} an excerpt of one of the datasets is shown, which might give a clearer picture of the data that has been gathered and the format in which it has been stored.
 The possible actions of the robot correspond to a discrete set of robot movements in $8$ different directions, being \textit{south}, \textit{south-east}, \textit{east}, \textit{north-east}, \textit{north}, \textit{north-west}, \textit{west} and \textit{south-west}.
-For example, the first two entries describes the transformation of the robot's pose after trying to make a \textit{south-east} movement (N.B., positive difference in $x$ corresponds to moving south, while positive difference in $y$ corresponds to moving east).
+For example, the first two entries describes the transformation of the robot's pose after trying to make a \textit{south-east} movement (n.b., positive difference in $x$ corresponds to moving south, while positive difference in $y$ corresponds to moving east).
 \autoref{tab:datasets-environments} presents additional information about the environments and the size of the datasets gathered accordingly.
 
 %Explain how the data-sets are obtained. 
@@ -234,7 +245,7 @@ Further, additional data is logged in each iteration, which is the total iterati
 
 \subsubsection{Optimization Step}
 
-For the implementation of the framework for this domain we make use of the \acrshort{acr:bo} framework for optimization based on a \acrshort{acr:gp} with a Mat\'ern 3/2 kernel where the noise in the simulations is approximated by adding Gaussian white noise through a White kernel with estimated noise level of $10^{-4}$.
+For the implementation of the framework for this domain we make use of the \acrshort{acr:bo} framework for optimization based on a \acrshort{acr:gp} with a Mat\'ern 3/2 kernel where the noise in the simulations is approximated by adding Gaussian white noise through a White kernel with estimated noise~level of $10^{-4}$.
 As initially there is no knowledge about the model value given a parameter setting $\theta$, first, a number of random settings are selected for which yielded performance is assessed and stored in an evidence set.
 In the following iterations new settings for $\theta$ are chosen with maximum utility in the selected acquisition function, which is repeated for a fixed number of iterations.
 
@@ -457,7 +468,7 @@ In the next section the obtained results for each of these configurations are sh
 
 \section{Results and Discussion}
 \label{sec:results}
-%TODO Fix order of figures and update text
+%vTODO Fix order of figures and update text
 
 From the experiments that have been performed according to the configurations presented in \autoref{sec:scenarios} results have been obtained that are discussed in this section.
 First, we present and review the results obtained for the experiments that follow the base framework in \autoref{sec:base-framework-results}.

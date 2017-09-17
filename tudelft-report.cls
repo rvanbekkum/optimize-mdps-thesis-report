@@ -43,7 +43,7 @@
     \if@dutch
         \RequirePackage[dutch]{babel}
     \else
-        \RequirePackage[dutch,english]{babel}
+        \RequirePackage[dutch,british]{babel}
     \fi
 \fi
 \RequirePackage[nooneline,footnotesize]{caption}

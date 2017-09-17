@@ -8,7 +8,7 @@
 		\begin{column}{.7\textwidth}
 			\begin{itemize}
 				\item A system is controlled by one or more \textit{agents}
-				\item \textit{Uncertain domain dynamics}, i.e. uncertainty may be present in:
+				\item \textit{Uncertain domain dynamics}, i.e.\\ uncertainty may be present in:
 				\begin{itemize}
 					\item Execution of actions (e.g., robot may slip)
 					\item Exogenous factors (e.g., doors open/closed)
@@ -40,32 +40,38 @@
 			\end{overlayarea}
 			\captionof*{figure}{\scriptsize\textit{\textcolor{tudBlack}{Path planning}}}
 		\end{column}
-		\begin{column}{.3\textwidth}
+		\begin{column}{.25\textwidth}
 			\centering
 			\begin{overlayarea}{\linewidth}{4.75cm}
-				\vspace{2pt}
-				\includegraphics[width=\columnwidth]{figures/motion-planning}
+				\centering
+				\vspace{-18pt}
+				\includegraphics[width=0.75\columnwidth]{figures/motion-planning}\\
+				{\scriptsize\textit{Motion planning}}\\\vspace{6pt}
+				\includegraphics[width=0.85\columnwidth]{figures/dialog_system_2}
 			\end{overlayarea}
-			\captionof*{figure}{\scriptsize\textit{\textcolor{tudBlack}{Motion planning}}}
+			\captionof*{figure}{\scriptsize\textit{\textcolor{tudBlack}{Dialog Management}}}
 		\end{column}
 		\begin{column}{.3\textwidth}
 			\centering
 			\begin{overlayarea}{\linewidth}{4.75cm}
-				\vspace{17pt}
-				\includegraphics[width=\columnwidth]{figures/dialog_system_2}
+				\vspace{0pt}
+				\includegraphics[width=\columnwidth]{figures/operations-planning5}
 			\end{overlayarea}
-			\captionof*{figure}{\scriptsize\textit{\textcolor{tudBlack}{Dialog management systems}}}
-%\includegraphics[width=0.5\columnwidth]{figures/dialog_system}
+			\captionof*{figure}{\scriptsize\textit{\textcolor{tudBlack}{Operations planning}}}
 		\end{column}
 	\end{columns}
 	\imgsrc*[Image credits]{Hawes et al. \cite{hawes2016strands}, \href{https://coaches.greyc.fr}{Iocchi et al.} \cite{iocchi2016practical}, \href{http://www.coppeliarobotics.com/helpFiles/en/motionPlanningModule.htm}{V-REP Manual}, Bemidji State University}
 \end{frame}
+% Examples Operations Planning:
+% - Military Operations Planning: Decision-Theoretic Military Operations Planning
+% - Markov Decision Processes in AI: (Operations Planning Rover Exploration) https://www.safaribooksonline.com/library/view/markov-decision-processes/9781118620106/xhtml/Chapter15.html
+% - Project Management: Engineering the Decision-Making Process Using Multiple Markov Theories and DEMO
 \imgsrc*{off}
 
 \begin{frame}
 	\frametitle{Planning under Uncertainty}
 	\framesubtitle{Typical Development Routine}
-	
+	\centering
 	\includegraphics[width=\textwidth]{figures/high-level-planning-diagram}
 \end{frame}
 
@@ -95,9 +101,17 @@
 
 \begin{frame}
 	\frametitle{Planning under Uncertainty}
+	\framesubtitle{Planning with MDPs}
+	\begin{center}
+	\includegraphics[width=0.9\textwidth]{figures/mdp-planning-diagram-v32-cropped}
+\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Planning under Uncertainty}
 	\framesubtitle{Model Development}
 	
-	\textcolor{tudBlack}{\textbf{Problem:}} How to find a suitable MDP?
+	\textcolor{tudBlack}{\textbf{Problem:}} How to obtain a suitable MDP for offline planning?
 	\pause
 	\vfill
 	\textcolor{tudBlack}{\textbf{Classical approach:}} Model development by a \textit{human designer}, however:
@@ -113,6 +127,20 @@
 		\item One might require \textit{reusable} models, applicable for multiple tasks % You do have model-based RL, but we might want a model that generalizes for multiple tasks
 		%\item Still requires definition of state-spaces (and actions and rewards)
 	\end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+	\frametitle{Planning under Uncertainty}
+	\framesubtitle{Model Development}
+	\vspace{8pt}
+	\textcolor{tudBlack}{\textbf{Problem:}} How to obtain a suitable MDP for offline planning?\\
+	\vspace{14pt}
+	\textcolor{tudblue}{\textbf{Idea:}} Automate the model development process \\through learning algorithms 
+	\begin{itemize}
+		\item Learn from (exploration) data about the environment
+		\item Optimization for the best MDP model
+	\end{itemize}
+
 \end{frame}
 
 \begin{frame}

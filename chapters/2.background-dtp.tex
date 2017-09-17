@@ -107,14 +107,14 @@ where $L$ is the so-called \textit{order} of the Markov Chain.
 	\label{fig:markov-chains}
 \end{figure}
 
-As depicted in \autoref{fig:markov-chains}, Markov Chains of different order can be defined. \autoref{fig:markov-chains-first-order} exemplifying a first-order Markov Chain in which each state only depends on the previous state, and \autoref{fig:markov-chains-second-order} showing a second-order Markov Chain in which each state depends on the two prior states of the Markov Chain.
+As depicted in \autoref{fig:markov-chains}, Markov Chains of different order can be defined. \autoref{fig:markov-chains-first-order} exemplifies a first-order Markov Chain in which each state only depends on the previous state, and \autoref{fig:markov-chains-second-order} shows a second-order Markov Chain in which each state depends on the two prior states of the Markov Chain.
 In the special case where the transition distribution is independent of the stage of the system, but solely on the prior state(s), one speaks of a \textit{stationary} or \textit{homogeneous} Markov Chain.
 
 Though, mostly first-order Markov Chains as depicted in \autoref{fig:markov-chains-first-order}, which are said to satisfy the \textit{Markov Property}, are applied widely for modeling stochastic processes, such as physical phenomena and economic time-series \cite{bacciu2015probabilistic}.
 In addition, mostly compact, stationary, discrete-time, finite-space Markov Chains are used, bearing in mind the computational adequacy of the model (i.e., the larger the state space and order, the more computational cost might be incurred).
 Some concrete examples of practical applications include assessing the reliability and/or safety of appliances in engineering \cite{cochran2001generic, cronvall2009combining,el2008optimal}, modeling water flows \cite{parent1991stochastic}, or modeling loan defaults \cite{grimshaw2011markov} in the financial world (for an overview see \cite{pasanisi2012estimating}).
 
-In these chains the state transition probabilities can be stored in an $n \times n$ transition matrix $\mat{A} = [a_{ij}]$ with each entry
+In these chains the state transition probabilities can be stored in an $n \times n$ transition matrix~$\mat{A} = [a_{ij}]$ with each entry
 \begin{equation}
 a_{ij} = p(q_{t+1} = s_i\vert q_t = s_j)
 \end{equation}
@@ -150,7 +150,7 @@ Additionally this model consists of observations, typically referred to as \text
 
 \begin{definition}
 	\label{def:hmm}
-	A (discrete-state) stationary \textit{\acrfull{acr:hmm}} is a 5-tuple $(\mathcal{S}, \mathcal{V}, \arr{\pi}, \mat{A}, \mat{B})$ consisting of the following parts:
+	A (discrete-state) stationary \textit{\acrfull{acr:hmm}} is a 5-tuple $(\mathcal{S}, \mathcal{V}, \arr{\pi}, \mat{A}, \mat{B})$ \mbox{consisting} of the following parts:
 	
 \begin{itemize}
 	\item a discrete set of $n$ attainable states $\mathcal{S} = \{s_1, \ldots, s_n\}$, i.e. the underlying \textit{state space}
@@ -311,8 +311,8 @@ That is, if we let $n_{ij}$ denote the number of observed transitions from state
 p(q_{t+1} = s_i\vert q_t = s_j) = \frac{n_{ij}}{\sum_j n_{ij}}
 \end{equation}
 
-The second-mentioned approach of Bayesian inference is more suitable for many real-life problems for which state sequences are incomplete, i.e. states are recorded only for certain stages, meaning there might be gaps in-between.
-This type of approach aims to make an estimation of the transition probabilities by adopting a prior for the transition matrix $\mat{A}$, a convenient choice being a factorized prior from the product of $n$ independent \textit{Dirichlet} distributions, one for each row $\mat{A}_j$, such that:
+The second-mentioned approach of Bayesian inference is more suitable for many real-life problems for which state sequences are incomplete, i.e., states are recorded only for certain stages, meaning there might be gaps in-between.
+This type of approach aims to make an estimation of the transition probabilities by adopting a prior for the transition matrix~$\mat{A}$, a convenient choice being a factorized prior from the product of $n$ independent \textit{Dirichlet} distributions, one for each row $\mat{A}_j$, such that:
 \begin{equation}
 p(\mat{A}) = \prod_{j} \text{Dir}(\mat{A}_j \vert \alpha_j)
 \end{equation}
@@ -376,7 +376,7 @@ After evaluating the current policy, one may choose to stick with the current po
 	\caption{Value iteration}
 	\label{alg:vi}
 	\begin{algorithmic}[1]
-		\Require{MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$, discount factor $\gamma \in (0, 1)$, threshold $\xi > 0$}
+		\Require{MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$, Discount factor $\gamma \in [0, 1)$, Threshold $\xi > 0$}
 		\Ensure{Optimal policy $\arr{\pi}^*: \mathcal{S} \mapsto A$}
 		\State{Initialize $V_t: \mathcal{S} \mapsto \mathbb{R}$ arbitrarily for $t = 0$}
 		\State $t \gets 0$
@@ -396,9 +396,9 @@ After evaluating the current policy, one may choose to stick with the current po
 The most well-known algorithm for obtaining optimal policies from \acrshortpl{acr:mdp} is \textit{\acrfull{acr:vi}}, which is a synchronous dynamic programming solution which iteratively updates a value function $V: \mathcal{S} \mapsto \mathbb{R}$ until convergence, given an \acrshort{acr:mdp} model $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$.
 The updates are performed through so-called \textit{Bellman backups} based on the following Bellman equation:
 \begin{align}
-V^*(s) &= max_{a \in A} \left[\sum_{s' \in \mathcal{S}} P(s' \vert s, a) \cdot \left[R(s, a, s') + \gamma \cdot V^*_{t}(s')\right]\right]	&\forall s \in \mathcal{S}
+V^*(s) &= \max_{a \in A} \left[\sum_{s' \in \mathcal{S}} P(s' \vert s, a) \cdot \left[R(s, a, s') + \gamma \cdot V^*_{t}(s')\right]\right]	&\forall s \in \mathcal{S}
 \end{align}
-where $\gamma \in (0,1)$ is a discount factor which expresses the magnitude of preference of short-term solutions over long-term solutions. That is, the smaller the factor $\gamma$, the more important it is that goals are reached in as few steps as possible.
+where $\gamma \in [0,1)$ is a discount factor which expresses the magnitude of preference of short-term solutions over long-term solutions. That is, the smaller the factor $\gamma$, the more important it is that goals are reached in as few steps as possible.
 
 In \autoref{alg:vi}, it is shown how the \acrshort{acr:vi} algorithm can be used to obtain optimal policies for an MDP (based on the formulation in \cite{poole2010artificial}).
 Intuitively, \acrshort{acr:vi} can be viewed as estimating the values starting from the goal-rewards and working backwards.
@@ -422,7 +422,7 @@ In the case of a fixed ordering, this algorithm is usually referred to as \texti
 Compared to the traditional \acrshort{acr:vi} algorithm, the asynchronous adaptation requires less space and converges faster, especially when updates occur more often for most relevant states and the update ordering is adjusted carefully.
 
 \textit{\acrfull{acr:rtdp}} \cite{barto1995learning} is a family of asynchronous \acrshort{acr:vi} algorithms which aim to find policies by performing updates and concurrently controlling the \acrshort{acr:mdp} (based on the policy corresponding to the latest estimate of the value function).
-Opposed to traditional \acrshort{acr:vi}, where solving \acrshortpl{acr:mdp} with large state spaces is infeasible, RTDP algorithms often converge without examining all states.
+In contrast to traditional \acrshort{acr:vi}, where solving \acrshortpl{acr:mdp} with large state spaces is infeasible, RTDP algorithms often converge without examining all states.
 
 % TODO POMDP Adaptation of Value Iteration See AI: A Modern Approach + Probabilistic Robotics
 
@@ -433,7 +433,7 @@ Opposed to traditional \acrshort{acr:vi}, where solving \acrshortpl{acr:mdp} wit
 	\caption{Policy iteration}
 	\label{alg:pi}
 	\begin{algorithmic}[1]
-		\Require{MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$, discount factor $\gamma \in (0, 1)$}
+		\Require{MDP $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$, Discount factor $\gamma \in [0, 1)$}
 		\Ensure{Optimal policy $\arr{\pi}^*: \mathcal{S} \mapsto A$}
 		\State{Initialize $\arr{\pi}_0$}
 		\State $t \gets 0$
@@ -448,10 +448,10 @@ Opposed to traditional \acrshort{acr:vi}, where solving \acrshortpl{acr:mdp} wit
 	\end{algorithmic}
 \end{algorithm}
 
-Another algorithm that is widely applied for obtaining policies from \acrshortpl{acr:mdp} is known as \textit{\acrfull{acr:pi}}. As shown in \autoref{alg:pi} \acrshort{acr:pi} starts off with an initial policy vector $\arr{\pi}_0$ which may be arbitrarily initialized, but preferably by an approximation of an optimal policy for the input \acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$ to achieve faster convergence.
+Another algorithm that is widely applied for obtaining policies from \acrshortpl{acr:mdp} is known as \textit{\acrfull{acr:pi}}. As shown in \autoref{alg:pi} \acrshort{acr:pi} starts off with an initial policy vector~$\arr{\pi}_0$ which may be arbitrarily initialized, but preferably by an approximation of an optimal policy for the input \acrshort{acr:mdp} $\mathcal{M} = (\mathcal{S}, s_0, A, \delta, R)$ to achieve faster convergence.
 Then, in each iteration, first the value for each state is computed based on the latest policy $\arr{\pi}_t$, which comes down to solving a set of linear equations.
 Solving this set of linear equations can be done by linear programming in (at most) $O(\lvert\mathcal{S}\rvert^3)$ time \cite{littman1995complexity}. 
-An alternative approach, known as \textit{modified policy iteration}, is to solve these by applying a simplified form of value iteration in which the actions to select are already known for each state from the policy (i.e., $\arr{\pi}_t(s)$ for each $s \in \mathcal{S}$).
+An alternative approach, known as \textit{modified policy iteration}, is to solve these by applying a simplified form of value iteration in which the actions to select are already known for each state from the policy (i.e., $\arr{\pi}_t(s)$ for each~$s \in \mathcal{S}$).
 This step which is known as \textit{policy evaluation} is followed by a \textit{policy improvement} step in which the policy is greedily updated based on the latest value function $V_{\arr{\pi}}$.
 This process is repeated until no improvements are possible and the policy stops changing.
 
@@ -503,8 +503,9 @@ Following this approach, an \acrshort{acr:lp} formulation for an MDP $\mathcal{M
 \end{align}
 where $\mu_0: \mathcal{S} \mapsto [0,1]$ is a probability distribution over the states.
 
-From the solution $V^*$ of this \acrshort{acr:lp} formulation, a policy $\arr{\pi}^*$ can be obtained by letting $\arr{\pi}^*(s) = \argmax_{a \in A} \sum_{s' \in \mathcal{S}} \delta(s, a, s') \left[R(s,a,s') + \gamma\cdot V(s')\right]$ for each state $s \in \mathcal{S}$. This primal formulation optimizes a value function $V$, but alternatively the policy can be optimized directly by considering the dual formulation (see \cite{littman1995complexity}).
-Comparing \acrshort{acr:lp} solutions to the specialized \acrshort{acr:vi} and \acrshort{acr:pi} solutions, the latter typically hold more promise for efficient solutions than general-purpose \acrshort{acr:lp} algorithms, although the \acrshort{acr:lp} scale better to larger \acrshort{acr:mdp} planning problems.
+\noindent From the solution $V^*$ of this \acrshort{acr:lp} formulation, a policy $\arr{\pi}^*$ can be obtained by letting $$\arr{\pi}^*(s) = \argmax_{a \in A} \sum_{s' \in \mathcal{S}} \delta(s, a, s') \left[R(s,a,s') + \gamma\cdot V(s')\right]$$ for each state $s \in \mathcal{S}$. 
+This primal formulation optimizes a value function $V$, but alternatively the policy can be optimized directly by considering the dual formulation (see \cite{littman1995complexity}).
+Comparing \acrshort{acr:lp} algorithms to the specialized \acrshort{acr:vi} and \acrshort{acr:pi} algorithms, the latter typically hold more promise for efficient solutions than general-purpose \acrshort{acr:lp} algorithms, although the \acrshort{acr:lp} scale better to larger \acrshort{acr:mdp} planning problems.
 
 \newpage
 
@@ -526,8 +527,8 @@ The Q-table is then updated accordingly based on the following update rule:
 \[
 Q(s, a) = Q(s, a) + \alpha \Big[r + \gamma \max_{a'} Q(s',a') - Q(s, a)\Big]
 \]
-where $\alpha \in (0,1)$ is the learning rate and $\gamma \in (0, 1)$ the discount factor.
-The learning rate expresses the rate at which newly acquired information overrides the old information in the Q-table.
+where $\alpha \in (0,1)$ is the learning rate and $\gamma \in [0, 1)$ the discount factor.
+The learning rate expresses the rate at which newly acquired information overrides the old information in the \mbox{Q-table}.
 Over time the estimates in the Q-table will improve such that the revenue is maximized.
 A near-optimal policy can then be constructed by selecting the action with the highest Q-value from the Q-table for each state.
 
@@ -541,7 +542,7 @@ A near-optimal policy can then be constructed by selecting the action with the h
 	\caption{SARSA}
 	\label{alg:sarsa}
 	\begin{algorithmic}[1]
-		\Require{State space $\mathcal{S}$, action space $A$, learning rate $\alpha$, discount factor $\gamma$}
+		\Require{State space $\mathcal{S}$, Action space $A$, Learning rate $\alpha \in (0, 1)$, Discount factor $\gamma \in [0, 1)$}
 		\Ensure{Optimal policy $\arr{\pi}^*: \mathcal{S} \mapsto A$}
 		\State Initialize $Q: \mathcal{S} \times A \mapsto \mathbb{R}$ arbitrarily
 		\Repeat
@@ -563,5 +564,5 @@ A near-optimal policy can then be constructed by selecting the action with the h
 SARSA \cite{sutton1998reinforcement} is another model-free \acrshort{acr:rl} algorithm which is similar to Q-Learning.
 While Q-Learning is an off-policy method which learns the value of the optimal policy, SARSA is an on-policy method which learns the value of the policy it currently follows in order to iteratively improve this policy.
 In each iteration, it simulates the action yielded by its policy and observes the reward and next state.
-Accordingly the $Q$-table is updated based on these observations as shown in \autoref{alg:sarsa}, which repeats itself with the observed $s'$ and action $a'$ imposed by the policy $\pi$ that is derived from $Q$.
+Accordingly the $Q$-table is updated based on these observations as shown in \autoref{alg:sarsa}, which repeats itself with the observed $s'$ and action~$a'$ imposed by the policy $\pi$ that is derived from $Q$.
 
