@@ -12,13 +12,13 @@ Finally, this chapter concludes this thesis with recommendations and suggestions
 \section{Summary of Contributions}
 \label{sec:summary}
 
-Previous work in the field of probabilistic model learning for planning under uncertainty has already presented us with various algorithms for (offline) learning \acrfullpl{acr:mdp} from a dataset describing the dynamics of some system.
+Previous work in the field of probabilistic model learning for planning under uncertainty has already presented us with various algorithms for (offline) learning \acrfullpl{acr:mdp} from a dataset describing the dynamics of the system under consideration.
 The state of the art however lacks an automated method of setting the hyperparameters of these learning algorithms so to best reflect the underlying system and maximize its performance in the execution of the tasks it is expected to perform.
-To address this issue, we pose the adjustment of the parameters of such learning algorithms as an optimization task.
+To address this issue, we pose the adjustment of the hyperparameters of such learning algorithms as an optimization task.
 In this optimization task, the goal is to find the setting of the hyperparameters $\theta$ which maximizes the performance yielded by executing the plans or \textit{policies} derived from the learned \acrshort{acr:mdp}.
 
 In this thesis, we present a solution (which we refer to as the \textit{\acrshort{acr:mdp} optimization framework}) that employs the \acrfull{acr:bo} framework for this optimization task, defining a probability distribution over functions which maps parameter settings $\theta$ to an assessment of the value $V_\mathcal{M}$ of a learned \acrshort{acr:mdp}.
-Although algorithms that employ the \acrshort{acr:bo} framework for \acrshort{acr:sdm} problems do already exist, all of them are online \acrshortpl{acr:rl} approaches that do not utilize an available dataset prior to interacting with the real-world environment.
+Although algorithms that employ the \acrshort{acr:bo} framework for \acrshort{acr:sdm} problems do already exist, all of them are online \acrshort{acr:rl} approaches that do not utilize an available dataset prior to interacting with the real-world environment.
 The model value $V_\mathcal{M}$ of an \acrshort{acr:mdp}, used as a relative performance measure in the optimization, is assessed based on computed value functions and simulations of the tasks the system is expected to perform.
 
 Additionally, we extended our proposed solution by exploiting the lower cost of computing a value function in comparison to performing time-expensive simulations, to define our \textit{multi-phase optimization framework}.
@@ -77,6 +77,8 @@ Combining these estimations results in the expression shown in \autoref{eq:vm} i
 We have seen that making an accurate assessment of the value of an \acrshort{acr:mdp} requires time-expensive simulations to be performed.
 Therefore, it is important to limit the number of evaluations of a parameter setting for the used model learning algorithm, with \acrshort{acr:bo} emerging as an attractive framework for optimization.
 As we have seen in our experiments, \acrshort{acr:bo} could effectively be employed to explore the parameter space with a limited number of evaluations.
+
+\newpage
 
 \vspace{16pt}
 \noindent%\fbox{\parbox{\textwidth}{

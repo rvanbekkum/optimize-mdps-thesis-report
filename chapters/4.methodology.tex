@@ -25,8 +25,8 @@ Finally, in \autoref{sec:multi-phase-framework}, we define our extension of this
 %vTODO Say something about related work moving to reinforcement learning -> issues with this (perhaps: RL takes long and involves 'dangers' as it is done in the real-world; BRL intractable)
 %TODO Go over this later on
 As mentioned in \autoref{ch:introduction}, the problem this thesis is concerned with is the development of probabilistic models in the form of \acrshortpl{acr:mdp} to be used for obtaining plans for automated control of systems that involve uncertainty.
-The development of such probabilistic models tend to be a difficult and time-costly process for a human designer.
-Therefore, an appealing idea is to automate the model development process by applying learning algorithms on a dataset of execution traces of the system in need of automated control.
+The development of such probabilistic models tends to be a difficult and time-costly process for a human designer.
+Therefore, an appealing idea is to automate the model development process by applying learning algorithms on a dataset of execution traces of the system under consideration.
 However, to achieve effective planning in a real-world environment, the models that are learned should accurately reflect the dynamics of the system, such that derived plans account for the uncertainty that is present in the execution of actions, observations and exogenous events.
 Although algorithms for learning \acrshortpl{acr:mdp} from a dataset do already exist, the state of the art lacks a method of setting the hyperparameters $\theta$ of these algorithms such that a model is retrieved that best reflects the underlying system and maximizes the performance in its execution of derived plans.
 Besides, although \acrfull{acr:rl} allows us to bypass the development of a model, it often turns out to be quite slow for finding optimal policies in complex environments.
@@ -58,7 +58,7 @@ Finally and most importantly, a solution to this problem should take into accoun
 	\begin{subfigure}{.5\textwidth}
 		\centering
 		\includegraphics[width=.8\linewidth]{dummy-map-2-1}
-		\caption{Dummy environment with a mobile robot and goal area.}
+		\caption{Example environment with a mobile robot and goal area.}
 		\label{fig:dummy-map-1}
 	\end{subfigure}\hfill
 	\begin{subfigure}{.5\textwidth}
@@ -149,10 +149,10 @@ A self-evident approach is making use of a dataset generated from execution trac
 One should note that this means that the action space $A$ and time-step $t$, that will be used for any \acrshort{acr:mdp} for the system, should already have been established at this point.
 When adding the auxiliary condition of needing to learn fully observable \acrshortpl{acr:mdp}, the need arises for the observations in these execution traces to be usable for distinguishing between the different system states.
 
-For our running example of mobile robot navigation such a dataset may be obtained by executing the robot in its real-world environment following a random action policy.
+For our running example of mobile robot navigation such a dataset may be obtained by executing the robot in its real-world environment following a random action policy (or a policy that exploits any further prior knowledge).
 That is, one could choose to let the robot record its location and orientation in terms of its sensor readings which are logged at a fixed time interval.
 In the exploration, the robot would then start from some position in the environment, choose an action (e.g., driving forward in some direction) at random and execute it according to the fixed time-step.
-What would then be logged are the robot's sensor readings and selected action at each stage.
+Then, what will be logged are the robot's sensor readings and selected action at each stage.
 Recording the action at each stage is appropriate as it allows us to observe the effect of the actions and identify actions that do not affect the robot's state (e.g., being unable to move because of a wall or other obstacle close to the robot).
 
 % Size of content
@@ -316,7 +316,7 @@ To take care of this, we introduce a discrepancy factor $\xi \in [0, 1]$, which 
 
 Let us then define $R_G$ as the set of reward functions $R_i$ for each $i \in \mathcal{S}_G$ in which a one-time reward (which is realized as depicted in \autoref{fig:goal-trap-state}) is received only in goal state $i$.
 Note that as such, an equivalent formulation can be given as a \textit{stochastic shortest path} problem \cite{GuillotS17} for the resulting \acrshortpl{acr:mdp}.
-The reason the reward needs to be only obtainable once is to ensure that the expressions $V_\mathit{DTP}$ and $V_\mathit{SIM}$ are in the same range and can be used together as discussed in the next section.
+The reason the reward needs to be only obtainable once is to ensure that the expressions in \autoref{eq:vdtp} and \autoref{eq:vsim}, which are used to estimate the performance yielded by an \acrshort{acr:mdp}, lie in the same range and can be used together as discussed in the next section.
 %The reward function $R_i: \mathcal{S} \mapsto \mathbb{R}$ for some task with goal state $i \in \mathcal{S}_G$ is then defined as follows:
 %\begin{equation}
 %R_i(s) = 
@@ -341,7 +341,7 @@ The next section discusses how the value of a model $\mathcal{M}$ is assessed in
 
 \subsubsection{Performance Measure}
 
-Posing the learning of probabilistic models as an optimization task requires us to define a mapping of \acrshortpl{acr:mdp} to a performance measure that can fairly compare different models.
+Posing the learning of probabilistic models as an optimization task requires us to define a mapping of \acrshortpl{acr:mdp} to a performance measure that can be used to fairly compare different models.
 As discussed earlier, one can express the performance of an \acrshort{acr:mdp} in terms of how well the agent performs tasks following the policies that are derived from the model.
 Therefore, one option is to make use of the value function $V$ obtained by a \acrshort{acr:dtp} algorithm, such as \acrshort{acr:vi} or \acrshort{acr:pi}.
 Based on such a value function, an expression of how well the agent is expected to perform some task $t = (s_0, R) \in T_\mathcal{M}$ is:

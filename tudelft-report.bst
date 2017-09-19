@@ -869,10 +869,10 @@ FUNCTION {inproceedings}
           format.date "year" output.check
         }
         { address output.nonnull
+          publisher output
           format.date "year" output.check
           new.sentence
           organization output
-          publisher output
         }
       if$
     }
@@ -967,10 +967,10 @@ FUNCTION {proceedings}
   format.bvolume output
   format.number.series output
   address output
+  publisher output
   format.date "year" output.check
   new.sentence
   organization output
-  publisher output
   format.isbn output
   format.doi output
   format.url output
@@ -988,6 +988,7 @@ FUNCTION {techreport}
   new.block
   format.tr.number output.nonnull
   institution "institution" output.check
+  publisher output
   address output
   format.date "year" output.check
   format.url output
