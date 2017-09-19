@@ -473,7 +473,7 @@ In the next section the obtained results for each of these configurations are sh
 From the experiments that have been performed according to the configurations presented in \autoref{sec:scenarios} results have been obtained that are discussed in this section.
 First, we present and review the results obtained for the experiments that follow the base framework in \autoref{sec:base-framework-results}.
 Then, in \autoref{sec:multiphase-framework-results} the results for the multi-phase extension of the framework are presented and discussed. 
-Each of the figures in these sections present plots for each of the experiments, showing the resulting posterior from the gathered evidence, and the value $V_\mathcal{M}$ of the learned model in each iteration of the \acrshort{acr:bo} optimization process.
+Each of the figures in these sections present plots for each of the experiments, showing the resulting posterior from the gathered evidence, and the value~$V_\mathcal{M}$ of the learned model in each iteration of the \acrshort{acr:bo} optimization process.
 %In these plots $\theta$ is the parameter-setting for model learning and $f$ is the (unknown) objective function mapping these to model values.
 
 \subsection{Base Framework}
@@ -504,8 +504,8 @@ As shown in \autoref{tab:configurations-base}, experiments have been performed o
 First of all, let us consider the results obtained for the small \texttt{tum\_kitchen} environment.
 Overall, in \Crefrange{fig:exp1}{fig:exp9} one can see that the optimum $\theta_\mathsf{max}$ is mostly found within similar areas of the parameter space $\Theta$.
 In \Crefrange{fig:exp1}{fig:exp3} respectively 100\%, 75\% and 50\% of the dataset has been used in the corresponding experiments, and one can see in \autoref{fig:exp3} that with 50\% of the data employed, the observed model values $V_\mathcal{M}$ for different settings of $\theta$ are indiscernible.
-At the other hand, \autoref{fig:exp2} shows that with 75\% of the data the distinction becomes much more clear, even though there is still some bias, particularly for larger settings of $\theta$.
-This clearly shows that sufficient data is needed to avoid underfitting and obtaining more stable results with discernible performance measures.
+At the other hand, \autoref{fig:exp2} shows that with 75\% of the data the distinction becomes much more clear, even though the higher variance is still present, particularly for larger settings of $\theta$.
+This clearly shows that sufficient data is needed to avoid overfitting and obtaining more stable results with discernible performance measures.
 
 %What might explain this, is that this particular section of the dataset adds data based on which \acrshortpl{acr:mdp} with large state spaces overfit their corresponding transition function.
 

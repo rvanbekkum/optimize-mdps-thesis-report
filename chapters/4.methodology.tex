@@ -315,7 +315,7 @@ One problem that emerges, however, is that there might not be a one-to-one corre
 To take care of this, we introduce a discrepancy factor $\xi \in [0, 1]$, which corresponds to the fraction of entries from the set $E$ within the goal state that map to the true goal.
 
 Let us then define $R_G$ as the set of reward functions $R_i$ for each $i \in \mathcal{S}_G$ in which a one-time reward (which is realized as depicted in \autoref{fig:goal-trap-state}) is received only in goal state $i$.
-Note that as such, an equivalent formulation can be given as a \textit{stochastic shortest path} problem \cite{GuillotS17} for the resulting \acrshortpl{acr:mdp}.
+Note that as such, an equivalent formulation can be given as a \textit{stochastic shortest path} problem~\cite{GuillotS17} for the resulting \acrshortpl{acr:mdp}.
 The reason the reward needs to be only obtainable once is to ensure that the expressions in \autoref{eq:vdtp} and \autoref{eq:vsim}, which are used to estimate the performance yielded by an \acrshort{acr:mdp}, lie in the same range and can be used together as discussed in the next section.
 %The reward function $R_i: \mathcal{S} \mapsto \mathbb{R}$ for some task with goal state $i \in \mathcal{S}_G$ is then defined as follows:
 %\begin{equation}

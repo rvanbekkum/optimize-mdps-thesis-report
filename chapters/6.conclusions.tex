@@ -96,14 +96,40 @@ In our experiments we have seen that it is possible to use the first phase to su
 \section{Recommendations and Future Work}
 \label{sec:recommendations-future-work}
 
-As this thesis has only limited itself to learning and optimizing fully observable \acrshortpl{acr:mdp}, one direction for proposed future work is to explore the possibilities of optimizing for \acrshortpl{acr:pomdp}.
-That is, we should acknowledge that our experiments make the simplifying assumption that the state is directly observable from odometric readings, while in practice this does not hold up and would require execution traces with other sensor readings.
-This would require one to make use of other model learning algorithms, such as the \textit{Baum-Welch} algorithm and state merging algorithms seen in \autoref{sec:learning-probabilistic-models}.
-Apart from this, another recommendation for future work would be to implement and test the solution on applications other than path planning for mobile robot navigation.
-Further, one could consider to explore and investigate alternative global optimization algorithms (e.g., see \cite{bergstra2011algorithms}) to address the problem statement of this thesis.
+As the framework proposed in this thesis is targeted at offline planning, the policies computed from resulting \acrshortpl{acr:mdp} can only to a certain extent account for the exogenous events in the environment.
+Suppose an agent for a mobile robot, like in our example application, is employed in the real world and at some point the planned path is obstructed.
+In this scenario the agent will be unable to get to its target location based \textit{solely} on the policy that was computed offline.
+To account for these scenarios, first off, one could choose to periodically explore the environment (using the current model as a blueprint, as in \cite{epshteyn2008active}) and update the model parameters accordingly instead of having just a single exploration phase.
+An alternative, is to employ the learned \acrshort{acr:mdp} in one of the model-based \acrshort{acr:rl} methods seen in \autoref{ch:problem-related-work}, which automatically balance exploration and exploitation.
 
-\vspace{12pt}
-\noindent\minibox[frame]{\textbf{Note:} This section will be updated and extended for the final version of the report.}
+Another issue that might be interesting to address in future work, is to identify whether or not sufficient data is available for learning an appropriate \acrshort{acr:mdp} model.
+Although, in our experiments we were able to observe large noise when using smaller datasets, still the problem exists of how to assess what dataset size is appropriate.
+
+Considering the optimization aspect of the presented framework, one of the issues that were identified, is that selecting the acquisition function and the hyperparameters of the \acrshort{acr:gp} prior for \acrshort{acr:bo} is not a trivial task.
+For future work, we recommend the use of the portfolio allocation \cite{Hoffman2011, shahriari2016taking} and integrated acquisition \cite{snoek2012practical} functions, discussed in \autoref{ch:background}, which ease the above task as they reduce the number of choices that need to be made.
+
+Probably one of the most interesting directions for future work is to examine and experiment with model learning through our framework for different domains.
+The main question then is whether or not the application domain under consideration can provide a dataset that describes the dynamics of the system and allows for learning probabilistic models.
+Considering that \acrshortpl{acr:mdp} and especially \acrshortpl{acr:pomdp} is data intensive, one should carefully contemplate the contents of the dataset and whether they allow for learning transition probabilities, emission probabilities and/or state space which accurately reflect the dynamics of the underlying~system.
+One recommendation is to look into learning \acrshortpl{acr:pomdp} for spoken dialogue systems \cite{chinaei2011, png2011bayesian, young2016}.
+Recently there has been much interest in modeling the dialogue manager of these systems this way, although estimating their dynamics is quite a difficult task, and so it is desirable to automate this process.
+As an example, in \cite{chinaei2011}, the \acrshort{acr:pomdp}'s components (i.e., state and observation space, and transition and emission probabilities) based on a dataset of human-to-human dialogues.
+For such domains, our framework may prove useful in learning a probabilistic model that maximizes the performance of the system.
+For other potential application domains, one may want to consult \cite{cassandra1998spa} which presents a variety of applications for \acrshortpl{acr:pomdp} which may potentially be learned from data.
+
+Another topic we briefly touched upon in \autoref{ch:background} is \textit{automated model checking}, which encompass techniques for formal model verification through temporal logic formulas.
+Examples can be found in \cite{bhatia2010sampling, lacerda2015optimal} where \acrshort{acr:ltl} formulas are used to formally express temporal goals and produce a `product-\acrshort{acr:mdp}' to derive plans which (partially) satisfy these formulas.
+An interesting direction for future work would be to investigate the possibilities of combining such model checking techniques with our framework.
+That is, combining the methods from automated model checking and model learning through our framework, one may be able to develop a framework that optimizes for an \acrshort{acr:mdp} which is best capable of satisfying a collection of \acrshort{acr:ltl} formulas.
+
+%As this thesis has only limited itself to learning and optimizing fully observable \acrshortpl{acr:mdp}, one direction for proposed future work is to explore the possibilities of optimizing for \acrshortpl{acr:pomdp}.
+%That is, we should acknowledge that our experiments make the simplifying assumption that the state is directly observable from odometric readings, while in practice this does not hold up and would require execution traces with other sensor readings.
+%This would require one to make use of other model learning algorithms, such as the \textit{Baum-Welch} algorithm and state merging algorithms seen in \autoref{sec:learning-probabilistic-models}.
+%Apart from this, another recommendation for future work would be to implement and test the solution on applications other than path planning for mobile robot navigation.
+%Further, one could consider to explore and investigate alternative global optimization algorithms (e.g., see \cite{bergstra2011algorithms}) to address the problem statement of this thesis.
+
+%\vspace{12pt}
+%\noindent\minibox[frame]{\textbf{Note:} This section will be updated and extended for the final version of the report.}
 
 % Recommendation: POMDPs for Dialogue Management as seen in http://mi.eng.cam.ac.uk/~sjy/papers/ygtw13.pdf
 % http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.129.2652&rep=rep1&type=pdf
