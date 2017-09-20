@@ -438,34 +438,6 @@ In the next section the obtained results for each of these configurations are sh
 %\vspace{12pt}
 %\noindent\fbox{\textbf{TODO:} Table to be added describing the configurations/scenarios for the experiments.}
 
-\afterpage{
-	% ID = 1
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ei}
-		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ei_maximum}
-		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 1).}
-		\label{fig:exp1}
-	\end{figure}
-	% ID = 2
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_75_acq_ei}
-		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_75_acq_ei_maximum}
-		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $75\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 2).}
-		\label{fig:exp2}
-	\end{figure}
-	% ID = 3
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_50_acq_ei}
-		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_50_acq_ei_maximum}
-		\caption{Plots showing \acrshort{acr:gp}  posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $50\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 3).}
-		\label{fig:exp3}
-	\end{figure}
-	\clearpage
-}
-
 \section{Results and Discussion}
 \label{sec:results}
 %vTODO Fix order of figures and update text
@@ -482,22 +454,33 @@ Each of the figures in these sections present plots for each of the experiments,
 First off, we present and evaluate the results obtained from the experiments on the base framework.
 As shown in \autoref{tab:configurations-base}, experiments have been performed on two different simulation environments: the small \texttt{tum\_kitchen} environment and the, in comparison, large \texttt{uol\_bl} environment, for which the results are discussed in the following sections.
 
-	% ID = 4
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ucb}
-		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ucb_maximum}
-		\caption{Plots showing \acrshort{acr:gp}  posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 4).}
-		\label{fig:exp4}
-	\end{figure}
-	% ID = 5
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_eips}
-		\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_eips_maximum}
-		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei-ps} acquisition function used (Experiment 5).}
-		\label{fig:exp5}
-	\end{figure}
+\begin{figure}
+	\centering
+		\captionsetup{font=small}
+		\captionsetup[subfigure]{font=footnotesize}
+	\captionsetup[subfigure]{justification=centering}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ei}
+		\caption{Experiment 1: 100\% of the dataset used}
+		\label{fig:exp1}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ei_maximum}
+		\caption{Experiment 1: Observations over iterations}
+		\label{fig:exp1_observations}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_75_acq_ei}
+		\caption{Experiment 2: 75\% of the dataset used}
+		\label{fig:exp2}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_50_acq_ei}
+		\caption{Experiment 3: 50\% of the dataset used}
+		\label{fig:exp3}
+	\end{subfigure}
+	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for different dataset sizes. The plots correspond to 20 iterations of the base framework on the \texttt{tum\_kitchen} environment with $\beta = 0.0$, $k$-Means and \acrshort{acr:mei} acquisition function used.}
+\end{figure}
 
 \subsubsection{Tum Kitchen Environment}
 
@@ -517,45 +500,11 @@ First of all, we see that in each of these experiments a global maximum is found
 For this environment the \acrshort{acr:gp-ucb} and \acrshort{acr:mei-ps} lead to a more clear convergence to the area of the parameter space with the global optimum.
 The benefits of the timing \acrshort{acr:gp} in the \acrshort{acr:mei-ps} is only limited for this environment as the time for model learning and planning are closer together than for the \texttt{uol\_bl} environment.
 
-% ID = 6
-\begin{figure}[t!]
-	\centering
-	\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ei}
-	\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ei_maximum}
-	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, \acrshort{acr:gmm}, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 6).}
-	\label{fig:exp6}
-\end{figure}
-% ID = 7
-\begin{figure}[t!]
-	\centering
-	\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ucb}
-	\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ucb_maximum}
-	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.0$, \acrshort{acr:gmm}, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 7).}
-	\label{fig:exp7}
-\end{figure}
-
 Then, in \autoref{fig:exp6} and \autoref{fig:exp7} we see the plots for the experiments in which instead \acrshortpl{acr:gmm} are used for learning state spaces for our \acrshortpl{acr:mdp}.
 We observe that again for this algorithm, the optima are found within the same areas of the parameter space for both experiments with different acquisition functions.
 The main thing we observe is that, the observed model values $V_\mathcal{M}$ is overall lower with the \acrshort{acr:gmm} employed in comparison to the values observed with $k$-Means employed.
 Therefore, employing the $k$-Means appears more suitable to learn the state space for \acrshortpl{acr:mdp} in our application of mobile robot navigation.
 
-% ID = 8
-\begin{figure}[t!]
-	\centering
-	\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_025__alg_kmeans_pct_100_acq_ei}
-	\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_025__alg_kmeans_pct_100_acq_ei_maximum}
-	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.25$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 8).}
-	\label{fig:exp8}
-\end{figure}
-
-% ID = 9
-\begin{figure}[t]
-	\centering
-	\includegraphics[width=0.495\textwidth]{plots/tum_base/plot_b_05__alg_kmeans_pct_100_acq_ei}
-	\includegraphics[width=0.485\textwidth]{plots/tum_base/plot_b_05__alg_kmeans_pct_100_acq_ei_maximum}
-	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{tum\_kitchen} environment, $\beta = 0.5$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used(Experiment 9).}
-	\label{fig:exp9}
-\end{figure}
 	
 Finally, we look at the influence of the weight factor $\beta$ for the small environment considering the plots of \autoref{fig:exp1}, \autoref{fig:exp8} and \autoref{fig:exp9}.
 In this particular situation, one might benefit from weighing $V_\mathit{DTP}$ in the model value, as it could make a clearer distinction between values for different settings of $\theta$, because it cancels out part of the uncertainty from the simulations.
@@ -569,36 +518,9 @@ One can observe the optima found in each of these experiments lie close together
 The experiment that employs the \acrshort{acr:mei} function, however, appears ineffective to find the same global maximum in multiple repetitions.
 All in all, the \acrshort{acr:gp-ucb} appears most effective in sampling parameter settings that result in \acrshortpl{acr:mdp} yielding high performance.
 
-\afterpage{
-	% ID = 10
 
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.495\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ei}
-		\includegraphics[width=0.485\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ei_maximum}
-		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 30 iterations of the base framework on the \texttt{uol\_bl} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 10).}
-		\label{fig:exp10}
-	\end{figure}
-	% ID = 11
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.495\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ucb}
-		\includegraphics[width=0.485\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ucb_maximum}
-		\caption{Plot showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{uol\_bl} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 11).}
-		\label{fig:exp11}
-	\end{figure}
-	% ID = 12
-	\begin{figure}[t!]
-		\centering
-		\includegraphics[width=0.495\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_eips}
-		\includegraphics[width=0.485\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_eips_maximum}
-		\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 20 iterations of the base framework on the \texttt{uol\_bl} environment, $\beta = 0.0$, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei-ps} acquisition function used (Experiment 12).}
-		\label{fig:exp12}
-	\end{figure}
-	\clearpage
-}
 
-\newpage
+
 
 \subsection{Multi-Phase Framework}
 \label{sec:multiphase-framework-results}
@@ -618,54 +540,24 @@ First, we consider the experiments that apply the multi-phase framework to find 
 In \autoref{fig:exp13} and \autoref{fig:exp14} one can see that there appears to be a correspondence between the maxima of the posterior of the first and second phase.
 Particularly, in \autoref{fig:exp14} we see a direct correspondence of the global maximums, so that a proper model is found in the first few iterations of the optimization process.
 
-% ID = 13
-\begin{figure}[t!]
-	\centering
-	\includegraphics[width=0.495\textwidth]{plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ei}
-	\includegraphics[width=0.485\textwidth]{plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ei_maximum}
-	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 30 iterations of the multi-phase framework on the \texttt{tum\_kitchen} environment, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 13).}
-	\label{fig:exp13}
-\end{figure}
-% ID = 14
-\begin{figure}[t!]
-	\centering
-	\includegraphics[width=0.495\textwidth]{plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ucb}
-	\includegraphics[width=0.485\textwidth]{plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ucb_maximum}
-	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 30 iterations of the multi-phase framework on the \texttt{tum\_kitchen} environment, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 14).}
-	\label{fig:exp14}
-\end{figure}%vTODO Update
 
-\newpage
+
+
 
 \subsubsection{UOL BL Environment}
 Next, we consider the experiments that apply the multi-phase framework to the \texttt{uol\_bl} environment, for which the results are shown in \autoref{fig:exp15} and \autoref{fig:exp16}.
 As opposed to the experiments on the \texttt{tum\_kitchen} environment, the prediction mean from the first phase has a less evident correspondence with the maxima of the posterior of the second phase.
 However, this does not prevent the \acrshort{acr:bo} of eventually finding a maximum for both of these experiments in the same area of the parameter space.
 
-\vspace{12pt}
-\noindent\minibox[frame]{\textbf{Note:} For the final version of the report, I also plan to include a comparison of the time costs \\of the base framework and the multi-phase framework.}
+%\vspace{12pt}
+%\noindent\minibox[frame]{\textbf{Note:} For the final version of the report, I also plan to include a comparison of the time costs \\of the base framework and the multi-phase framework.}
 
-% ID = 15
-\begin{figure}[t!]
-	\centering
-	\includegraphics[width=0.495\textwidth]{plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ei}
-	\includegraphics[width=0.485\textwidth]{plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ei_maximum}
-	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 30 iterations of the multi-phase framework on the \texttt{uol\_bl} environment, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:mei} acquisition function used (Experiment 15).}
-	\label{fig:exp15}
-\end{figure}
-% ID = 16
-\begin{figure}[t!]
-	\centering
-	\includegraphics[width=0.495\textwidth]{plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ucb}
-	\includegraphics[width=0.485\textwidth]{plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ucb_maximum}
-	\caption{Plots showing \acrshort{acr:gp} posterior after (left) and observed values in (right) 30 iterations of the multi-phase framework on the \texttt{uol\_bl} environment, $k$-Means, $100\%$ of the dataset used, \acrshort{acr:gp-ucb} acquisition function used (Experiment 16).}
-	\label{fig:exp16}
-\end{figure}
+
 
 % Small state-spaces: discrepancy between goal state and true goal is discounted
 % Large state-spaces overshooting + overfitting on limited training data
 
-\newpage
+
 \subsubsection{Phase 3: MDP Tuning}
 
 \begin{figure}
