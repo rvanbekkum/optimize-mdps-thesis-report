@@ -486,8 +486,11 @@ As shown in \autoref{tab:configurations-base}, experiments have been performed o
 \subsubsection{Tum Kitchen Environment}
 
 First of all, let us consider the results obtained for the small \texttt{tum\_kitchen} environment.
-Overall, in \Crefrange{fig:exp1}{fig:exp9} one can see that the optimum $\theta_\mathsf{max}$ is mostly found within similar areas of the parameter space $\Theta$.
-In \Crefrange{fig:exp1}{fig:exp3} respectively 100\%, 75\% and 50\% of the dataset has been used in the corresponding experiments, and one can see in \autoref{fig:exp3} that with 50\% of the data employed, the observed model values $V_\mathcal{M}$ for different settings of $\theta$ are indiscernible.
+Overall, in \Crefrange{fig:plots_tum_base_acq}{fig:plots_tum_base_weight} one can see that the optimum $\theta_\mathsf{max}$ is mostly found within similar areas of the parameter space $\Theta$.
+In \autoref{fig:plots_tum_base_data} we compare the effect of using different dataset sizes for learning \acrshortpl{acr:mdp}.
+In \autoref{fig:exp1}, \autoref{fig:exp2} and \autoref{fig:exp3} the resulting \acrshort{acr:gp} is shown after respectively using 100\%, 75\% and 50\% of the dataset in the corresponding experiments.
+One can see in \autoref{fig:exp3} that with 50\% of the data employed, the observed model values $V_\mathcal{M}$ for different settings of $\theta$ involve quite some noise.
+In this figure one can also see that the \acrshort{acr:gp} is quite sensitive to this noise and accordingly over-fits on these observations, so that the uncertainty about the parameter space is quite large.
 At the other hand, \autoref{fig:exp2} shows that with 75\% of the data the distinction becomes much more clear, even though the higher variance is still present, particularly for larger settings of $\theta$.
 This clearly shows that sufficient data is needed to avoid overfitting and obtaining more stable results with discernible performance measures.
 
@@ -541,7 +544,9 @@ This clearly shows that sufficient data is needed to avoid overfitting and obtai
 	\label{fig:plots_tum_base_gmm}
 \end{figure}
 
-Next, let us compare the results depicted in \autoref{fig:exp1}, \autoref{fig:exp4} and \autoref{fig:exp5} where different acquisition functions are used in the \acrshort{acr:bo} framework (i.e., \acrshort{acr:mei}, \acrshort{acr:gp-ucb} and \acrshort{acr:mei-ps} respectively).
+Next, let us compare the results depicted in \autoref{fig:exp1} and \autoref{fig:plots_tum_base_acq} where different acquisition functions are used in the \acrshort{acr:bo} framework (i.e., \acrshort{acr:mei}, \acrshort{acr:gp-ucb} and \acrshort{acr:mei-ps} respectively).
+In addition, we present some plots that show how the different acquisition function samples new observations in \autoref{fig:exp1_observations}, \autoref{fig:exp4_observations} and \autoref{fig:exp5_observations}.
+
 First of all, we see that in each of these experiments a global maximum is found in the same area of the parameter space.
 %For this environment, we see the results are quite similar, and also in the logs made from the experiments it was seen that the maximum observation was done in the (exact) same number of steps (in the third step).
 %The most clear difference is seen in the `behavior' of the \acrshort{acr:gp-ucb} acquisition function, being optimistic in the face of uncertainty, so that the confidence intervals are restricted for promising areas of the parameter space.
@@ -626,12 +631,12 @@ All in all, the \acrshort{acr:gp-ucb} appears most effective in sampling paramet
 	\captionsetup[subfigure]{justification=centering}
 	\begin{subfigure}[t]{0.495\textwidth}
 		\includegraphics[width=\textwidth]{plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ei}
-		\caption{Experiment 13: \acrshort{acr:mei} acquisition function used in first phase}
+		\caption{Experiment 13: \acrshort{acr:mei} acquisition function in phase 1}
 		\label{fig:exp13}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.495\textwidth}
 		\includegraphics[width=\textwidth]{plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ucb}
-		\caption{Experiment 14: \acrshort{acr:gp-ucb} acquisition function used in first phase}
+		\caption{Experiment 14: \acrshort{acr:gp-ucb} acquisition function in phase 1}
 		\label{fig:exp14}
 	\end{subfigure}
 	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying acquisition functions. The plots correspond to 20 iterations of the multi-phase framework on the \texttt{tum\_kitchen} environment with $\beta = 0.0$ and $k$-Means~clustering~used.}
@@ -640,12 +645,12 @@ All in all, the \acrshort{acr:gp-ucb} appears most effective in sampling paramet
 	\null
 	\begin{subfigure}[t]{0.495\textwidth}
 		\includegraphics[width=\textwidth]{plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ei}
-		\caption{Experiment 15: \acrshort{acr:mei} acquisition function used in first phase}
+		\caption{Experiment 15: \acrshort{acr:mei} acquisition function in phase 1}
 		\label{fig:exp15}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.495\textwidth}
 		\includegraphics[width=\textwidth]{plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ucb}
-		\caption{Experiment 16: \acrshort{acr:gp-ucb} acquisition function used in first phase}
+		\caption{Experiment 16: \acrshort{acr:gp-ucb} acquisition function in phase 1}
 		\label{fig:exp16}
 	\end{subfigure}
 	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying acquisition functions. The plots correspond to 30 iterations of the multi-phase framework on the \texttt{uol\_bl} environment with $\beta = 0.0$ and $k$-Means~clustering~used.}
@@ -664,6 +669,8 @@ In the second phase, the posterior from the first phase is utilized to steer the
 The \acrshort{acr:bo} in both of these phases is preceded by collecting a set of $5$ random samples.
 Our hypothesis is that using the \acrshort{acr:gp-ucb} acquisition function in the first phase, may result in a better contribution of the expected improvement to the acquisition in the second phase.
 The third phase of the multi-phase framework will be covered separately, as it is mostly independent of the two prior phases, being concerned with fine-tuning a specific \acrshort{acr:mdp} model rather than searching for one.
+
+\newpage
 
 \subsubsection{Tum Kitchen Environment}
 First, we consider the experiments that apply the multi-phase framework to find an \acrshort{acr:mdp} for path planning in the \texttt{tum\_kitchen} environment.
