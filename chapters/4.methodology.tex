@@ -1,15 +1,15 @@
-\chapter{Model Learning Framework}
+\chapter{Model Optimization Framework}
 \label{ch:methodology}
 % Model Learning or Model Optimization, what should this be called?
 
 Our interest in this thesis lies in the development of probabilistic models for systems whose dynamics are stochastic.
-The objective is to use a dataset of execution traces of a system to attain an accurate system representation, which can be used to obtain plans for optimal automated control of a system involving uncertainty.
+The objective is to use a dataset of execution traces of a system to attain an accurate system representation, which can be used to obtain plans for an agent's decision making in a system that involves uncertainty.
 In this chapter we describe our proposed framework that applies learning algorithms to obtain probabilistic models in the form of \acrshortpl{acr:mdp} and optimizes for a performance-maximizing model by sampling multiple hyperparameter settings for these learning algorithms.
 
 First off, in \autoref{sec:problem-statement} we define the problem at hand that the proposed framework aims to deal with.
 Then, in \autoref{sec:application-mobile-robot}, the application of mobile robot navigation is introduced, which is one of the possible applications of the framework and is used as a running example in this chapter.
 This application is also used for evaluating the proposed framework through the experiments that were carried out and are documented in \autoref{ch:experimental-results}.
-Next, \autoref{sec:dataset-prerequisites} describes the prerequisites for the dataset serving as the input of the proposed model learning framework.
+Next, \autoref{sec:dataset-prerequisites} describes the prerequisites for the dataset serving as the input of the proposed model optimization framework.
 Subsequently, in \autoref{sec:model-learning-routine}, a detailed description of the learning and optimization routine is provided which forms our \textit{base framework} for learning optimal \acrshortpl{acr:mdp}.
 Finally, in \autoref{sec:multi-phase-framework}, we define our extension of this base framework in the form of a \textit{multi-phase framework} consisting of three phases whose aim is to further improve on the effectiveness of the framework.
 %In \autoref{sec:model-learning-routine} a detailed explanation is provided of the learning and optimization routine which forms the basis of our framework.
@@ -94,9 +94,9 @@ Finally and most importantly, a solution to this problem should take into accoun
 
 %vTODO Throughout this chapter
 %vTODO Use formal notation to clarify
-In this chapter a model learning framework is proposed that could be employed for various planning problems involving uncertainty.
+In this chapter a model optimization framework is proposed that could be employed for various planning problems involving uncertainty.
 To illustrate the type of problems this framework is aimed at and what comprises a probabilistic model for such problems, we use its application to path planning in mobile robot navigation as a running example throughout this chapter.
-%An example application for which the model learning framework described in this chapter could be used is that of mobile robot navigation.
+%An example application for which the model optimization framework described in this chapter could be used is that of mobile robot navigation.
 The problem statement for this application is as follows: a mobile robot needs to be autonomously controlled by an agent in such way to navigate from one location to another in some world, say, an office environment, as fast as possible.
 This problem domain is particularly suited as the robots tend to operate under significant uncertainty in their actions (e.g., slipping) and observations (e.g., sensor noise).
 Although there are other potential applications as described in \autoref{ch:introduction}, this particular application can be used to illustrate the procedure of learning \acrshortpl{acr:mdp} from data and obtaining plans accordingly quite well.
@@ -109,7 +109,7 @@ For now let us assume, the action space $A$ is defined as a finite set of moveme
 	A = \{&\texttt{S}, \texttt{SE}, \texttt{E}, \texttt{NE},
 		  \texttt{N}, \texttt{NW}, \texttt{W}, \texttt{SW}  \}
 \end{align*}\newpage
-Before our model learning framework is applied to learn \acrshortpl{acr:mdp} for the system, the data about the environment could have been obtained in the form of execution traces that consist of logs of the robot's pose and the (next) action it is about to take.
+Before our model optimization framework is applied to learn \acrshortpl{acr:mdp} for the system, the data about the environment could have been obtained in the form of execution traces that consist of logs of the robot's pose and the (next) action it is about to take.
 This could then give a set of datapoints, as depicted in \autoref{fig:dummy-map-2}, which can be used to learn the states and transition probabilities of an \acrshort{acr:mdp}.
 Quantizing this dataset of observed robot poses into $10$ symbols (e.g., using $k$-Means clustering), might give us the state space $\mathcal{S} = \{s_0, \ldots s_9\}$ depicted in \autoref{fig:dummy-map-3}.
 %, such that:
@@ -259,7 +259,7 @@ The sections below describes each of the components of this algorithm in more de
 %vTODO Explain where each component of the MDP comes from
 %vTODO Devote a paragraph clearly on how the reward function is defined; multiply the reward with the discrepancy factor rather than the value 
 
-\subsubsection{Action-Space and Time-Step}
+\subsubsection{Action Space and Time-Step}
 The action space $A$ of the \acrshort{acr:mdp} to be learned is one of the input parameters for the framework and should match the actions used in obtaining the set $E$ of execution traces.
 Similarly, the time-step $t$ is an input parameter as well, which specifies the time in between stages in which the agent selects an action, again matching the time-step used in obtaining the set $E$ of execution traces.
 In our running example, one possibility is to define the action space as the set of movements in the cardinal and inter-cardinal directions as seen earlier in \autoref{sec:application-mobile-robot}.
@@ -554,7 +554,7 @@ This section defines the phases of the extension, of which each subsequent phase
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=0.7\textwidth]{abstraction-5-1}
-	\caption{Correspondence of the phases of the model learning framework to the different levels of abstraction.}
+	\caption{Correspondence of the phases of the model optimization framework to the different levels of abstraction.}
 	\label{fig:abstraction-cost}
 \end{figure}
 

@@ -1,21 +1,17 @@
 \chapter{Conclusions}
 \label{ch:conclusions}
 
-The goal of this thesis is to provide a foundation for an algorithmic technique for learning \acrfullpl{acr:mdp} for planning under uncertainty which maximize yielded performance given a dataset describing the dynamics of a system in need of automated control.
+The goal of this thesis is to provide a foundation for an algorithmic technique for learning \acrfullpl{acr:mdp} for planning under uncertainty which maximize yielded performance given a dataset describing the dynamics of a system that involves uncertainty.
 This chapter presents a summary of the presented work and the contributions made in \autoref{sec:summary} and revisits the identified research questions in \autoref{sec:revisiting-research-questions}.
-Finally, this chapter concludes this thesis with recommendations and suggestions for future work in \autoref{sec:recommendations-future-work}.% and our concluding remarks in \autoref{sec:concluding-remarks}.
-
-% 'Don't ignore RL, could be used together'
-% Continuous-state?
-% Partially Observable?
+Finally, this chapter concludes this thesis with recommendations and suggestions for future work in \autoref{sec:recommendations-future-work}.
 
 \section{Summary of Contributions}
 \label{sec:summary}
 
-Previous work in the field of probabilistic model learning for planning under uncertainty has already presented us with various algorithms for (offline) learning \acrfullpl{acr:mdp} from a dataset describing the dynamics of the system under consideration.
+Previous work in the field of probabilistic model learning for planning under uncertainty has already presented us with various algorithms for learning \acrfullpl{acr:mdp} offline from a dataset describing the dynamics of the system under consideration.
 The state of the art however lacks an automated method of setting the hyperparameters of these learning algorithms so to best reflect the underlying system and maximize its performance in the execution of the tasks it is expected to perform.
 To address this issue, we pose the adjustment of the hyperparameters of such learning algorithms as an optimization task.
-In this optimization task, the goal is to find the setting of the hyperparameters $\theta$ which maximizes the performance yielded by executing the plans or \textit{policies} derived from the learned \acrshort{acr:mdp}.
+In this optimization task, the goal is to find the setting of the hyperparameters $\theta$ which maximizes the performance yielded by executing the plans or \textit{policies} derived from the learned~\acrshort{acr:mdp}.
 
 In this thesis, we present a solution (which we refer to as the \textit{\acrshort{acr:mdp} optimization framework}) that employs the \acrfull{acr:bo} framework for this optimization task, defining a probability distribution over functions which maps parameter settings $\theta$ to an assessment of the value $V_\mathcal{M}$ of a learned \acrshort{acr:mdp}.
 Although algorithms that employ the \acrshort{acr:bo} framework for \acrshort{acr:sdm} problems do already exist, all of them are online \acrshort{acr:rl} approaches that do not utilize an available dataset prior to interacting with the real-world environment.
@@ -29,12 +25,13 @@ Then, finally, we present a solution to further fine-tune the parameters of the 
 This is done by increasing the resolution of the state space and updating the transition probabilities where necessary, e.g., when the agent gets stuck in a certain state.
 
 An implementation of the aforementioned framework has been made for path planning in a mobile robot navigation domain, in which a robot needs to move from one location to another in an office environment.
-A dataset of execution traces with odometric readings has been gathered based on which our implementation learns \acrshortpl{acr:mdp} by clustering the data into a state space, with the number of states defined by $\theta$.
-The implementation thus optimizes for an \acrshort{acr:mdp} that can produce policies for a mobile robot offline, so that it can move from one location to another as fast as possible.
+A dataset of execution traces with odometric readings has been gathered based on which our implementation learns \acrshortpl{acr:mdp} by clustering the data into a state~space, with the number of states defined by the parameter setting $\theta$.
+The implementation thus optimizes for an \acrshort{acr:mdp} that can produce policies for a mobile robot offline, which can be followed to move from one location to another as fast as possible.
 
 The results of the experiments show that our framework can effectively be used to obtain an \acrshort{acr:mdp} for the path planning of a mobile robot.
 The first phase in the multi-phase framework shows out to be able to steer the acquisition in the second phase towards a global maximizer in some scenarios.
 And finally, the proof-of-concept implementation of the last phase, can successfully be used to further fine-tune the parameters of a learned \acrshort{acr:mdp} when the mobile robot gets stuck in some state when presented with a new task.
+However, it should be noted that the last phase only has been tested on a single task (considering it is just an extra step on top to potentially further improve \acrshortpl{acr:mdp}), which means we cannot simply guarantee it can be used to recover from all discrepancies that may be present.
 
 % Discussion of the results
 % Contributions made
@@ -54,7 +51,7 @@ First off, the following research question is mostly concerned with getting a go
 As seen in \autoref{sec:learning-markov-models}, one of the most straightforward methods can be deducted from methods for fitting Markov Chains, i.e. by maximum likelihood or Bayesian inference.
 The difference is in the addition of actions, so that a transition probability matrix needs to be learned for each possible action, given some user-defined state space.
 For various domains, such as that of mobile robot navigation, defining the state space may not be a trivial task, although there are approaches for this, such as $k$-Means clustering or (time-)state merging approaches, which are parameterized by the number of states.
-Then, when one needs to learn partially observable models one needs to consider other approaches, as shown in \autoref{sec:learning-probabilistic-models} to account for emission probabilities as well.
+Then, when one needs to learn partially observable models one needs to consider other approaches, as seen in \autoref{sec:learning-probabilistic-models}, to account for emission probabilities as well.
 
 \vspace{16pt}
 \noindent%\fbox{\parbox{\textwidth}{
@@ -66,7 +63,7 @@ The value $V_\mathcal{M}$ of an \acrshort{acr:mdp} $\mathcal{M}$ should be defin
 Therefore, first of all, the performance can be estimated using the expected value in the initial state from the value function for multiple tasks.
 However, as a model abstracts from the real world, using the value function to express model value is not always sufficient.
 Therefore, a more accurate estimation can be made through simulations of the tasks the system is expected to perform, discounting the obtained reward based on the number of steps made.
-Combining these estimations results in the expression shown in \autoref{eq:vm} in \autoref{sec:learning-step}, which can be used as a relative performance measure of different \acrshortpl{acr:mdp} for the same environments.
+Combining these estimations results in the expression shown in \autoref{eq:vm} in \autoref{sec:learning-step}, which can be used as a relative performance measure of different \acrshortpl{acr:mdp} for an environment.
 
 \vspace{16pt}
 \noindent%\fbox{\parbox{\textwidth}{
@@ -90,8 +87,22 @@ This research question has been addressed by the multi-phase framework proposed 
 In the first phase a \acrshort{acr:bo} for an \acrshort{acr:mdp} with the model value based solely on the value functions for the set of tasks over which to evaluate the performance.
 The resulting posterior is then used in the second phase to steer the acquisition of the first few samples.
 In our experiments we have seen that it is possible to use the first phase to successfully steer the optimization in the second phase towards a global maximizer.
+\vspace{12pt}
 
-% Revisiting the research questions
+Putting our findings for our sub-questions together, we attempt to provide an answer to our main research question reiterated below.
+
+\vspace{12pt}
+\noindent%\fbox{\parbox{\textwidth}{ %Uncomment this for boxes
+\textbf{Main Research Question.} How can the task of obtaining a (discrete) \acrshort{acr:mdp} that maximizes the yielded performance of executing plans that are derived from it, given a dataset about the system under consideration, be automated?
+%}}
+\vspace{12pt}
+
+As handcrafting \acrshortpl{acr:mdp} for systems with uncertain dynamics is a difficult task, an appealing approach is to employ learning algorithms to automate this task.
+To learn an \acrshort{acr:mdp} which maximizes performance yielded from following the policies computed from it, one needs to properly adjust the hyperparameters of these algorithms.
+As evaluating all possible hyperparameter settings may be a cost-expensive endeavor, the parameter space of model learning algorithms may be explored more effectively using the sequential model-based optimization framework known as \acrfull{acr:bo}.
+To compare \acrshortpl{acr:mdp}, assessments of their value can be made at different levels of abstraction, i.e., based solely on the \acrshort{acr:mdp} and its value function, based on performance in simulations, or based on performance in a real-world environment.
+Additionally, it was found that assessments on a higher level of abstraction (with lower costs) can be employed to steer the optimization on a lower level of abstraction towards the area of the parameter space that maximizes the performance.
+However, we should note that to give a conclusive answer to our main research question, we need to investigate how well our methodology works for different application domains.
 
 \section{Recommendations and Future Work}
 \label{sec:recommendations-future-work}
@@ -100,24 +111,24 @@ As the framework proposed in this thesis is targeted at offline planning, the po
 Suppose an agent for a mobile robot, like in our example application, is employed in the real world and at some point the planned path is obstructed.
 In this scenario the agent will be unable to get to its target location based \textit{solely} on the policy that was computed offline.
 To account for these scenarios, first off, one could choose to periodically explore the environment (using the current model as a blueprint, as in \cite{epshteyn2008active}) and update the model parameters accordingly instead of having just a single exploration phase.
-An alternative, is to employ the learned \acrshort{acr:mdp} in one of the model-based \acrshort{acr:rl} methods seen in \autoref{ch:problem-related-work}, which automatically balance exploration and exploitation.
+An alternative is to employ the learned \acrshort{acr:mdp} in one of the model-based \acrshort{acr:rl} methods seen in \autoref{ch:problem-related-work}, which automatically balance exploration and exploitation.
 
 Another issue that might be interesting to address in future work, is to identify whether or not sufficient data is available for learning an appropriate \acrshort{acr:mdp} model.
-Although, in our experiments we were able to observe large noise when using smaller datasets, still the problem exists of how to assess what dataset size is appropriate.
+Although, in our experiments we were able to observe large noise and overfitting on smaller datasets, still the problem exists of how to assess what dataset size is appropriate.
 
 Considering the optimization aspect of the presented framework, one of the issues that were identified, is that selecting the acquisition function and the hyperparameters of the \acrshort{acr:gp} prior for \acrshort{acr:bo} is not a trivial task.
 For future work, we recommend the use of the portfolio allocation \cite{Hoffman2011, shahriari2016taking} and integrated acquisition \cite{snoek2012practical} functions, discussed in \autoref{ch:background}, which ease the above task as they reduce the number of choices that need to be made.
 
 Probably one of the most interesting directions for future work is to examine and experiment with model learning through our framework for different domains.
 The main question then is whether or not the application domain under consideration can provide a dataset that describes the dynamics of the system and allows for learning probabilistic models.
-Considering that \acrshortpl{acr:mdp} and especially \acrshortpl{acr:pomdp} is data intensive, one should carefully contemplate the contents of the dataset and whether they allow for learning transition probabilities, emission probabilities and/or state space which accurately reflect the dynamics of the underlying~system.
+Considering that \acrshortpl{acr:mdp} and especially \acrshortpl{acr:pomdp} are data intensive, one should carefully contemplate the contents of the dataset and whether they allow for learning transition probabilities, emission probabilities state spaces and/or observation spaces which accurately reflect the dynamics of the underlying system.
 One recommendation is to look into learning \acrshortpl{acr:pomdp} for spoken dialogue systems \cite{chinaei2011, png2011bayesian, young2016}.
-Recently there has been much interest in modeling the dialogue manager of these systems this way, although estimating their dynamics is quite a difficult task, and so it is desirable to automate this process.
-As an example, in \cite{chinaei2011}, the \acrshort{acr:pomdp}'s components (i.e., state and observation space, and transition and emission probabilities) based on a dataset of human-to-human dialogues.
+Recently, there has been much interest in modeling the dialogue manager of these systems this way, although estimating their dynamics is quite a difficult task, and so it is desirable to automate this process.
+As an example, in \cite{chinaei2011}, the \acrshort{acr:pomdp}'s components (i.e., state space, observation space, transition and emission probabilities) are learned based on a dataset of human-to-human dialogues.
 For such domains, our framework may prove useful in learning a probabilistic model that maximizes the performance of the system.
 For other potential application domains, one may want to consult \cite{cassandra1998spa} which presents a variety of applications for \acrshortpl{acr:pomdp} which may potentially be learned from data.
 
-Another topic we briefly touched upon in \autoref{ch:background} is \textit{automated model checking}, which encompass techniques for formal model verification through temporal logic formulas.
+Another topic we briefly touched upon in \autoref{ch:background} is \textit{automated model checking}, which encompasses techniques for formal model verification through temporal logic formulas.
 Examples can be found in \cite{bhatia2010sampling, lacerda2015optimal} where \acrshort{acr:ltl} formulas are used to formally express temporal goals and produce a `product-\acrshort{acr:mdp}' to derive plans which (partially) satisfy these formulas.
 An interesting direction for future work would be to investigate the possibilities of combining such model checking techniques with our framework.
 That is, combining the methods from automated model checking and model learning through our framework, one may be able to develop a framework that optimizes for an \acrshort{acr:mdp} which is best capable of satisfying a collection of \acrshort{acr:ltl} formulas.

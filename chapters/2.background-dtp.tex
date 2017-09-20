@@ -455,8 +455,10 @@ An alternative approach, known as \textit{modified policy iteration}, is to solv
 This step which is known as \textit{policy evaluation} is followed by a \textit{policy improvement} step in which the policy is greedily updated based on the latest value function $V_{\arr{\pi}}$.
 This process is repeated until no improvements are possible and the policy stops changing.
 
-Compared to \acrshort{acr:vi} the algorithm always converges in a finite number of iterations. However, solving the set of linear equations in each iteration is a more time-costly operation, especially for large state spaces.
-That is, in \acrshort{acr:vi} each iteration takes $O(\lvert\mathcal{S}\rvert^2\cdot\lvert A\rvert)$ time, although one must note that the number of iterations is not finite, while \acrshort{acr:pi} finds an optimum in a finite number.
+Solving the set of linear equations in each iteration is a time-costly operation, especially for large state spaces, in comparison to the $O(\lvert\mathcal{S}\rvert^2\cdot\lvert A\rvert)$ time required for an iteration of \acrshort{acr:vi}.
+The main advantage of \acrshort{acr:pi} can however be that for a finite space the algorithm converges in a finite number of steps when there is no more strict improvement, because only a finite number of stationary policies exist, while in \acrshort{acr:vi} the convergence depends on the threshold.
+%In \acrshort{acr:vi} the convergence, however, depends on a threshold, which may not have been reached while an optimal policy was already found.
+%That is, in \acrshort{acr:vi} each iteration takes $O(\lvert\mathcal{S}\rvert^2\cdot\lvert A\rvert)$ time, although one must note that the number of iterations is not finite, while \acrshort{acr:pi} finds an optimum in a finite number.
 
 \paragraph{Backwards Induction}
 \label{sec:backwards-induction}
