@@ -749,10 +749,10 @@ If the agent gets stuck in the same state $s_f$ a clustering with higher resolut
 For our implementation of this proof-of-concept solution, the mobile robot executes and gathers new experience in a simulation environment.
 In gathering new experience, the mobile robot stores the observations (i.e., odometric readings) it makes and the state $s'$ it ends up in after executing an action $a$ from these observations.
 
-To evaluate the approach, we take the performance-maximizing \acrshort{acr:mdp} $\mathcal{M}$ of $540$ states learned in the second phase of our last experiment (i.e., see \autoref{fig:exp16}) for the \texttt{uol\_bl} environment.
+To evaluate the approach, we take the \acrshort{acr:mdp} $\mathcal{M}$ learned in the second phase of our last experiment (i.e., see \autoref{fig:exp16}) for the \texttt{uol\_bl} environment.
 Then, a new task is presented, which requires the robot to move from the corner of a room in the environment, as shown in \autoref{fig:uol_bl_tuning_1}, to a location in the main hall outside the room.
 The problem, is that the resolution in the learned state space $\mathcal{S}$ of $\mathcal{M}$ for this area is too low, as shown in \autoref{fig:uol_bl_tuning_2}, caused by the limited execution traces gathered for this area in the set $E$ used for learning the model.
-As a result, there is a considerable chance the robot gets stuck in the state labeled $s_f \in \mathcal{S}$ from its starting location.
+As a result, there is a considerable chance the robot gets stuck in the state labeled~$s_f \in \mathcal{S}$ from its starting location.
 
 To take care of this, after the observation is made that he robot got stuck, the algorithm makes the robot gather new data about the transitions possible from the different locations within the state $s_f$ in which it got stuck.
 Based on this data, the algorithm clusters the data to effectively split the state in two, well-nigh as shown in \autoref{fig:uol_bl_tuning_2}.
