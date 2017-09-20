@@ -54,6 +54,10 @@ The obtained results are compared to those that emerge from the traditional Baum
 Similarly, an adaptation of the Baum-Welch algorithm is applied in \cite{koenig1996unsupervised} to learn \acrshortpl{acr:pomdp} which exploits prior knowledge of map symmetry and does not adjust probabilities that are assumed to be approximately correct since the sensor and actuator models are expected to be similar in different environments.
 In this way the amount of required training data is restricted and updating the model happens more selectively and efficiently, although it demands the need for handcrafting an initial topological model and defining constraints on the model structure.
 
+As opposed to the related work described in this section, in our approach we aim to avoid any assumptions or constraints on the \acrshort{acr:mdp} model parameters.
+For instance, in the experiments presented in \autoref{ch:experimental-results}, we obtain the state space in exactly the same way as in \cite{shatkay1997learning}, although avoid the assumption that the size is known.
+Instead, we choose to learn the most appropriate choice for this hyperparameter with which the best performance in the execution of the system's tasks can be obtained.
+
 % Explain drawbacks of Baum-Welch for planning: e.g. local maxima
 % https://www.google.nl/url?sa=t&rct=j&q=&esrc=s&source=web&cd=9&cad=rja&uact=8&ved=0ahUKEwiZpvCGmcLTAhXESBQKHTq7Bg0QFghiMAg&url=http%3A%2F%2Fciteseerx.ist.psu.edu%2Fviewdoc%2Fdownload%3Fdoi%3D10.1.1.57.4643%26rep%3Drep1%26type%3Dps&usg=AFQjCNH-b5YR7gExaSuktykOrezijr8kZw&sig2=f4NrRWV0O8dSokuqWWCP7Q
 % @techreport{shatkay1997learning,
@@ -68,6 +72,8 @@ In this way the amount of required training data is restricted and updating the 
 
 A completely different class of algorithms is based on the merging of states to acquire probabilistic models.
 The type of algorithms that are considered here are based on a method called \textit{Best-First Model Merging} which was first proposed by \citeauthor{stolcke1994best} in \cite{stolcke1994best} to learn \acrshortpl{acr:hmm} for the purpose of speech recognition.
+
+\newpage
 
 Given a training set $\mathcal{O}$ of i.i.d. observation sequences, this algorithm starts from an initial \acrshort{acr:hmm} whose state space consists of separate states for each time-step in the sequences.
 The entries of the transition and emission matrix are thus initialized with probability one for each of the transitions between subsequent states and each percept in the observation sequence respectively.
@@ -97,6 +103,9 @@ In this approach the merging criterion is changed such that in each iteration th
 The pseudocode of this method is shown in \autoref{alg:trajectory-clustering} where the similarity of states is thus defined by the length of the common trajectories from and towards the states. 
 In case the observations have an underlying metric space, one can choose to apply algorithms like $k$-Means clustering to cluster the most similar time-states, or alternatively turn to clustering methods that work on similarity matrices.
 
+Although a simply likelihood maximization approach for \acrshortpl{acr:mdp} has been followed in our experiments presented in \autoref{ch:experimental-results}, the algorithms described here may prove useful for potential future work.
+Especially when we want to learn state spaces for \acrshortpl{acr:pomdp} for our application domain, the latter algorithm seen in \cite{nikovski1999learning} appears better capable of dealing with perceptual aliasing that is often encountered in real-world systems.
+Although, when the state space of \acrshortpl{acr:pomdp} is not learned from the available data, employing the Baum-Welch algorithm is probably a more attractive alternative, considering the state merging algorithms are computationally quite expensive.
 
 %One of the main issues faced in learning \acrshort{acr:mdp} models is that of deciding on the state space, while one typically does not know the size of the true state space of the real-world process that generated the training data.
 %In fact this state space might even have been continuous, while the state space of the model is typically discrete.
@@ -152,8 +161,6 @@ When the system under consideration encompasses considerable structure and its d
 The \acrshort{acr:sdm} problems involving these type of systems are those that qualify for applying model-based \acrshort{acr:rl} in which an initial \acrshort{acr:mdp} could be obtained by offline model learning.
 However, one should note that model-free \acrshort{acr:rl} approaches are better suited for learning from scratch (i.e., \acrshort{acr:sdm} problems with very limited prior knowledge and data), as model-based \acrshort{acr:rl} approaches tend to suffer from model bias \cite{deisenroth2011pilco}.
 That is, model-based \acrshort{acr:rl} makes the inherent assumption that the underlying model sufficiently accurately reflects the real-world environment.
-
-\newpage
 
 To improve the estimations of the model parameters in model-based \acrshort{acr:rl}, the algorithms demand for efficient exploration, for which various approaches exist that are optimistic in face of uncertainty.
 An example is the $E^3$ algorithm \cite{kearns2002near} which explicitly chooses between exploiting the known part of the \acrshort{acr:mdp} and optimally reaching the part that needs to be explored. 
