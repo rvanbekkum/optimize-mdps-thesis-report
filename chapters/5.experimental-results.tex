@@ -480,6 +480,7 @@ As shown in \autoref{tab:configurations-base}, experiments have been performed o
 		\label{fig:exp3}
 	\end{subfigure}
 	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for different dataset sizes. The plots correspond to 20 iterations of the base framework on the \texttt{tum\_kitchen} environment with $\beta = 0.0$, $k$-Means clustering and \acrshort{acr:mei} acquisition function used.}
+	\label{fig:plots_tum_base_data}
 \end{figure}
 
 \subsubsection{Tum Kitchen Environment}
@@ -518,6 +519,7 @@ This clearly shows that sufficient data is needed to avoid overfitting and obtai
 		\label{fig:exp5_observations}
 	\end{subfigure}
 	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying acquisition functions. The plots correspond to 20 iterations of the base framework on the \texttt{tum\_kitchen} environment with $\beta = 0.0$ and $k$-Means~clustering used.}
+	\label{fig:plots_tum_base_acq}
 \end{figure}
 
 \begin{figure}[t!]
@@ -536,6 +538,7 @@ This clearly shows that sufficient data is needed to avoid overfitting and obtai
 		\label{fig:exp7}
 	\end{subfigure}
 	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying acquisition functions. The plots correspond to 20 iterations of the base framework on the \texttt{tum\_kitchen} environment with $\beta = 0.0$ and \acrshort{acr:gmm} used.}
+	\label{fig:plots_tum_base_gmm}
 \end{figure}
 
 Next, let us compare the results depicted in \autoref{fig:exp1}, \autoref{fig:exp4} and \autoref{fig:exp5} where different acquisition functions are used in the \acrshort{acr:bo} framework (i.e., \acrshort{acr:mei}, \acrshort{acr:gp-ucb} and \acrshort{acr:mei-ps} respectively).
@@ -551,7 +554,7 @@ We observe that again for this algorithm, the optima are found within the same a
 The main thing we observe is that, the observed model values $V_\mathcal{M}$ is overall lower with the \acrshort{acr:gmm} employed in comparison to the values observed with $k$-Means employed.
 Therefore, employing the $k$-Means appears more suitable to learn the state space for \acrshortpl{acr:mdp} in our application of mobile robot navigation.
 
-\begin{figure}[t]
+\begin{figure}[!t]
 	\centering
 	\captionsetup{font=small}
 	\captionsetup[subfigure]{font=footnotesize}
@@ -567,29 +570,7 @@ Therefore, employing the $k$-Means appears more suitable to learn the state spac
 		\label{fig:exp9}
 	\end{subfigure}
 	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying settings of the $\beta$ factor. The plots correspond to 20 iterations of the base framework on the \texttt{tum\_kitchen} environment with $k$-Means clustering and \acrshort{acr:mei} acquisition used.}
-\end{figure}
-
-\begin{figure}[t!]
-	\centering
-	\captionsetup{font=small}
-	\captionsetup[subfigure]{font=footnotesize}
-	\captionsetup[subfigure]{justification=centering}
-	\begin{subfigure}[t]{0.495\textwidth}
-		\includegraphics[width=\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ei}
-		\caption{Experiment 10: \acrshort{acr:mei} acquisition function used}
-		\label{fig:exp10}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.495\textwidth}
-		\includegraphics[width=\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ucb}
-		\caption{Experiment 11: \acrshort{acr:gp-ucb} acquisition function used}
-		\label{fig:exp11}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.495\textwidth}
-		\includegraphics[width=\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_eips}
-		\caption{Experiment 12: \acrshort{acr:mei-ps} acquisition function used}
-		\label{fig:exp12}
-	\end{subfigure}
-	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying acquisition functions. The plots correspond to 20 iterations of the base framework on the \texttt{uol\_bl} environment with $\beta = 0.0$ and $k$-Means~clustering used.}
+	\label{fig:plots_tum_base_weight}
 \end{figure}
 	
 Finally, we look at the influence of the weight factor $\beta$ for the small environment considering the plots of \autoref{fig:exp1}, \autoref{fig:exp8} and \autoref{fig:exp9}.
@@ -604,9 +585,72 @@ One can observe the optima found in each of these experiments lie close together
 The experiment that employs the \acrshort{acr:mei} function, however, appears ineffective to find the same global maximum in multiple repetitions.
 All in all, the \acrshort{acr:gp-ucb} appears most effective in sampling parameter settings that result in \acrshortpl{acr:mdp} yielding high performance.
 
+\afterpage{
+\begin{figure}[!t]
+	\centering
+	\captionsetup{font=small}
+	\captionsetup[subfigure]{font=footnotesize}
+	\captionsetup[subfigure]{justification=centering}
+	\begin{subfigure}[t]{0.65\textwidth}
+		\includegraphics[width=\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ei}
+		\caption{Experiment 10: \acrshort{acr:mei} acquisition function used}
+		\label{fig:exp10}
+	\end{subfigure}
+	\bigskip
+	
+	\begin{subfigure}[t]{0.65\textwidth}
+		\includegraphics[width=\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ucb}
+		\caption{Experiment 11: \acrshort{acr:gp-ucb} acquisition function used}
+		\label{fig:exp11}
+	\end{subfigure}
+	\bigskip
+	
+	\begin{subfigure}[t]{0.65\textwidth}
+		\includegraphics[width=\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_eips}
+		\caption{Experiment 12: \acrshort{acr:mei-ps} acquisition function used}
+		\label{fig:exp12}
+	\end{subfigure}
+	\bigskip
+	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying acquisition functions. The plots correspond to the \texttt{uol\_bl} environment with $\beta = 0.0$ and $k$-Means~clustering~used.}
+	\label{fig:plots_uol_base_acq}
+\end{figure}
+\clearpage
+}
 
+\newpage
 
-
+\begin{figure}[!t]
+	\centering
+	\captionsetup{font=small}
+	\captionsetup[subfigure]{font=footnotesize}
+	\captionsetup[subfigure]{justification=centering}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ei}
+		\caption{Experiment 13: \acrshort{acr:mei} acquisition function used in first phase}
+		\label{fig:exp13}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ucb}
+		\caption{Experiment 14: \acrshort{acr:gp-ucb} acquisition function used in first phase}
+		\label{fig:exp14}
+	\end{subfigure}
+	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying acquisition functions. The plots correspond to 20 iterations of the multi-phase framework on the \texttt{tum\_kitchen} environment with $\beta = 0.0$ and $k$-Means~clustering~used.}
+	\label{fig:plots_tum_multi_acq}
+	
+	\null
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ei}
+		\caption{Experiment 15: \acrshort{acr:mei} acquisition function used in first phase}
+		\label{fig:exp15}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ucb}
+		\caption{Experiment 16: \acrshort{acr:gp-ucb} acquisition function used in first phase}
+		\label{fig:exp16}
+	\end{subfigure}
+	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying acquisition functions. The plots correspond to 30 iterations of the multi-phase framework on the \texttt{uol\_bl} environment with $\beta = 0.0$ and $k$-Means~clustering~used.}
+	\label{fig:plots_uol_multi_acq}
+\end{figure}
 
 \subsection{Multi-Phase Framework}
 \label{sec:multiphase-framework-results}
@@ -625,10 +669,6 @@ The third phase of the multi-phase framework will be covered separately, as it i
 First, we consider the experiments that apply the multi-phase framework to find an \acrshort{acr:mdp} for path planning in the \texttt{tum\_kitchen} environment.
 In \autoref{fig:exp13} and \autoref{fig:exp14} one can see that there appears to be a correspondence between the maxima of the posterior of the first and second phase.
 Particularly, in \autoref{fig:exp14} we see a direct correspondence of the global maximums, so that a proper model is found in the first few iterations of the optimization process.
-
-
-
-
 
 \subsubsection{UOL BL Environment}
 Next, we consider the experiments that apply the multi-phase framework to the \texttt{uol\_bl} environment, for which the results are shown in \autoref{fig:exp15} and \autoref{fig:exp16}.
