@@ -454,10 +454,10 @@ Each of the figures in these sections present plots for each of the experiments,
 First off, we present and evaluate the results obtained from the experiments on the base framework.
 As shown in \autoref{tab:configurations-base}, experiments have been performed on two different simulation environments: the small \texttt{tum\_kitchen} environment and the, in comparison, large \texttt{uol\_bl} environment, for which the results are discussed in the following sections.
 
-\begin{figure}
+\begin{figure}[t]
 	\centering
-		\captionsetup{font=small}
-		\captionsetup[subfigure]{font=footnotesize}
+	\captionsetup{font=small}
+	\captionsetup[subfigure]{font=footnotesize}
 	\captionsetup[subfigure]{justification=centering}
 	\begin{subfigure}[t]{0.495\textwidth}
 		\includegraphics[width=\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ei}
@@ -479,7 +479,7 @@ As shown in \autoref{tab:configurations-base}, experiments have been performed o
 		\caption{Experiment 3: 50\% of the dataset used}
 		\label{fig:exp3}
 	\end{subfigure}
-	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for different dataset sizes. The plots correspond to 20 iterations of the base framework on the \texttt{tum\_kitchen} environment with $\beta = 0.0$, $k$-Means and \acrshort{acr:mei} acquisition function used.}
+	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for different dataset sizes. The plots correspond to 20 iterations of the base framework on the \texttt{tum\_kitchen} environment with $\beta = 0.0$, $k$-Means clustering and \acrshort{acr:mei} acquisition function used.}
 \end{figure}
 
 \subsubsection{Tum Kitchen Environment}
@@ -491,6 +491,52 @@ At the other hand, \autoref{fig:exp2} shows that with 75\% of the data the disti
 This clearly shows that sufficient data is needed to avoid overfitting and obtaining more stable results with discernible performance measures.
 
 %What might explain this, is that this particular section of the dataset adds data based on which \acrshortpl{acr:mdp} with large state spaces overfit their corresponding transition function.
+
+\begin{figure}[t]
+	\centering
+	\captionsetup{font=small}
+	\captionsetup[subfigure]{font=footnotesize}
+	\captionsetup[subfigure]{justification=centering}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ucb}
+		\caption{Experiment 4: \acrshort{acr:gp-ucb} acquisition function used}
+		\label{fig:exp4}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ucb_maximum}
+		\caption{Experiment 4: Observations over iterations}
+		\label{fig:exp4_observations}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_eips}
+		\caption{Experiment 5: \acrshort{acr:mei-ps} acquisition function used}
+		\label{fig:exp5}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_eips_maximum}
+		\caption{Experiment 5: Observations over iterations}
+		\label{fig:exp5_observations}
+	\end{subfigure}
+	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying acquisition functions. The plots correspond to 20 iterations of the base framework on the \texttt{tum\_kitchen} environment with $\beta = 0.0$ and $k$-Means~clustering used.}
+\end{figure}
+
+\begin{figure}[t!]
+	\centering
+	\captionsetup{font=small}
+	\captionsetup[subfigure]{font=footnotesize}
+	\captionsetup[subfigure]{justification=centering}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ei}
+		\caption{Experiment 6: \acrshort{acr:mei} acquisition function used}
+		\label{fig:exp6}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_base/plot_b_00__alg_gmm_pct_100_acq_ucb}
+		\caption{Experiment 7: \acrshort{acr:gp-ucb} acquisition function used}
+		\label{fig:exp7}
+	\end{subfigure}
+	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying acquisition functions. The plots correspond to 20 iterations of the base framework on the \texttt{tum\_kitchen} environment with $\beta = 0.0$ and \acrshort{acr:gmm} used.}
+\end{figure}
 
 Next, let us compare the results depicted in \autoref{fig:exp1}, \autoref{fig:exp4} and \autoref{fig:exp5} where different acquisition functions are used in the \acrshort{acr:bo} framework (i.e., \acrshort{acr:mei}, \acrshort{acr:gp-ucb} and \acrshort{acr:mei-ps} respectively).
 First of all, we see that in each of these experiments a global maximum is found in the same area of the parameter space.
@@ -505,6 +551,46 @@ We observe that again for this algorithm, the optima are found within the same a
 The main thing we observe is that, the observed model values $V_\mathcal{M}$ is overall lower with the \acrshort{acr:gmm} employed in comparison to the values observed with $k$-Means employed.
 Therefore, employing the $k$-Means appears more suitable to learn the state space for \acrshortpl{acr:mdp} in our application of mobile robot navigation.
 
+\begin{figure}[t]
+	\centering
+	\captionsetup{font=small}
+	\captionsetup[subfigure]{font=footnotesize}
+	\captionsetup[subfigure]{justification=centering}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_base/plot_b_025__alg_kmeans_pct_100_acq_ei}
+		\caption{Experiment 8: Weight factor $\beta = 0.25$}
+		\label{fig:exp8}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/tum_base/plot_b_05__alg_kmeans_pct_100_acq_ei}
+		\caption{Experiment 9: Weight factor $\beta = 0.5$}
+		\label{fig:exp9}
+	\end{subfigure}
+	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying settings of the $\beta$ factor. The plots correspond to 20 iterations of the base framework on the \texttt{tum\_kitchen} environment with $k$-Means clustering and \acrshort{acr:mei} acquisition used.}
+\end{figure}
+
+\begin{figure}[t!]
+	\centering
+	\captionsetup{font=small}
+	\captionsetup[subfigure]{font=footnotesize}
+	\captionsetup[subfigure]{justification=centering}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ei}
+		\caption{Experiment 10: \acrshort{acr:mei} acquisition function used}
+		\label{fig:exp10}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_ucb}
+		\caption{Experiment 11: \acrshort{acr:gp-ucb} acquisition function used}
+		\label{fig:exp11}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.495\textwidth}
+		\includegraphics[width=\textwidth]{plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_eips}
+		\caption{Experiment 12: \acrshort{acr:mei-ps} acquisition function used}
+		\label{fig:exp12}
+	\end{subfigure}
+	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying acquisition functions. The plots correspond to 20 iterations of the base framework on the \texttt{uol\_bl} environment with $\beta = 0.0$ and $k$-Means~clustering used.}
+\end{figure}
 	
 Finally, we look at the influence of the weight factor $\beta$ for the small environment considering the plots of \autoref{fig:exp1}, \autoref{fig:exp8} and \autoref{fig:exp9}.
 In this particular situation, one might benefit from weighing $V_\mathit{DTP}$ in the model value, as it could make a clearer distinction between values for different settings of $\theta$, because it cancels out part of the uncertainty from the simulations.
