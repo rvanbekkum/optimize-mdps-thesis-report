@@ -540,9 +540,11 @@ This clearly shows that sufficient data is needed to avoid overfitting and obtai
 		\caption{Experiment 7: \acrshort{acr:gp-ucb} acquisition function used}
 		\label{fig:exp7}
 	\end{subfigure}
-	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying acquisition functions. The plots correspond to 20 iterations of the base framework on the \texttt{tum\_kitchen} environment with $\beta = 0.0$ and \acrshort{acr:gmm} used.}
+	\caption{Plots showing a comparison of the resulting \acrshort{acr:gp} posterior for varying acquisition functions. The plots correspond to 20 iterations of the base framework on the \texttt{tum\_kitchen} environment with $\beta = 0.0$ and \acrshort{acr:gmm}~used.}
 	\label{fig:plots_tum_base_gmm}
 \end{figure}
+
+\newpage
 
 Next, let us compare the results depicted in \autoref{fig:exp1} and \autoref{fig:plots_tum_base_acq} where different acquisition functions are used in the \acrshort{acr:bo} framework (i.e., \acrshort{acr:mei}, \acrshort{acr:gp-ucb} and \acrshort{acr:mei-ps} respectively).
 In addition, we present some plots that show how the different acquisition function samples new observations in \autoref{fig:exp1_observations}, \autoref{fig:exp4_observations} and \autoref{fig:exp5_observations}.
@@ -557,7 +559,7 @@ The benefits of the timing \acrshort{acr:gp} in the \acrshort{acr:mei-ps} is onl
 Then, in \autoref{fig:exp6} and \autoref{fig:exp7} we see the plots for the experiments in which instead \acrshortpl{acr:gmm} are used for learning state spaces for our \acrshortpl{acr:mdp}.
 We observe that again for this algorithm, the optima are found within the same areas of the parameter space for both experiments with different acquisition functions.
 The main thing we observe is that, the observed model values $V_\mathcal{M}$ is overall lower with the \acrshort{acr:gmm} employed in comparison to the values observed with $k$-Means employed.
-Therefore, employing the $k$-Means appears more suitable to learn the state space for \acrshortpl{acr:mdp} in our application of mobile robot navigation.
+Therefore, employing $k$-Means appears more suitable to learn the state space for \acrshortpl{acr:mdp} in our application of mobile robot navigation.
 
 \begin{figure}[!t]
 	\centering
@@ -580,15 +582,15 @@ Therefore, employing the $k$-Means appears more suitable to learn the state spac
 	
 Finally, we look at the influence of the weight factor $\beta$ for the small environment considering the plots of \autoref{fig:exp1}, \autoref{fig:exp8} and \autoref{fig:exp9}.
 In this particular situation, one might benefit from weighing $V_\mathit{DTP}$ in the model value, as it could make a clearer distinction between values for different settings of $\theta$, because it cancels out part of the uncertainty from the simulations.
-The intuition of why this works well for this particular environment can be elucidated by \autoref{fig:exp12} and \autoref{fig:exp13}, which show that the maxima of the $V_\mathit{DTP}$ and $V_\mathit{SIM}$ measures lie close together.
+The intuition of why this works well for this particular environment can be elucidated by \autoref{fig:plots_tum_multi_acq}, which shows that the maxima of the $V_\mathit{DTP}$ and $V_\mathit{SIM}$ measures lie close together.
 However, setting $\beta > 0$ might also lead to a bias in other environments, which is that, although $V_\mathit{DTP}$ may have high value, computed policies may not work well in the simulations or the real world.
 
 \subsubsection{UOL BL Environment}
 
-Let us next consider the results for the large \texttt{uol\_bl} environment. In \Crefrange{fig:exp10}{fig:exp12} plots are shown for the experiments in which different acquisitions were used in the \acrshort{acr:bo}.
+Let us next consider the results for the large \texttt{uol\_bl} environment. In \autoref{fig:plots_uol_base_acq} plots are shown for the experiments in which different acquisitions were used in the \acrshort{acr:bo}.
 One can observe the optima found in each of these experiments lie close together.
 The experiment that employs the \acrshort{acr:mei} function, however, appears ineffective to find the same global maximum in multiple repetitions.
-All in all, the \acrshort{acr:gp-ucb} appears most effective in sampling parameter settings that result in \acrshortpl{acr:mdp} yielding high performance.
+All in all, the \acrshort{acr:gp-ucb} and especially the \acrshort{acr:mei-ps} function appear most effective in sampling parameter settings that result in \acrshortpl{acr:mdp} yielding high performance.
 
 \afterpage{
 \begin{figure}[!t]
@@ -657,6 +659,18 @@ All in all, the \acrshort{acr:gp-ucb} appears most effective in sampling paramet
 	\label{fig:plots_uol_multi_acq}
 \end{figure}
 
+\begin{table}[t!]
+	\centering
+	\caption{Overview of the time expenses of a single iteration for model learning, planning and simulation with the algorithms used in the experiments. The time expenses are presented as ranges for the smallest and largest \acrshortpl{acr:mdp} learned for the environment.}
+	\label{tab:framework-time-expenses}
+	\begin{tabular}{|l|r|r|r|}
+		\hline
+		\textbf{Environment}    & \textbf{Model Learning Time (\si{\second})} & \textbf{Planning Time (\si{\second})} & \textbf{Simulation Time (\si{\second})} \\ \hline
+		\texttt{tum\_kitchen} & \numrange[range-phrase = --]{0.2}{15.0}       & \numrange[range-phrase = --]{0.01}{0.5} & \numrange[range-phrase = --]{110}{200}                         \\ \hline
+		\texttt{uol\_bl}      & \numrange[range-phrase = --]{1.0}{60.0}       & \numrange[range-phrase = --]{0.05}{5.0}   & \numrange[range-phrase = --]{100}{700}                        \\ \hline
+	\end{tabular}
+\end{table}
+
 \subsection{Multi-Phase Framework}
 \label{sec:multiphase-framework-results}
 
@@ -664,13 +678,13 @@ All in all, the \acrshort{acr:gp-ucb} appears most effective in sampling paramet
 Next, we present and evaluate our results obtained in the experiments on the multi-phase framework, for which the configurations are presented in \autoref{tab:configurations-multi}.
 In these experiments, first an optimization takes place of the model value computed solely from the value functions for the tasks the system is expected perform.
 Only computing the value functions for \acrshortpl{acr:mdp} as is done in this first phase is relatively time-cheap (i.e., a matter of minutes) in comparison to performing time-costly simulations (i.e., taking multiple hours) as is done in the second phase.
+In \autoref{tab:framework-time-expenses} we present an overview to give an idea of the difference in time expenses between learning \acrshort{acr:mdp}, running \acrshort{acr:vi} to compute plans, and running simulations in the Morse simulator.
 In the plots in \Crefrange{fig:exp13}{fig:exp16}, the prediction mean resulting from this first phase is depicted by a dotted line.
 In the second phase, the posterior from the first phase is utilized to steer the acquisition of the first few samples as described in \autoref{sec:multi-phase-framework}.
-The \acrshort{acr:bo} in both of these phases is preceded by collecting a set of $5$ random samples.
-Our hypothesis is that using the \acrshort{acr:gp-ucb} acquisition function in the first phase, may result in a better contribution of the expected improvement to the acquisition in the second phase.
+The~\acrshort{acr:bo} in both of these phases is preceded by collecting a set of $5$ random samples.
+%Our hypothesis is that using the \acrshort{acr:gp-ucb} acquisition function in the first phase, may result in a better coverage of the parameter space of the expected improvement to the acquisition in the second phase.
 The third phase of the multi-phase framework will be covered separately, as it is mostly independent of the two prior phases, being concerned with fine-tuning a specific \acrshort{acr:mdp} model rather than searching for one.
 
-\newpage
 
 \subsubsection{Tum Kitchen Environment}
 First, we consider the experiments that apply the multi-phase framework to find an \acrshort{acr:mdp} for path planning in the \texttt{tum\_kitchen} environment.
@@ -681,6 +695,11 @@ Particularly, in \autoref{fig:exp14} we see a direct correspondence of the globa
 Next, we consider the experiments that apply the multi-phase framework to the \texttt{uol\_bl} environment, for which the results are shown in \autoref{fig:exp15} and \autoref{fig:exp16}.
 As opposed to the experiments on the \texttt{tum\_kitchen} environment, the prediction mean from the first phase has a less evident correspondence with the maxima of the posterior of the second phase.
 However, this does not prevent the \acrshort{acr:bo} of eventually finding a maximum for both of these experiments in the same area of the parameter space.
+One thing that should be noted is that for this environment there seems to be significantly more noise in the observations than for the observations made with the smaller \texttt{tum\_kitchen} environment.
+We identified that one aspect that influences the amount of noise is the size of the dataset for model learning, having observed that with only half of our data significantly more noise could be observed.
+Certainly we cannot exclude other causes for these highly varying observations, as part of it is naturally caused by the uncertain dynamics being simulated, such as the robot slipping.
+It could also be that assessing the performance based on a larger set of tasks or implementing a mechanism for detecting outliers may result in more stable observations.
+
 
 %\vspace{12pt}
 %\noindent\minibox[frame]{\textbf{Note:} For the final version of the report, I also plan to include a comparison of the time costs \\of the base framework and the multi-phase framework.}

@@ -105,7 +105,7 @@ In case the observations have an underlying metric space, one can choose to appl
 
 Although a simply likelihood maximization approach for \acrshortpl{acr:mdp} has been followed in our experiments presented in \autoref{ch:experimental-results}, the algorithms described here may prove useful for potential future work.
 Especially when we want to learn state spaces for \acrshortpl{acr:pomdp} for our application domain, the latter algorithm seen in \cite{nikovski1999learning} appears better capable of dealing with perceptual aliasing that is often encountered in real-world systems.
-Although, when the state space of \acrshortpl{acr:pomdp} is not learned from the available data, employing the Baum-Welch algorithm is probably a more attractive alternative, considering the state merging algorithms are computationally quite expensive.
+However, when the state space of \acrshortpl{acr:pomdp} is not learned from the available data, employing the Baum-Welch algorithm is probably a more attractive alternative, considering the state merging algorithms are computationally quite expensive.
 
 %One of the main issues faced in learning \acrshort{acr:mdp} models is that of deciding on the state space, while one typically does not know the size of the true state space of the real-world process that generated the training data.
 %In fact this state space might even have been continuous, while the state space of the model is typically discrete.
@@ -170,7 +170,7 @@ Another algorithm is the $R$-Max algorithm \cite{Brafman2002}, which has a built
 Another issue that should be taken care of in model-based \acrshort{acr:rl} is when and how to update the \acrshort{acr:mdp} and its plan based on acquired experience. A simple approach would be to update the plan on each model update applying a well-known algorithm like \acrshort{acr:vi}, although this is computationally expensive.
 To gain efficiency, frameworks like \textsc{RTMBA} \cite{hester2012rtmba} or \textsc{DYNA} and its various extensions \cite{silver2008sample}, aim to update their plans more intelligently (e.g., by updating value functions only for a subset of state-action pairs).
 A different approach could be to limit exhaustive exploration of states in the first place, exemplified by the \textsc{RL-DT} algorithm proposed in \cite{hester2010generalized}, which generalizes the effects of actions across states.
-This however, is particularly useful for these domains that require sample-efficient learning and for which the available time for exploration is limited.
+This, however, is particularly useful for these domains that require sample-efficient learning and for which the available time for exploration is limited.
 
 \subsection{Active Reinforcement Learning}
 \label{sec:active-reinforcement-learning}

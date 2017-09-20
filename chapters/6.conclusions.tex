@@ -18,7 +18,7 @@ Although algorithms that employ the \acrshort{acr:bo} framework for \acrshort{ac
 The model value $V_\mathcal{M}$ of an \acrshort{acr:mdp}, used as a relative performance measure in the optimization, is assessed based on computed value functions and simulations of the tasks the system is expected to perform.
 
 Additionally, we extended our proposed solution by exploiting the lower cost of computing a value function in comparison to performing time-expensive simulations, to define our \textit{multi-phase optimization framework}.
-That is, we define a first phase in which a \acrshort{acr:bo} is performed to maximize the average expected value for the \acrshort{acr:mdp} for a set of tasks to perform.
+That is, we define a first phase in which \acrshort{acr:bo} is performed to maximize the average expected value for the \acrshort{acr:mdp} for a set of tasks to perform.
 The posterior resulting from this phase is then used to steer the acquisition in a second optimization phase, in which the performance in simulations over a set of tasks is being optimized.
 
 Then, finally, we present a solution to further fine-tune the parameters of the \acrshort{acr:mdp} resulting from this optimization.
@@ -84,12 +84,12 @@ As we have seen in our experiments, \acrshort{acr:bo} could effectively be emplo
 \vspace{12pt}
 
 This research question has been addressed by the multi-phase framework proposed in \autoref{sec:multi-phase-framework}.
-In the first phase a \acrshort{acr:bo} for an \acrshort{acr:mdp} with the model value based solely on the value functions for the set of tasks over which to evaluate the performance.
+In the first phase \acrshort{acr:bo} for an \acrshort{acr:mdp} with the model value based solely on the value functions for the set of tasks over which to evaluate the performance.
 The resulting posterior is then used in the second phase to steer the acquisition of the first few samples.
 In our experiments we have seen that it is possible to use the first phase to successfully steer the optimization in the second phase towards a global maximizer.
 \vspace{12pt}
 
-Putting our findings for our sub-questions together, we attempt to provide an answer to our main research question reiterated below.
+Putting our findings for our sub-questions together, we provide an answer to our main research question reiterated below.
 
 \vspace{12pt}
 \noindent%\fbox{\parbox{\textwidth}{ %Uncomment this for boxes
@@ -114,10 +114,12 @@ To account for these scenarios, first off, one could choose to periodically expl
 An alternative is to employ the learned \acrshort{acr:mdp} in one of the model-based \acrshort{acr:rl} methods seen in \autoref{ch:problem-related-work}, which automatically balance exploration and exploitation.
 
 Another issue that might be interesting to address in future work, is to identify whether or not sufficient data is available for learning an appropriate \acrshort{acr:mdp} model.
-Although, in our experiments we were able to observe large noise and overfitting on smaller datasets, still the problem exists of how to assess what dataset size is appropriate.
+Although in our experiments we were able to observe a high level of noise and overfitting on smaller datasets, still the problem exists of how to assess what dataset size is appropriate and whether or not the dataset covers the complete environment.
 
 Considering the optimization aspect of the presented framework, one of the issues that were identified, is that selecting the acquisition function and the hyperparameters of the \acrshort{acr:gp} prior for \acrshort{acr:bo} is not a trivial task.
 For future work, we recommend the use of the portfolio allocation \cite{Hoffman2011, shahriari2016taking} and integrated acquisition \cite{snoek2012practical} functions, discussed in \autoref{ch:background}, which ease the above task as they reduce the number of choices that need to be made.
+
+\newpage
 
 Probably one of the most interesting directions for future work is to examine and experiment with model learning through our framework for different domains.
 The main question then is whether or not the application domain under consideration can provide a dataset that describes the dynamics of the system and allows for learning probabilistic models.
