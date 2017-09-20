@@ -605,7 +605,7 @@ V_{\mathcal{M}} = \frac{\sum_{t \in T_\mathcal{M}} V_{\mathit{DTP}, t}}{|T_\math
 \end{equation*}
 where each task $t \in T_\mathcal{M}$ is defined in terms of an initial state and reward function.
 
-Based on the gathered evidence new parameter settings $\theta$ are sampled iteratively, which are those settings for which the utility is the highest in the acquisition function $a_1$ used for \acrshort{acr:bo}.
+Based on the gathered evidence new parameter settings $\theta$ are sampled iteratively, which are those settings for which the utility is the highest in the acquisition function $a_1$ used for~\acrshort{acr:bo}.
 This continues until a stopping condition has been met, where in this first phase stopping after a fixed number of iterations should be acceptable, as the goal is only to narrow down the search space.
 At the end of the first phase, the resulting posterior \acrshort{acr:gp} distribution $\mathit{gp}_1$ is taken and used for the acquisition in the next optimization phase.
 
