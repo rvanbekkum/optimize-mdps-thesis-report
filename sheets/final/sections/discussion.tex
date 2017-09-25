@@ -1,8 +1,28 @@
-\section{Conclusions and Recommendations}
+\section{Discussion}
 
 \begin{frame}
-\frametitle{Conclusions and Recommendations}
+\frametitle{Discussion}
 
-%TODO
+\textbf{\textcolor{tudblue}{Conclusions:}}
+\begin{itemize}
+	\item Handcrafting MDPs for systems with uncertain dynamics is a daunting task, which can be eased through learning algorithms
+	\item Evaluating all hyperparameter settings is a cost-expensive endeavor; using BO one may determine more effectively which settings maximize performance
+	\item Applying BO first with a performance measure that abstracts more from the real world, can aid in steering BO to the hyperparameters that maximize performance in simulations
+\end{itemize}
 
+%\textbf{\textcolor{tudblue}{Future work:}}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Discussion}
+	
+	\textbf{\textcolor{tudblue}{Future work suggestions:}}
+	\begin{itemize}
+		\item Investigate other application domains, e.g., learning POMDPs for dialogue management \cite{chinaei2011}
+		\item Automated Model Checking \cite{lacerda2015optimal}
+		\vspace{20pt}
+		\item Combination with model-based RL techniques {(using offline learned MDPs as blueprints for exploration)}
+		\item Coverage and size of datasets for model learning
+	\end{itemize}
 \end{frame}

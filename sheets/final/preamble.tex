@@ -2,12 +2,24 @@
 \usepackage{beamerTUDelft}
 \usepackage[font=footnotesize]{caption}
 \setbeamercovered{invisible}
+\usepackage{multicol}
 \usefonttheme[onlymath]{serif}
 \usepackage{scrextend}
 \usepackage{copyrightbox}
+\usepackage{transparent}
+
+\newcommand{\semitransp}[2][35]{\color{fg!#1}#2}
 
 \usepackage{tikz}
-\usetikzlibrary{automata,arrows,shapes}
+\usetikzlibrary{automata,arrows,positioning,shapes}
+
+\tikzset{
+	invisible/.style={opacity=0,text opacity=0},
+	visible on/.style={alt={#1{}{invisible}}},
+	alt/.code args={<#1>#2#3}{%
+		\alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+	},
+}
 
 \defbeamertemplate*{title page}{mystyle}[1][]
 {
