@@ -4,10 +4,20 @@
 \frametitle{Discussion}
 
 \textbf{\textcolor{tudblue}{Conclusions:}}
-\begin{itemize}
-	\item Handcrafting MDPs for systems with uncertain dynamics is a daunting task, which can be eased through learning algorithms
-	\item Evaluating all hyperparameter settings is a cost-expensive endeavor; using BO one may determine more effectively which settings maximize performance
-	\item Applying BO first with a performance measure that abstracts more from the real world, can aid in steering BO to the hyperparameters that maximize performance in simulations
+
+\begin{itemize}\setlength\itemsep{1em}
+	\item<1-> Handcrafting MDPs for planning under uncertainty is a daunting task
+	\begin{itemize}
+		\item Given a dataset, learning algorithms can ease the development
+	\end{itemize}
+	\item<2-> Evaluating all hyperparameter settings is a cost-expensive endeavor
+	\begin{itemize}
+		\item Determining appropriate settings more effectively approached by BO
+	\end{itemize}
+	\item<3-> The multi-phase approach can help to find a global maximizer of the performance faster
+	\begin{itemize}
+		\item With the first phase abstracting more, but being significantly cheaper
+	\end{itemize}
 \end{itemize}
 
 %\textbf{\textcolor{tudblue}{Future work:}}
@@ -18,11 +28,12 @@
 	\frametitle{Discussion}
 	
 	\textbf{\textcolor{tudblue}{Future work suggestions:}}
+	
 	\begin{itemize}
-		\item Investigate other application domains, e.g., learning POMDPs for dialogue management \cite{chinaei2011}
-		\item Automated Model Checking \cite{lacerda2015optimal}
+		\item<1-> Investigate other application domains, e.g., learning POMDPs for dialogue management \cite{chinaei2011}
+		\item<2-> Automated Model Checking \cite{lacerda2015optimal}
 		\vspace{20pt}
-		\item Combination with model-based RL techniques {(using offline learned MDPs as blueprints for exploration)}
-		\item Coverage and size of datasets for model learning
+		\item<3-> Combination with model-based RL techniques {(using offline learned MDPs as blueprints for exploration)}
+		\item<4-> Coverage and size of datasets for model learning
 	\end{itemize}
 \end{frame}
