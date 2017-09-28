@@ -25,6 +25,7 @@
 \usepackage{tikz}
 \usepackage{graphicx}
 
+\hyphenation{Although}
 \hyphenation{consideration}
 \hyphenation{hyperparameters}
 \hyphenation{learning}
@@ -77,8 +78,8 @@
 \coordinate (abstract) at (0.045\paperwidth, 0.7 \paperheight);
 \coordinate (baseframework) at (0.045\paperwidth, 0.515 \paperheight);
 \coordinate (multiframework) at (0.045\paperwidth, 0.275\paperheight);
-\coordinate (experiments) at (0.505\paperwidth, 0.5825\paperheight);
-\coordinate (conclusions) at (0.505\paperwidth, 0.3\paperheight);
+\coordinate (experiments) at (0.505\paperwidth, 0.53\paperheight);
+\coordinate (conclusions) at (0.505\paperwidth, 0.194\paperheight);
 
 %%%%	Contents
 \node at (abstract) [anchor=west, black, text width=0.4\paperwidth] {
@@ -144,18 +145,52 @@ For our experiments an implementation has been made for path planning in mobile 
 
 \bigskip
 
-The plots below show GP posteriors resulting from BO in some of our experiments from which we can identify the hyperparameters $\theta$ most likely to maximize the system's performance.
+The plots below show the resulting GP posteriors for a selection of our experiments, from which we can identify the hyperparameters $\theta$ most likely to maximize the system's performance.
 
-\bigskip
+\vspace{2.5cm}
+
+\begin{center}
+\large \textsf{BASE FRAMEWORK}
+\end{center}
+
+\vspace{1cm}
 
 \begin{minipage}{\textwidth}
 \includegraphics[width=0.5\textwidth]{../figures/plots/tum_base/plot_b_00__alg_kmeans_pct_100_acq_ei.pdf}
 \includegraphics[width=0.5\textwidth]{../figures/plots/uol_base/plot_b_00__alg_kmeans_pct_100_acq_eips.pdf}
+\begin{minipage}{0.5\textwidth}
+\centering
+\small
+\texttt{tum\_kitchen} environment, \textrm{EI} acquisition function
 \end{minipage}
+\begin{minipage}{0.5\textwidth}
+\centering
+\small
+\texttt{uol\_bl} environment, \textrm{EIPS} acquisition function
+\end{minipage}
+\end{minipage}
+
+\vspace{3cm}
+
+\begin{center}
+\large \textsf{MULTI-PHASE FRAMEWORK}
+\end{center}
+
+\vspace{1cm}
 
 \begin{minipage}{\textwidth}
 \includegraphics[width=0.5\textwidth]{../figures/plots/tum_multi/plot_b_00__alg_kmeans_pct_100_acq_ei.pdf}
 \includegraphics[width=0.5\textwidth]{../figures/plots/uol_multi/plot_b_00__alg_kmeans_pct_100_acq_ucb.pdf}
+\begin{minipage}{0.5\textwidth}
+\centering
+\small
+\texttt{tum\_kitchen} environment, \textrm{EI} acquisition function
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\centering
+\small
+\texttt{uol\_bl} environment, \textrm{GP-UCB} acquisition function
+\end{minipage}
 \end{minipage}
 
 }
@@ -166,11 +201,9 @@ The plots below show GP posteriors resulting from BO in some of our experiments 
 	\parbox{\textwidth}{
 
 \section{Conclusions}
-\begin{itemize}
-\item First Item
-\item Second Item
-\item Third Item
-\end{itemize}
+As handcrafting MDPs for systems with uncertain dynamics is a difficult task, an appealing approach is to automate the task by employing learning algorithms on a dataset describing the dynamics of the underlying system.
+Evaluating all hyperparameter settings for these algorithms is a cost-expensive endeavour which may be more effectively approached by BO.
+Our multi-phase approach may speed up the optimization making relatively cost-cheap performance assessments on a more abstract level first, and using these to steer the acquisition in an optimization where more accurate and cost-expensive performance assessments are made through simulations or execution in a real-world setting.
 }
 };
 
