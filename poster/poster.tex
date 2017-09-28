@@ -12,6 +12,7 @@
 \usepackage{fontenc}
 \usepackage{anyfontsize}
 \usepackage{microtype}
+\usepackage{shadowtext}
 
 \usepackage{ifthen}
 
@@ -34,34 +35,35 @@
 
 %%%%	Header coordinates.
 \coordinate (header_SW)      at (              0 , 0.9\paperheight  );
-\coordinate (header_NE)      at ( 1.1\paperwidth , 1.1\paperheight  );
+\coordinate (header_NE)      at ( 1.1\paperwidth , 0.99\paperheight  );
 \coordinate (header_fade_SW) at (              0 , 0.805\paperheight  );
 \coordinate (header_fade_NE) at ( 1.1\paperwidth , 0.901\paperheight );
 \coordinate (title)          at ( 0.5\paperwidth , 0.935\paperheight );
-\coordinate (authors)        at ( 0.5\paperwidth , 0.855\paperheight );
-\coordinate (institute)      at ( 0.5\paperwidth , 0.825\paperheight );
+\coordinate (authors)        at ( 0.5\paperwidth , 0.865\paperheight );
+\coordinate (institute)      at ( 0.5\paperwidth , 0.835\paperheight );
 
 %%%%	Footer coordinates.
 \coordinate (footer_SW)  at (              0 , 0                 );
-\coordinate (footer_NE)  at ( 1.1\paperwidth , 0.045\paperheight );
+\coordinate (footer_NE)  at ( 1.1\paperwidth , 0.05\paperheight );
 \coordinate (tudlogo_SW) at (0.01\paperheight, 0.01\paperheight  );
 \coordinate (tudlogo_SE) at (0.1325\paperwidth, 0.009\paperheight  );
-\coordinate (faculty_W) at (0.507\paperwidth, 0.0175\paperheight  );
+\coordinate (faculty_W) at (0.56\paperwidth, 0.015\paperheight  );
 \def\tudlogoheight{0.03\paperheight}
 
 %%%%	Header: Cyan banner fading south, with title and 
 \fill[tudblue] (header_SW) rectangle (header_NE);
-\fill[tudblue,path fading=south] (header_fade_SW) rectangle (header_fade_NE);
-\node at (title) [anchor=center] {\parbox{0.9\paperwidth}{\centering\fontsize{95}{120}\bfseries The Title}};
-\node at (authors) [anchor=center] {\parbox{0.9\paperwidth}{\centering\fontsize{60}{60}\selectfont Author One,\hskip1.25em Author Two,\hskip1.25em Author Three}};
-\node at (institute) [anchor=center] {\parbox{0.9\paperwidth}{\centering\fontsize{45}{45}\selectfont Algorithmics Group, Department of Software Technology}};
+\fill[tudblue] (header_fade_SW) rectangle (header_fade_NE);
+\node at (title) [anchor=center] {\parbox{0.9\paperwidth}{\centering\fontsize{95}{120}\bfseries\color{white}\shadowoffset{2pt}\shadowcolor{black!55!white} \shadowtext{Learning and Optimizing Probabilistic Models}\\\shadowtext{for Planning under Uncertainty}}};
+\node at (authors) [anchor=center] {\parbox{0.9\paperwidth}{\centering\fontsize{60}{60}\selectfont\color{white} \shadowtext{R. van Bekkum,}\hskip1.5em \shadowtext{M. T. J. Spaan}}};
+\node at (institute) [anchor=center] {\parbox{0.9\paperwidth}{\centering\fontsize{45}{45}\selectfont\color{white} \shadowtext{Algorithmics Group, Department of Software Technology}}};
 
 %%%%	Footer: Cyan banner with logo embedded.
 \fill [tudblue] (footer_SW) rectangle (footer_NE);
 \node at (tudlogo_SW) [anchor=south west] {\includegraphics[height=\tudlogoheight ]{images/TU_Delft_logo_White}};
 \node at (tudlogo_SE) [anchor=south west] [white,text width=0.2\paperwidth] {\fontsize{18}{19}\selectfont Delft\\University\hskip0.175cmof\\\hskip0.0275cm Technology\\};
 
-\node at (faculty_W) [anchor=west] [white] {\parbox{0.6\paperwidth}{\LARGE Electrical Engineering, Mathematics, and Computer Science}};
+\node at (faculty_W) [anchor=west] [white] {\parbox{0.6\paperwidth}{\Large\bfseries Electrical Engineering, Mathematics, and Computer Science}};
 
 \end{tikzpicture}
+
 \end{document}
