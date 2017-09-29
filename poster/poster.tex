@@ -14,7 +14,7 @@
 \usepackage{microtype}
 \usepackage{shadowtext}
 \usepackage[british]{babel}
-\usepackage{blindtext}
+\usepackage{ragged2e}
 
 \usepackage{sectsty}
 \sectionfont{\fontsize{40}{40}\selectfont}
@@ -24,11 +24,14 @@
 \usepackage[cmyk]{xcolor}
 \usepackage{tikz}
 \usepackage{graphicx}
+\usepackage{tcolorbox}
 
-\hyphenation{Although}
-\hyphenation{consideration}
-\hyphenation{hyperparameters}
-\hyphenation{learning}
+%\hyphenation{Although}
+%\hyphenation{consideration}
+%\hyphenation{hyperparameters}
+%\hyphenation{learning}
+\hyphenation{algorithms}
+\hyphenation{effectively}
 
 \usetikzlibrary{shapes,fadings,calc,decorations.pathmorphing,arrows}
 
@@ -37,6 +40,12 @@
 \definecolor{tudblue}{cmyk}{1,0,0,0}
 \definecolor{barcolor}{hsb}{0.56, 0.40, 1}
 \definecolor{arrowcolor}{hsb}{0.56, 0.20, 1}
+
+\newcommand{\bluebox}[1]{
+	\begin{tcolorbox}[colframe=tudblue!75!black, boxrule=0.15cm, boxsep=1cm,width=\textwidth,colback=white]
+	#1
+	\end{tcolorbox}
+}
 
 \begin{document}
 \thispagestyle{empty}
@@ -64,7 +73,7 @@
 \fill[tudblue] (header_SW) rectangle (header_NE);
 \fill[tudblue] (header_fade_SW) rectangle (header_fade_NE);
 \node at (title) [anchor=center] {\parbox{0.9\paperwidth}{\centering\fontsize{95}{120}\bfseries\color{white}\shadowoffset{2pt}\shadowcolor{black!55!white} \shadowtext{Learning and Optimizing Probabilistic Models}\\\shadowtext{for Planning under Uncertainty}}};
-\node at (authors) [anchor=center] {\parbox{0.9\paperwidth}{\centering\fontsize{60}{60}\selectfont\color{white} \shadowtext{R. van Bekkum,}\hskip1.5em \shadowtext{M. T. J. Spaan}}};
+\node at (authors) [anchor=center] {\parbox{0.9\paperwidth}{\centering\fontsize{60}{60}\selectfont\color{white} \shadowtext{R. van Bekkum}\hskip1.5em \shadowtext{M. T. J. Spaan}}};
 \node at (institute) [anchor=center] {\parbox{0.9\paperwidth}{\centering\fontsize{45}{45}\selectfont\color{white} \shadowtext{Algorithmics Group, Department of Software Technology}}};
 
 %%%%	Footer: Cyan banner with logo embedded.
@@ -75,82 +84,109 @@
 \node at (faculty_W) [anchor=west] [white] {\parbox{0.6\paperwidth}{\Large\bfseries Electrical Engineering, Mathematics, and Computer Science}};
 
 %%%%	Contents coordinates
-\coordinate (abstract) at (0.045\paperwidth, 0.7 \paperheight);
-\coordinate (baseframework) at (0.045\paperwidth, 0.515 \paperheight);
-\coordinate (multiframework) at (0.045\paperwidth, 0.275\paperheight);
-\coordinate (experiments) at (0.505\paperwidth, 0.53\paperheight);
-\coordinate (conclusions) at (0.505\paperwidth, 0.194\paperheight);
+\coordinate (abstract) at (0.035\paperwidth, 0.69 \paperheight);
+\coordinate (runningexample) at (0.035\paperwidth, 0.49 \paperheight);
+\coordinate (methodology) at (0.035\paperwidth, 0.23\paperheight);
+\coordinate (experiments) at (0.505\paperwidth, 0.51025\paperheight);
+\coordinate (conclusions) at (0.505\paperwidth, 0.1305\paperheight);
 
 %%%%	Contents
-\node at (abstract) [anchor=west, black, text width=0.4\paperwidth] {
+\node at (abstract) [anchor=west, black, text width=0.425\paperwidth] {
+\bluebox{
+%\parbox{\textwidth}{
 
-\parbox{\textwidth}{
-\section*{Abstract}
-Decision-theoretic planning techniques are increasingly being used to obtain (optimal) plans for domains involving uncertainty, which may be present in the form of the controlling agent's actions, its percepts, or exogenous factors in the domain.
+{\huge\bfseries Abstract\bigskip}
+
+\justifying
+\noindent Decision-theoretic planning techniques are increasingly being used to obtain (optimal) plans for domains involving uncertainty, which may be present in the form of the controlling agent's actions, its percepts, or exogenous factors in the domain.
 These techniques build on detailed probabilistic models of the underlying system, for which Markov Decision Processes (MDPs) have become the \textit{de facto} standard formalism.
 However, handcrafting these probabilistic models is usually a daunting and error-prone task, requiring expert knowledge on the domain under consideration.
 Therefore, it is desirable to automate the process of obtaining these models by means of learning algorithms presented with a set of execution traces from the system.
 Although some work has already been done on crafting such learning algorithms, the state of the art lacks an automated method of configuring their hyperparameters, so to maximize the performance yielded from executing the derived plans.
-
-\bigskip
-
 In this work we present a solution that employs the \textit{Bayesian Optimization} (BO) framework to learn MDPs autonomously from a set of execution traces, optimizing the expected value and performance in simulations over a set of tasks the underlying system is expected to perform.
 The approach has been tested on learning MDPs for mobile~robot navigation, motivated by the significant uncertainty accompanying the robots' actions in this domain.
+%}
+
 }
 };
 
-\node at (baseframework) [anchor=west, black, text width=0.4\paperwidth] {
-	
-\parbox{\textwidth}{
-\section{Base Framework}
-In our solution we employ BO to select hyperparameters $\theta$ for model learning algorithms towards a global maximizer of a performance measure $V_\mathcal{M}$ (made through time-expensive simulations) over a set of tasks the system is expected to perform.
+\node at (runningexample) [anchor=west, text width=0.425\paperwidth] {
 
-\bigskip\bigskip
-
-\includegraphics[width=\textwidth]{figures/learning-cycle-simplified}
-}
-};
-
-\node at (multiframework) [anchor=west, black, text width=0.4\paperwidth] {
-	
-%\parbox{\textwidth}{
-\section{Multi-Phase Framework}
-To improve the cost-effectiveness, the solution is extended by defining two phases. In the first phase an optimization is done on a relatively cost-cheap performance measure based on the value functions computed from the learned MDPs.
-The resulting posterior is used to potentially speed up the optimization in the second phase by steering the BO acquisition of new samples.
+\bluebox{
+\begin{center}
+\includegraphics[width=0.475\textwidth]{figures/dummy-map-2-1.pdf}
+\hspace{1cm}
+\includegraphics[width=0.475\textwidth]{figures/dummy-map-2-2.pdf}
 
 \bigskip
+
+\includegraphics[width=0.475\textwidth]{figures/dummy-map-2-3.pdf}
+\hspace{1cm}
+\includegraphics[width=0.475\textwidth]{figures/dummy-map-2-4.pdf}
+\end{center}
+}
+};
+
+\node at (methodology) [anchor=west, black, text width=0.425\paperwidth] {
+\bluebox{
+\parbox{\textwidth}{
+{\huge\bfseries Methodology\bigskip}
+\Large
+\begin{itemize}
+\item BO for the parameters of MDP model learning algorithms
+\item Performance assessed through expensive simulations
+\item Multi-phase for speeding up BO with informative prior
+\end{itemize}
+%To improve the cost-effectiveness, the solution is extended by defining two phases. In the first phase an optimization is done on a relatively cost-cheap performance measure based on the value functions computed from the learned MDPs.
+%The resulting posterior is used to potentially speed up the optimization in the second phase by steering the BO acquisition of new samples.
+}
+
+\vspace{1.5cm}
 \includegraphics[width=\textwidth]{figures/phase-1}
 
 \vspace{2cm}
 
 \includegraphics[width=\textwidth]{figures/phase-2}
-%}
+}
 };
 
 
-\node at (experiments) [anchor=west, black, text width=0.45\paperwidth] {
-	
+\node at (experiments) [anchor=west, black, text width=0.455\paperwidth] {
+\bluebox{
 \parbox{\textwidth}{
-\section{Experimental Setup and Results}
-For our experiments an implementation has been made for path planning in mobile robot navigation, where a mobile robot is controlled by learned MDPs in simulation environments inside the \textit{Morse} robotics simulator. Based on execution traces from a random action policy, MDPs are learned based on clustering and maximum likelihood algorithms.
+{\huge\bfseries Experimental Setup and Results\bigskip}
 
-\bigskip
+\Large
+
+\begin{itemize}
+	\item Dataset of execution traces with odometric readings
+	\item Learning MDPs by $k$-Means and Maximum Likelihood
+\end{itemize}
+
+%For our experiments an implementation has been made for path planning in mobile robot navigation, where a mobile robot is controlled by learned MDPs in simulation environments inside the \textit{Morse} robotics simulator. Based on execution traces from a random action policy, MDPs are learned based on clustering and maximum likelihood algorithms.
+
+\vspace{2cm}
 
 \begin{minipage}{\textwidth}
 \centering
-\raisebox{-0.5\height}{\includegraphics[width=0.475\textwidth]{figures/demo_clustering_2}}
+\raisebox{-0.5\height}{\includegraphics[width=0.4725\textwidth]{figures/demo_clustering_2}}
 \hspace*{1em}
-\raisebox{-0.5\height}{\includegraphics[width=0.475\textwidth]{figures/demo_trajectory}}
+\raisebox{-0.5\height}{\includegraphics[width=0.4725\textwidth]{figures/demo_trajectory}}
 \end{minipage}
 
-\bigskip
+\vspace{2cm}
 
-The plots below show the resulting GP posteriors for a selection of our experiments, from which we can identify the hyperparameters $\theta$ most likely to maximize the system's performance.
+\begin{itemize}
+	\item Navigation in simulations of small and large environments
+	\item Extract hyperparameters from resulting GP posteriors in BO
+\end{itemize}
 
-\vspace{2.5cm}
+%The plots below show the resulting GP posteriors for a selection of our experiments, from which we can identify the hyperparameters $\theta$ most likely to maximize the system's performance.
+
+\vspace{1.5cm}
 
 \begin{center}
-\large \textsf{BASE FRAMEWORK}
+\Large \textsf{BASE FRAMEWORK}
 \end{center}
 
 \vspace{1cm}
@@ -170,10 +206,10 @@ The plots below show the resulting GP posteriors for a selection of our experime
 \end{minipage}
 \end{minipage}
 
-\vspace{3cm}
+\vspace{2cm}
 
 \begin{center}
-\large \textsf{MULTI-PHASE FRAMEWORK}
+\Large \textsf{MULTI-PHASE FRAMEWORK}
 \end{center}
 
 \vspace{1cm}
@@ -193,17 +229,26 @@ The plots below show the resulting GP posteriors for a selection of our experime
 \end{minipage}
 \end{minipage}
 
+\vspace{1cm}
+
+}
 }
 };
 
-\node at (conclusions) [anchor=west, black, text width=0.45\paperwidth] {
-	
+\node at (conclusions) [anchor=west, black, text width=0.455\paperwidth] {
+\bluebox{
 	\parbox{\textwidth}{
-
-\section{Conclusions}
-As handcrafting MDPs for systems with uncertain dynamics is a difficult task, an appealing approach is to automate the task by employing learning algorithms on a dataset describing the dynamics of the underlying system.
-Evaluating all hyperparameter settings for these algorithms is a cost-expensive endeavour which may be more effectively approached by BO.
-Our multi-phase approach may speed up the optimization making relatively cost-cheap performance assessments on a more abstract level first, and using these to steer the acquisition in an optimization where more accurate and cost-expensive performance assessments are made through simulations or execution in a real-world setting.
+{\huge\bfseries Conclusions\bigskip}
+\Large
+\justifying
+\begin{itemize}
+	\item Evaluating all parameter settings of model learning algorithms can be a time-expensive endeavour, potentially more effectively approached through BO.
+	\item The multi-phase approach may further reduce time-expenses by optimization with cost-cheap performance estimates on a more abstract level.
+\end{itemize}
+%As handcrafting MDPs for systems with uncertain dynamics is a difficult task, an appealing approach is to automate the task by employing learning algorithms on a dataset describing the dynamics of the underlying system.
+%Evaluating all hyperparameter settings for these algorithms is a cost-expensive endeavour which may be more effectively approached by BO.
+%Our multi-phase approach may speed up the optimization making relatively cost-cheap performance assessments on a more abstract level first, and using these to steer the acquisition in an optimization where more accurate and cost-expensive performance assessments are made through simulations or execution in a real-world setting.
+}
 }
 };
 
